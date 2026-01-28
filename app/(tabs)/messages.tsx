@@ -1,9 +1,9 @@
 import { View, Text } from 'react-native';
 
-export default function Feed() {
+export default function Messages() {
   return (
     <View>
-      <Text>Feed screen</Text>
+      <Text>Messages screen</Text>
     </View>
   );
 }
