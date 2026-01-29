@@ -5,9 +5,9 @@ const buttonVariants = {
   base: "rounded-lg flex-row items-center justify-center",
   variant: {
     primary: "bg-primary",
-    secondary: "bg-white border-2 border-primary",
-    disabled: "bg-onboardingSelected",
-    actioned: "bg-lightStroke",
+    secondary: "bg-background border-2 border-primary",
+    disabled: "bg-muted",
+    actioned: "bg-accent",
     text: "bg-transparent",
   },
   size: {
@@ -19,10 +19,10 @@ const buttonVariants = {
 
 const textVariants = {
   variant: {
-    primary: "text-white font-semibold",
+    primary: "text-primary-foreground font-semibold",
     secondary: "text-primary font-semibold",
-    disabled: "text-lightStroke font-semibold",
-    actioned: "text-primary font-semibold",
+    disabled: "text-muted-foreground font-semibold",
+    actioned: "text-accent-foreground font-semibold",
     text: "text-primary font-semibold",
   },
   size: {
