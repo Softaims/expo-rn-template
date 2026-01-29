@@ -1,6 +1,6 @@
-import "../global.css";
 import { Link } from "expo-router";
-import { View } from "react-native";
+import { Text, View } from "react-native";
+import "../global.css";
 
 export default function Index() {
   return (
@@ -12,6 +12,7 @@ export default function Index() {
       }}
     >
       <Link href="/storybook">Open Storybook</Link>
+      <Text className="text-red-500">wow</Text>
     </View>
   );
 }
