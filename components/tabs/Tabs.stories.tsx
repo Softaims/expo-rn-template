@@ -13,7 +13,7 @@ const meta = {
   },
   decorators: [
     (Story) => (
-      <View style={{ padding: 16, backgroundColor: "#fff" }}>
+      <View style={{ padding: 16 }}>
         <Story />
       </View>
     ),
@@ -31,21 +31,8 @@ const basicTabs = [
   { label: "Team", value: "team" },
 ];
 
-const iconTabs = [
-  {
-    label: "Posts",
-    value: "posts",
-    icon: <PostsIcon width={18} height={18} />,
-  },
-  {
-    label: "Saved Posts",
-    value: "saved",
-    icon: <BookmarkIcon width={18} height={18} />,
-  },
-];
-
 // Variant 1: Underline
-export const Variant1Underline: Story = {
+export const UnderlineDetails: Story = {
   args: {
     variant: "underline",
     tabs: basicTabs,
@@ -54,134 +41,187 @@ export const Variant1Underline: Story = {
   },
 };
 
-export const Variant1UnderlineProducts: Story = {
+export const UnderlineProducts: Story = {
   args: {
     variant: "underline",
     tabs: basicTabs,
     defaultValue: "products",
+    onValueChange: (value) => console.log("Tab changed to:", value),
   },
 };
 
-export const Variant1UnderlineOrders: Story = {
+export const UnderlineOrders: Story = {
   args: {
     variant: "underline",
     tabs: basicTabs,
     defaultValue: "orders",
+    onValueChange: (value) => console.log("Tab changed to:", value),
   },
 };
 
-export const Variant1UnderlineTeam: Story = {
+export const UnderlineTeam: Story = {
   args: {
     variant: "underline",
     tabs: basicTabs,
     defaultValue: "team",
+    onValueChange: (value) => console.log("Tab changed to:", value),
   },
 };
 
 // Variant 2: Filled
-export const Variant2Filled: Story = {
+export const FilledDetails: Story = {
   args: {
     variant: "filled",
     tabs: basicTabs,
     defaultValue: "details",
+    onValueChange: (value) => console.log("Tab changed to:", value),
   },
 };
 
-export const Variant2FilledProducts: Story = {
+export const FilledProducts: Story = {
   args: {
     variant: "filled",
     tabs: basicTabs,
     defaultValue: "products",
+    onValueChange: (value) => console.log("Tab changed to:", value),
   },
 };
 
-export const Variant2FilledOrders: Story = {
+export const FilledOrders: Story = {
   args: {
     variant: "filled",
     tabs: basicTabs,
     defaultValue: "orders",
+    onValueChange: (value) => console.log("Tab changed to:", value),
   },
 };
 
-// Variant 3: Filled Rounded (same as variant 2 in your design)
-export const Variant3FilledDetails: Story = {
+export const FilledTeam: Story = {
+  args: {
+    variant: "filled",
+    tabs: basicTabs,
+    defaultValue: "team",
+    onValueChange: (value) => console.log("Tab changed to:", value),
+  },
+};
+
+// Variant 3: Filled Rounded
+export const FilledRoundedDetails: Story = {
   args: {
     variant: "filled-rounded",
     tabs: basicTabs,
     defaultValue: "details",
+    onValueChange: (value) => console.log("Tab changed to:", value),
   },
 };
 
-export const Variant3FilledProducts: Story = {
+export const FilledRoundedProducts: Story = {
   args: {
     variant: "filled-rounded",
     tabs: basicTabs,
     defaultValue: "products",
+    onValueChange: (value) => console.log("Tab changed to:", value),
   },
 };
 
-export const Variant3FilledOrders: Story = {
+export const FilledRoundedOrders: Story = {
   args: {
     variant: "filled-rounded",
     tabs: basicTabs,
     defaultValue: "orders",
+    onValueChange: (value) => console.log("Tab changed to:", value),
   },
 };
 
-export const Variant3FilledTeams: Story = {
+export const FilledRoundedTeam: Story = {
   args: {
     variant: "filled-rounded",
     tabs: basicTabs,
     defaultValue: "team",
+    onValueChange: (value) => console.log("Tab changed to:", value),
   },
 };
 
 // Variant 4: Pill
-export const Variant4PillDetails: Story = {
+export const PillDetails: Story = {
   args: {
     variant: "pill",
     tabs: basicTabs,
     defaultValue: "details",
+    onValueChange: (value) => console.log("Tab changed to:", value),
   },
 };
 
-export const Variant4PillProducts: Story = {
+export const PillProducts: Story = {
   args: {
     variant: "pill",
     tabs: basicTabs,
     defaultValue: "products",
+    onValueChange: (value) => console.log("Tab changed to:", value),
   },
 };
 
-export const Variant4PillOrders: Story = {
+export const PillOrders: Story = {
   args: {
     variant: "pill",
     tabs: basicTabs,
     defaultValue: "orders",
+    onValueChange: (value) => console.log("Tab changed to:", value),
   },
 };
 
-export const Variant4PillTeams: Story = {
+export const PillTeam: Story = {
   args: {
     variant: "pill",
     tabs: basicTabs,
     defaultValue: "team",
+    onValueChange: (value) => console.log("Tab changed to:", value),
   },
 };
 
 // Variant 5: Icon Tabs
-export const Variant5IconPosts: Story = {
-  args: {
-    variant: "icon",
-    tabs: iconTabs,
-    defaultValue: "posts",
-  },
+export const IconPosts: Story = {
+  args: { variant: "icon", tabs: basicTabs, defaultValue: "posts" },
+  render: () => (
+    <Tabs
+      variant="icon"
+      tabs={[
+        {
+          label: "Posts",
+          value: "posts",
+          icon: <PostsIcon width={18} height={18} />,
+        },
+        {
+          label: "Saved Posts",
+          value: "saved",
+          icon: <BookmarkIcon width={18} height={18} />,
+        },
+      ]}
+      defaultValue="posts"
+      onValueChange={(value) => console.log("Tab changed to:", value)}
+    />
+  ),
 };
 
-export const Variant5IconSaved: Story = {
-  args: {
-    variant: "icon",
-    tabs: iconTabs,
-    defaultValue: "saved",
-  },
+export const IconSaved: Story = {
+  args: { variant: "icon", tabs: basicTabs, defaultValue: "saved" },
+  render: () => (
+    <Tabs
+      variant="icon"
+      tabs={[
+        {
+          label: "Posts",
+          value: "posts",
+          icon: <PostsIcon width={18} height={18} />,
+        },
+        {
+          label: "Saved Posts",
+          value: "saved",
+          icon: <BookmarkIcon width={18} height={18} />,
+        },
+      ]}
+      defaultValue="saved"
+      onValueChange={(value) => console.log("Tab changed to:", value)}
+    />
+  ),
 };
