@@ -1,7 +1,7 @@
 import React from "react";
-import { StyleSheet, View, PanResponder, Animated, Text } from "react-native";
+import { View, PanResponder, Animated, Text } from "react-native";
 
-export default function RangeSlider(props)
+export default function RangeSlider()
 {
   // ------------------ OPTIONS ------------------------ //
   // (Use props._VALUE_ in this section if needed)
@@ -9,8 +9,6 @@ export default function RangeSlider(props)
   const maxBoundary = 99;
   const min_initVal = 12;
   const max_initVal = 88;
-  const colorNeutral = "#f1f1f1";
-  const colorHighlight = "#008ee6";
   // Next line is the position's difference of min slider and max slider
   // To avoid overlap and blocking at the maximum boundary value
   // Keep between 0.10 and 0.40 for best user experience
@@ -173,23 +171,21 @@ export default function RangeSlider(props)
   {
     return (
       <Animated.View
-        style={[
-          s.draggable,
-          { transform:
-            [{ translateX: min_pan.x.interpolate(
-              {
-                inputRange: [Math.min(min_minBoundaryPosition, min_effectiveMaxBoundaryPosition), Math.max(min_minBoundaryPosition, min_effectiveMaxBoundaryPosition)],
-                outputRange: [Math.min(min_minBoundaryPosition, min_effectiveMaxBoundaryPosition), Math.max(min_minBoundaryPosition, min_effectiveMaxBoundaryPosition)],
-                extrapolate: 'clamp'
-              })
-            }]
-          },
-          {left:sliderCenter + min_initOffset - sliderHeight*manualOffsetBetweenSlider}
-        ]}
+        className="items-center justify-center h-full aspect-square absolute -top-[5px] flex-row rounded-full overflow-visible"
+        style={{
+          transform: [{ translateX: min_pan.x.interpolate(
+            {
+              inputRange: [Math.min(min_minBoundaryPosition, min_effectiveMaxBoundaryPosition), Math.max(min_minBoundaryPosition, min_effectiveMaxBoundaryPosition)],
+              outputRange: [Math.min(min_minBoundaryPosition, min_effectiveMaxBoundaryPosition), Math.max(min_minBoundaryPosition, min_effectiveMaxBoundaryPosition)],
+              extrapolate: 'clamp'
+            })
+          }],
+          left: sliderCenter + min_initOffset - sliderHeight*manualOffsetBetweenSlider
+        }}
         {...min_panResponder.panHandlers}
       >
-        <View style={s.circle}>
-          <View style={s.icon}>
+        <View className="shadow-md overflow-visible items-center justify-center flex-row aspect-square bg-foreground rounded-full border border-border">
+          <View className="items-center justify-center overflow-hidden h-[30%] w-[30%] pb-[10px]">
             {/* <MaterialCommunityIcons name={icon} size={20} color={colorHighlight} /> */}
           </View>
         </View>
@@ -200,21 +196,21 @@ export default function RangeSlider(props)
   const min_getLine = () =>
   {
     return(
-      <Animated.View style={[
-        s.line,
-        [{ translateX: min_pan.x.interpolate(
-          {
-            inputRange: [Math.min(min_minBoundaryPosition, min_effectiveMaxBoundaryPosition), Math.max(min_minBoundaryPosition, min_effectiveMaxBoundaryPosition)],
-            outputRange: [
-              Math.min(min_minBoundaryPosition + min_initOffset - sliderWidth/2 - sliderHeight*manualOffsetBetweenSlider,
-              min_effectiveMaxBoundaryPosition + min_initOffset - sliderWidth/2 - sliderHeight*manualOffsetBetweenSlider), 
-              Math.max(min_minBoundaryPosition + min_initOffset - sliderWidth/2 - sliderHeight*manualOffsetBetweenSlider,
-              min_effectiveMaxBoundaryPosition + min_initOffset - sliderWidth/2 - sliderHeight*manualOffsetBetweenSlider), ],
-            extrapolate: 'clamp'
-          })
-        }],
-        {backgroundColor:colorNeutral}
-        ]}
+      <Animated.View
+        className="h-full w-full absolute bg-muted"
+        style={{
+          transform: [{ translateX: min_pan.x.interpolate(
+            {
+              inputRange: [Math.min(min_minBoundaryPosition, min_effectiveMaxBoundaryPosition), Math.max(min_minBoundaryPosition, min_effectiveMaxBoundaryPosition)],
+              outputRange: [
+                Math.min(min_minBoundaryPosition + min_initOffset - sliderWidth/2 - sliderHeight*manualOffsetBetweenSlider,
+                min_effectiveMaxBoundaryPosition + min_initOffset - sliderWidth/2 - sliderHeight*manualOffsetBetweenSlider),
+                Math.max(min_minBoundaryPosition + min_initOffset - sliderWidth/2 - sliderHeight*manualOffsetBetweenSlider,
+                min_effectiveMaxBoundaryPosition + min_initOffset - sliderWidth/2 - sliderHeight*manualOffsetBetweenSlider), ],
+              extrapolate: 'clamp'
+            })
+          }]
+        }}
       />
     );
   }
@@ -275,23 +271,21 @@ export default function RangeSlider(props)
   {
     return (
       <Animated.View
-        style={[
-          s.draggable,
-          { transform:
-            [{ translateX: max_pan.x.interpolate(
-              {
-                inputRange: [Math.min(max_effectiveMinBoundaryPosition, max_maxBoundaryPosition), Math.max(max_effectiveMinBoundaryPosition, max_maxBoundaryPosition)],
-                outputRange: [Math.min(max_effectiveMinBoundaryPosition, max_maxBoundaryPosition), Math.max(max_effectiveMinBoundaryPosition, max_maxBoundaryPosition)],
-                extrapolate: 'clamp'
-              })
-            }]
-          },
-          {left:sliderCenter + max_initOffset + sliderHeight*manualOffsetBetweenSlider}
-        ]}
+        className="items-center justify-center h-full aspect-square absolute -top-[5px] flex-row rounded-full overflow-visible"
+        style={{
+          transform: [{ translateX: max_pan.x.interpolate(
+            {
+              inputRange: [Math.min(max_effectiveMinBoundaryPosition, max_maxBoundaryPosition), Math.max(max_effectiveMinBoundaryPosition, max_maxBoundaryPosition)],
+              outputRange: [Math.min(max_effectiveMinBoundaryPosition, max_maxBoundaryPosition), Math.max(max_effectiveMinBoundaryPosition, max_maxBoundaryPosition)],
+              extrapolate: 'clamp'
+            })
+          }],
+          left: sliderCenter + max_initOffset + sliderHeight*manualOffsetBetweenSlider
+        }}
         {...max_panResponder.panHandlers}
       >
-        <View style={s.circle}>
-          <View style={s.icon}>
+        <View className="shadow-md overflow-visible items-center justify-center flex-row aspect-square bg-foreground rounded-full border border-border">
+          <View className="items-center justify-center overflow-hidden h-[30%] w-[30%] pb-[10px]">
             {/* <MaterialCommunityIcons name={icon} size={30} color={colorHighlight} /> */}
           </View>
         </View>
@@ -302,159 +296,48 @@ export default function RangeSlider(props)
   const max_getLine = () =>
   {
     return(
-      <Animated.View style={[
-        s.line,
-        [{ translateX: max_pan.x.interpolate(
-          {
-            inputRange: [Math.min(max_effectiveMinBoundaryPosition, max_maxBoundaryPosition), Math.max(max_effectiveMinBoundaryPosition, max_maxBoundaryPosition)],
-            outputRange: [
-              Math.min(max_effectiveMinBoundaryPosition + sliderWidth/2 + max_initOffset + sliderHeight*manualOffsetBetweenSlider,
-              max_maxBoundaryPosition + sliderWidth/2 + max_initOffset + sliderHeight*manualOffsetBetweenSlider),
-              Math.max(max_effectiveMinBoundaryPosition + sliderWidth/2 + max_initOffset + sliderHeight*manualOffsetBetweenSlider,
-              max_maxBoundaryPosition + sliderWidth/2 + max_initOffset + sliderHeight*manualOffsetBetweenSlider),],
-            extrapolate: 'clamp'
-          })
-        }],
-        {backgroundColor:colorNeutral}
-        ]}
+      <Animated.View
+        className="h-full w-full absolute bg-muted"
+        style={{
+          transform: [{ translateX: max_pan.x.interpolate(
+            {
+              inputRange: [Math.min(max_effectiveMinBoundaryPosition, max_maxBoundaryPosition), Math.max(max_effectiveMinBoundaryPosition, max_maxBoundaryPosition)],
+              outputRange: [
+                Math.min(max_effectiveMinBoundaryPosition + sliderWidth/2 + max_initOffset + sliderHeight*manualOffsetBetweenSlider,
+                max_maxBoundaryPosition + sliderWidth/2 + max_initOffset + sliderHeight*manualOffsetBetweenSlider),
+                Math.max(max_effectiveMinBoundaryPosition + sliderWidth/2 + max_initOffset + sliderHeight*manualOffsetBetweenSlider,
+                max_maxBoundaryPosition + sliderWidth/2 + max_initOffset + sliderHeight*manualOffsetBetweenSlider),],
+              extrapolate: 'clamp'
+            })
+          }]
+        }}
       />
     );
   }
   
   // ----------------- Render ----------------------- //
   return (
-    <View style={s.mainContainer}>
-      <View style={s.container}>
-        <View style={s.labelValue}>
-          <Text style={s.labelValueText}>{min_animState.displayVal}</Text>
+    <View className="items-center justify-center overflow-hidden w-full aspect-[4/1]">
+      <View className="items-center justify-center overflow-hidden flex-1 flex-row">
+        <View className="items-center justify-center overflow-hidden flex-1">
+          <Text className="text-[11px] text-foreground">{min_animState.displayVal}</Text>
         </View>
         <View
-          style={[s.sliderContainer, {marginHorizontal:sliderHeight*manualOffsetBetweenSlider}]}
+          className="items-center justify-center overflow-hidden h-full flex-[8] overflow-visible"
+          style={{ marginHorizontal: sliderHeight*manualOffsetBetweenSlider }}
           onLayout={(event) => initSliders(event.nativeEvent.layout.height, event.nativeEvent.layout.width)}
         >
-          <View style={[s.lineContainer, {backgroundColor:colorHighlight}]}>
+          <View className="items-center justify-center overflow-hidden h-1 w-[80%] flex-row absolute left-[10%] top-1/2 -mt-[3px] rounded-[60px] bg-foreground">
             {min_getLine()}
             {max_getLine()}
           </View>
           {min_getSlider()}
           {max_getSlider()}
         </View>
-        <View style={s.labelValue}>
-          <Text style={s.labelValueText}>{max_animState.displayVal}</Text>
+        <View className="items-center justify-center overflow-hidden flex-1">
+          <Text className="text-[11px] text-foreground">{max_animState.displayVal}</Text>
         </View>
       </View>
     </View>
   );
 }
-
-const s = StyleSheet.create({
-  mainContainer:
-  {
-    alignItems: "center",
-    justifyContent: "center",
-    overflow: "hidden",
-    width:"100%",
-    aspectRatio:4,
-  },
-  container:
-  {
-    alignItems: "center",
-    justifyContent: "center",
-    overflow: "hidden",
-    flex: 1,
-    flexDirection: "row",
-  },
-
-  labelValue:
-  {
-    alignItems: "center",
-    justifyContent: "center",
-    overflow: "hidden",
-    flex: 1,
-  },
-  labelValueText:
-  {
-    fontSize:11,
-  },
-
-  sliderContainer:
-  {
-    alignItems: "center",
-    justifyContent: "center",
-    overflow: "hidden",
-    height:"100%",
-    flex: 8,
-    overflow:'visible',
-  },
-  lineContainer:
-  {
-    alignItems: "center",
-    justifyContent: "center",
-    overflow: "hidden",
-    height:4,
-    width:"80%",
-    flexDirection:'row',
-    position: "absolute",
-    left:"10%",
-    top:"50%",
-    marginTop:-3,
-    borderRadius: 60,
-  },
-  line:
-  {
-    height:"100%",
-    width:"100%",
-    position:'absolute',
-  },
-  draggable:
-  {
-    alignItems: "center",
-    justifyContent: "center",
-    height:"100%",
-    aspectRatio:1,
-    position:'absolute',
-    top:-5,
-    flexDirection:'row',
-    borderRadius:100,
-    overflow: "visible",
-  },
-  circle:
-  {
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.24,
-    shadowRadius: 2.8,
-    elevation: 3,
-    overflow: "visible",
-    alignItems: "center",
-    justifyContent: "center",
-    flexDirection: "row",
-    aspectRatio: 1,
-    backgroundColor: "#000",
-    borderRadius: "100%",
-    borderWidth: 1,
-    borderWidth: StyleSheet.hairlineWidth,
-  },
-  icon:
-  {
-    alignItems: "center",
-    justifyContent: "center",
-    overflow: "hidden",
-    height:"30%",
-    width:"30%",
-    paddingBottom:10
-  },
-  labelContainer:
-  {
-    alignItems: "center",
-    justifyContent: "center",
-    overflow: "hidden",
-    width:"100%",
-    aspectRatio:3,
-    position:'absolute',
-    bottom:0,
-  },
-  label:
-  {
-    fontSize:9,
-  },
-});
