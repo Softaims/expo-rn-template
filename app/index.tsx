@@ -1,3 +1,4 @@
+import "../global.css";
 import { Link } from "expo-router";
 import { View } from "react-native";
 

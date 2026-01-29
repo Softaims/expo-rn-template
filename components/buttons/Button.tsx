@@ -10,16 +10,7 @@ type ButtonProps = {
 
 export function Button({ variant = "primary-lg", onPress, title, disabled, loading }: ButtonProps) {
     return (
-        <Pressable
-            onPress={onPress}
-            disabled={disabled}
-            style={[styles.buttonContainer]}>
-            {
-                loading ?
-                    <ActivityIndicator size="small" color="white" />
-                    : <Text style={[styles.text]}>{title}</Text>
-            }
-        </Pressable>
+         <Text className="text-white" >{'title'}</Text>
     );
 }
 
