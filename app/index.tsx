@@ -5,7 +5,6 @@ import { Tabs } from "@/components/tabs";
 import { Checkbox } from "@/components/checkbox";
 import { RadioButton } from "@/components/radio";
 import { Toggle } from "@/components/toggle";
-import RangeSlider from "@/components/slider/Slider";
 import "../global.css";
 
 export default function Index() {
@@ -23,7 +22,6 @@ export default function Index() {
         gap: 32,
       }}
     >
-
       {/* Section: Button Examples */}
       <View style={{ gap: 16 }}>
         <Text className="text-foreground text-xl font-bold">
@@ -218,52 +216,7 @@ export default function Index() {
         />
       </View>
 
-      {/* Section: Slider Examples */}
-      <View style={{ gap: 16, marginBottom: 40 }}>
-        <Text className="text-foreground text-xl font-bold">
-          Slider Style Overrides
-        </Text>
-
-        {/* Example 1: Standard with props */}
-        <RangeSlider
-          minBoundary={0}
-          maxBoundary={100}
-          minInitValue={20}
-          maxInitValue={80}
-          onValueChange={(min, max) => console.log(`Range: ${min} - ${max}`)}
-        />
-
-        {/* Example 2: Custom classes */}
-        <RangeSlider
-          minBoundary={0}
-          maxBoundary={100}
-          minInitValue={30}
-          maxInitValue={70}
-          classes={{
-            track: "h-2 rounded-full",
-            minLabel: "text-lg font-bold",
-            maxLabel: "text-lg font-bold",
-          }}
-          onValueChange={(min, max) => console.log(`Custom: ${min} - ${max}`)}
-        />
-
-        {/* Example 3: Inline styles */}
-        <RangeSlider
-          minBoundary={0}
-          maxBoundary={100}
-          minInitValue={25}
-          maxInitValue={75}
-          styles={{
-            track: { height: 8, opacity: 0.8, backgroundColor: "#f87171" },
-            minLabel: { fontSize: 16, fontWeight: "bold", color: "green" },
-            maxLabel: { fontSize: 16, fontWeight: "bold" },
-          }}
-          onValueChange={(min, max) => console.log(`Styled: ${min} - ${max}`)}
-        />
-
-      <Link href="/storybook">Open Storybook</Link>
-
-      </View>
+        <Link href="/storybook">Open Storybook</Link>
     </ScrollView>
   );
 }
