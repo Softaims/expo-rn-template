@@ -1,36 +1,26 @@
 import { CloseCircleIcon, EnvelopeIcon, EyeCloseIcon, EyeOpenIcon, LockIcon, MagnifierIcon, PaperClipIcon, PlaneIcon } from "@/assets/icons";
 import { cn } from "@/lib/utils";
 import { useCallback, useState } from "react";
-import { TextInput as RNTextInput, TextInputProps, Text, View, Pressable } from "react-native";
-
-const ICONS: Record<string, React.ReactNode | null> = {
-    'default': null,
-    'email': <EnvelopeIcon />,
-    'password': <LockIcon />,
-    'eye-open': <EyeOpenIcon />,
-    'eye-close': <EyeCloseIcon />,
-    'number': null,
-    'tel': null,
-    'url': null,
-    'search': <MagnifierIcon />,
-    'close': <CloseCircleIcon />,
-    'textarea': null,
-    'paper-clip': <PaperClipIcon />,
-    'plane': <PlaneIcon />,
-}
+import { TextInput as RNTextInput, TextInputProps, View, Pressable, Text, TextStyle, ViewStyle } from "react-native";
 
 type InputType = 'default' | 'email' | 'password' | 'number' | 'tel' | 'search' | 'textarea' | 'chat';
 
 export interface InputProps extends TextInputProps {
     type?: InputType;
 
-    value?: string;
     label?: string;
+    labelStyles?: string | TextStyle;
+
+    inputContainerStyles?: string | ViewStyle;
+    inputStyles?: string | TextStyle;
 
     leftIcon?: React.ReactNode;
     rightIcon?: React.ReactNode;
     leftIconColor?: string;
     rightIconColor?: string;
+
+    borderActiveColor?: string;
+    borderInactiveColor?: string;
 
     onRightIconPress?: () => void;
 }
@@ -44,44 +34,50 @@ export function TextInput(props: InputProps) {
 
     switch (props.type) {
         case 'email':
-            leftIcon = ICONS['email'];
+            leftIcon = props.leftIcon || <EnvelopeIcon fill={props.leftIconColor} />;
             break;
         case 'password':
-            leftIcon = ICONS['password'];
-            rightIcon = isPasswordVisible ? ICONS['eye-close'] : ICONS['eye-open'];
+            leftIcon = props.leftIcon || <LockIcon fill={props.leftIconColor} />;
+            rightIcon = isPasswordVisible ? <EyeCloseIcon /> : <EyeOpenIcon />;
             break;
         case 'search':
-            leftIcon = ICONS['search'];
-            rightIcon = ICONS['close'];
+            leftIcon = props.leftIcon || <MagnifierIcon fill={props.leftIconColor} />;
+            rightIcon = props.value && props.value.length > 0 ? <CloseCircleIcon /> : null;
             break;
         case 'chat':
-            leftIcon = ICONS['paper-clip'];
-            rightIcon = ICONS['plane'];
+            leftIcon = props.leftIcon || <PaperClipIcon stroke={props.leftIconColor} />;
+            rightIcon = props.value && props.value.length > 0 ? <PlaneIcon /> : <PlaneIcon fill={"#26291F80"} />;
             break;
         default:
+            leftIcon = props.leftIcon || null;
+            rightIcon = props.rightIcon || null;
             break;
     }
 
     const handleRightIconPress = useCallback(() => {
         if (props.type === 'password') {
             setIsPasswordVisible(prev => !prev);
-            return;
+        } else if (props.type === 'search') {
+            props.onChangeText?.('');
+        } else {
+            props.onRightIconPress?.();
         }
-        if (!props.onRightIconPress) return;
-        props.onRightIconPress();
-    }, [props.onRightIconPress, props.type]);
+    }, [props.type, props.onChangeText, props.onRightIconPress]);
 
     return (
         <View>
-            {props.label && <Text className="">{props.label}</Text>}
-            <View>
-                {leftIcon && leftIcon}
-                <RNTextInput
-                    onFocus={() => setIsFocused(true)}
-                    onBlur={() => setIsFocused(false)}
-                    secureTextEntry={props.type === 'password' && !isPasswordVisible}
-                    {...props}
-                />
+            {props.label && <Text className={cn("text-[16px] mb-[12px] font-bold text-primary", props.labelStyles)}>{props.label}</Text>}
+            <View className={cn("flex-row border-[1.2px] border-primary justify-between items-center px-[12px] rounded-[10px] gap-[5px]", isFocused ? props.borderActiveColor || "border-primary" : props.borderInactiveColor || "border-border", props.inputContainerStyles)}>
+                <View className="flex-row items-center gap-[5px] flex-1">
+                    {leftIcon && leftIcon}
+                    <RNTextInput
+                        onFocus={() => setIsFocused(true)}
+                        onBlur={() => setIsFocused(false)}
+                        secureTextEntry={props.type === 'password' && !isPasswordVisible}
+                        className={cn("flex-1 py-[12px]", props.inputStyles)}
+                        {...props}
+                    />
+                </View>
                 {
                     rightIcon &&
                     <Pressable

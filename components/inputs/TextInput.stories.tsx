@@ -46,6 +46,7 @@ export const NumberField: Story = {
     type: 'number',
     label: 'Number Field',
     placeholder: 'Enter your number',
+    keyboardType:'numeric',
   },
 };
 
@@ -54,5 +55,13 @@ export const SearchField: Story = {
     type: 'search',
     label: 'Search Field',
     placeholder: 'Search',
+  },
+};
+
+export const ChatField: Story = {
+  args: {
+    type: 'chat',
+    label: 'Chat Field',
+    placeholder: 'Enter your message',
   },
 };

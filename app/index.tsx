@@ -7,8 +7,11 @@ import { RadioButton } from "@/components/radio";
 import { Toggle } from "@/components/toggle";
 import RangeSlider from "@/components/slider/Slider";
 import "../global.css";
+import { TextInput } from "@/components";
+import { useState } from "react";
 
 export default function Index() {
+  const [search, setSearch] = useState('');
   const basicTabs = [
     { label: "Details", value: "details" },
     { label: "Products", value: "products" },
@@ -261,7 +264,17 @@ export default function Index() {
           onValueChange={(min, max) => console.log(`Styled: ${min} - ${max}`)}
         />
 
-      <Link href="/storybook">Open Storybook</Link>
+        <TextInput
+          label="Chat"
+          type="chat" value={search}
+          onChangeText={setSearch}
+          placeholder="Enter your message"
+          // inputStyles={"text-red-500"}
+          
+        />
+
+
+        <Link href="/storybook">Open Storybook</Link>
 
       </View>
     </ScrollView>
