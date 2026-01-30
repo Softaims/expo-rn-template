@@ -1,11 +1,12 @@
 import { Link } from "expo-router";
 import { View, ScrollView } from "react-native";
-import { Button, Tabs, Checkbox, RadioButton, Toggle, Dropdown, Text } from "@/components";
+import { Button, Tabs, Checkbox, RadioButton, Toggle, Dropdown, Text, TextInput } from "@/components";
 import { ChevronDownIcon, CloseIcon, ArrowRightIcon, SendIcon } from "@/assets/icons";
 import { useState } from "react";
 import "../global.css";
 
 export default function Index() {
+  const [search, setSearch] = useState('');
   const basicTabs = [
     { label: "Details", value: "details" },
     { label: "Products", value: "products" },
@@ -406,20 +407,24 @@ export default function Index() {
             },
           }}
         />
+      </View>
 
-        {/* Example 12: With Callbacks */}
-        <Dropdown
-          placeholder="With Open/Close Callbacks"
-          options={dropdownOptions}
-          value={dropdown1}
-          onChange={(val) => setDropdown1(val as string)}
-          onOpen={() => console.log("Dropdown opened")}
-          onClose={() => console.log("Dropdown closed")}
-          chevronIcon={<ChevronDownIcon width={16} height={16} color="#666" />}
+      {/* Section: TextInput Examples */}
+      <View style={{ gap: 16 }}>
+        <Text className="text-foreground text-xl font-bold">
+          TextInput Examples
+        </Text>
+
+        <TextInput
+          label="Chat"
+          type="chat"
+          value={search}
+          onChangeText={setSearch}
+          placeholder="Enter your message"
         />
       </View>
 
-        <Link href="/storybook">Open Storybook</Link>
+      <Link href="/storybook">Open Storybook</Link>
     </ScrollView>
   );
 }
