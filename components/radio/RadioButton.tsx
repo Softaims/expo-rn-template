@@ -1,5 +1,6 @@
-import { Pressable, View, Text } from "react-native";
+import { Pressable, View } from "react-native";
 import { cn } from "@/lib/utils";
+import { Text } from "@/components/text/Text";
 
 const radioVariants = {
   container: "flex-row items-center gap-3",

@@ -1,5 +1,7 @@
-import { Pressable, PressableProps, Text, View } from "react-native";
+import { Pressable, PressableProps, View } from "react-native";
 import { cn } from "@/lib/utils";
+import { Text } from "@/components/text/Text";
+import { fontFamilies } from "@/hooks/useFonts";
 
 const buttonVariants = {
   base: "rounded-lg flex-row items-center justify-center",
@@ -19,16 +21,16 @@ const buttonVariants = {
 
 const textVariants = {
   variant: {
-    primary: "text-primary-foreground font-semibold",
-    secondary: "text-primary font-semibold",
-    disabled: "text-muted-foreground font-semibold",
-    actioned: "text-accent-foreground font-semibold",
-    text: "text-primary font-semibold",
+    primary: "text-primary-foreground",
+    secondary: "text-primary",
+    disabled: "text-muted-foreground",
+    actioned: "text-accent-foreground",
+    text: "text-primary",
   },
   size: {
     lg: "text-lg",
     md: "text-base",
-    sm: "text-sm",
+    sm: "text-[15px]",
   },
 } as const;
 
@@ -74,6 +76,7 @@ export function Button({
             textVariants.variant[effectiveVariant],
             textVariants.size[size]
           )}
+          style={{ fontFamily: fontFamilies.semibold }}
         >
           {title}
         </Text>

@@ -1,5 +1,6 @@
-import { Pressable, View, Text } from "react-native";
+import { Pressable, View } from "react-native";
 import { cn } from "@/lib/utils";
+import { Text } from "@/components/text/Text";
 import { useState } from "react";
 
 const checkboxVariants = {

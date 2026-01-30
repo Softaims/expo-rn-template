@@ -1,5 +1,7 @@
-import { Pressable, Text, View } from "react-native";
+import { Pressable, View } from "react-native";
 import { cn } from "@/lib/utils";
+import { Text } from "@/components/text/Text";
+import { fontFamilies } from "@/hooks/useFonts";
 import { useState } from "react";
 
 export type TabItem = {
@@ -17,7 +19,7 @@ const tabVariants = {
       inactive: "border-transparent",
     },
     text: {
-      base: "font-semibold",
+      base: "",
       active: "text-foreground",
       inactive: "text-muted-foreground",
     },
@@ -30,7 +32,7 @@ const tabVariants = {
       inactive: "bg-muted",
     },
     text: {
-      base: "font-semibold",
+      base: "",
       active: "text-primary-foreground",
       inactive: "text-muted-foreground",
     },
@@ -43,7 +45,7 @@ const tabVariants = {
       inactive: "bg-muted",
     },
     text: {
-      base: "font-semibold",
+      base: "",
       active: "text-primary-foreground",
       inactive: "text-muted-foreground",
     },
@@ -56,7 +58,7 @@ const tabVariants = {
       inactive: "bg-muted",
     },
     text: {
-      base: "font-semibold",
+      base: "",
       active: "text-primary-foreground",
       inactive: "text-muted-foreground",
     },
@@ -69,7 +71,7 @@ const tabVariants = {
       inactive: "border-transparent",
     },
     text: {
-      base: "font-semibold",
+      base: "",
       active: "text-foreground",
       inactive: "text-muted-foreground",
     },
@@ -119,6 +121,7 @@ export function Tabs({
                 styles.text.base,
                 isActive ? styles.text.active : styles.text.inactive
               )}
+              style={{ fontFamily: fontFamilies.semibold }}
             >
               {tab.label}
             </Text>
