@@ -1,5 +1,18 @@
-import { Pressable, PressableProps, Text, View } from "react-native";
+import { Pressable, PressableProps, View, ViewStyle, TextStyle } from "react-native";
 import { cn } from "@/lib/utils";
+import { Text } from "@/components/text/Text";
+import { fontFamilies } from "@/hooks/useFonts";
+import { getElementClasses } from "@/lib/component-styles";
+
+// Helper to get view style safely
+const getViewStyle = (styles: any, key: string): ViewStyle | undefined => {
+  return styles?.[key] as ViewStyle | undefined;
+};
+
+// Helper to get text style safely
+const getTextStyle = (styles: any, key: string): TextStyle | undefined => {
+  return styles?.[key] as TextStyle | undefined;
+};
 
 const buttonVariants = {
   base: "rounded-lg flex-row items-center justify-center",
@@ -19,27 +32,37 @@ const buttonVariants = {
 
 const textVariants = {
   variant: {
-    primary: "text-primary-foreground font-semibold",
-    secondary: "text-primary font-semibold",
-    disabled: "text-muted-foreground font-semibold",
-    actioned: "text-accent-foreground font-semibold",
-    text: "text-primary font-semibold",
+    primary: "text-primary-foreground",
+    secondary: "text-primary",
+    disabled: "text-muted-foreground",
+    actioned: "text-accent-foreground",
+    text: "text-primary",
   },
   size: {
     lg: "text-lg",
     md: "text-base",
-    sm: "text-sm",
+    sm: "text-[15px]",
   },
 } as const;
 
-export interface ButtonProps extends Omit<PressableProps, "onPress"> {
+type ButtonElements = "container" | "innerWrapper" | "text" | "iconWrapper";
+
+export interface ButtonProps extends Omit<PressableProps, "onPress" | "style"> {
   variant?: keyof typeof buttonVariants.variant;
   size?: keyof typeof buttonVariants.size;
   className?: string;
+  style?: ViewStyle;
   title: string;
   icon?: React.ReactNode;
   iconPosition?: "left" | "right";
   onPress?: () => void;
+  classes?: Partial<Record<ButtonElements, string>>;
+  styles?: {
+    container?: ViewStyle;
+    innerWrapper?: ViewStyle;
+    text?: TextStyle;
+    iconWrapper?: ViewStyle;
+  };
 }
 
 export function Button({
@@ -47,10 +70,13 @@ export function Button({
   size = "md",
   disabled,
   className,
+  style,
   title,
   icon,
   iconPosition = "left",
   onPress,
+  classes,
+  styles,
   ...props
 }: ButtonProps) {
   const effectiveVariant = disabled ? "disabled" : variant;
@@ -58,26 +84,60 @@ export function Button({
   return (
     <Pressable
       disabled={disabled}
-      className={cn(
-        buttonVariants.base,
-        buttonVariants.variant[effectiveVariant],
-        buttonVariants.size[size],
-        className
+      className={getElementClasses(
+        classes,
+        "container",
+        cn(
+          buttonVariants.base,
+          buttonVariants.variant[effectiveVariant],
+          buttonVariants.size[size],
+          className
+        )
       )}
+      style={[style, getViewStyle(styles, "container")]}
       onPress={onPress}
       {...props}
     >
-      <View className="flex-row items-center justify-center gap-2">
-        {icon && iconPosition === "left" && <View>{icon}</View>}
+      <View
+        className={getElementClasses(
+          classes,
+          "innerWrapper",
+          "flex-row items-center justify-center gap-2"
+        )}
+        style={getViewStyle(styles, "innerWrapper")}
+      >
+        {icon && iconPosition === "left" && (
+          <View
+            className={getElementClasses(classes, "iconWrapper", "")}
+            style={getViewStyle(styles, "iconWrapper")}
+          >
+            {icon}
+          </View>
+        )}
         <Text
-          className={cn(
-            textVariants.variant[effectiveVariant],
-            textVariants.size[size]
+          className={getElementClasses(
+            classes,
+            "text",
+            cn(
+              textVariants.variant[effectiveVariant],
+              textVariants.size[size]
+            )
           )}
+          style={[
+            { fontFamily: fontFamilies.semibold },
+            getTextStyle(styles, "text"),
+          ]}
         >
           {title}
         </Text>
-        {icon && iconPosition === "right" && <View>{icon}</View>}
+        {icon && iconPosition === "right" && (
+          <View
+            className={getElementClasses(classes, "iconWrapper", "")}
+            style={getViewStyle(styles, "iconWrapper")}
+          >
+            {icon}
+          </View>
+        )}
       </View>
     </Pressable>
   );

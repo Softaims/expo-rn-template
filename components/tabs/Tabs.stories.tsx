@@ -78,69 +78,69 @@ export const FilledDetails: Story = {
   },
 };
 
-export const FilledProducts: Story = {
-  args: {
-    variant: "filled",
-    tabs: basicTabs,
-    defaultValue: "products",
-    onValueChange: (value) => console.log("Tab changed to:", value),
-  },
-};
+// export const FilledProducts: Story = {
+//   args: {
+//     variant: "filled",
+//     tabs: basicTabs,
+//     defaultValue: "products",
+//     onValueChange: (value) => console.log("Tab changed to:", value),
+//   },
+// };
 
-export const FilledOrders: Story = {
-  args: {
-    variant: "filled",
-    tabs: basicTabs,
-    defaultValue: "orders",
-    onValueChange: (value) => console.log("Tab changed to:", value),
-  },
-};
+// export const FilledOrders: Story = {
+//   args: {
+//     variant: "filled",
+//     tabs: basicTabs,
+//     defaultValue: "orders",
+//     onValueChange: (value) => console.log("Tab changed to:", value),
+//   },
+// };
 
-export const FilledTeam: Story = {
-  args: {
-    variant: "filled",
-    tabs: basicTabs,
-    defaultValue: "team",
-    onValueChange: (value) => console.log("Tab changed to:", value),
-  },
-};
+// export const FilledTeam: Story = {
+//   args: {
+//     variant: "filled",
+//     tabs: basicTabs,
+//     defaultValue: "team",
+//     onValueChange: (value) => console.log("Tab changed to:", value),
+//   },
+// };
 
 // Variant 3: Filled Rounded
-export const FilledRoundedDetails: Story = {
-  args: {
-    variant: "filled-rounded",
-    tabs: basicTabs,
-    defaultValue: "details",
-    onValueChange: (value) => console.log("Tab changed to:", value),
-  },
-};
+// export const FilledRoundedDetails: Story = {
+//   args: {
+//     variant: "filled-rounded",
+//     tabs: basicTabs,
+//     defaultValue: "details",
+//     onValueChange: (value) => console.log("Tab changed to:", value),
+//   },
+// };
 
-export const FilledRoundedProducts: Story = {
-  args: {
-    variant: "filled-rounded",
-    tabs: basicTabs,
-    defaultValue: "products",
-    onValueChange: (value) => console.log("Tab changed to:", value),
-  },
-};
+// export const FilledRoundedProducts: Story = {
+//   args: {
+//     variant: "filled-rounded",
+//     tabs: basicTabs,
+//     defaultValue: "products",
+//     onValueChange: (value) => console.log("Tab changed to:", value),
+//   },
+// };
 
-export const FilledRoundedOrders: Story = {
-  args: {
-    variant: "filled-rounded",
-    tabs: basicTabs,
-    defaultValue: "orders",
-    onValueChange: (value) => console.log("Tab changed to:", value),
-  },
-};
+// export const FilledRoundedOrders: Story = {
+//   args: {
+//     variant: "filled-rounded",
+//     tabs: basicTabs,
+//     defaultValue: "orders",
+//     onValueChange: (value) => console.log("Tab changed to:", value),
+//   },
+// };
 
-export const FilledRoundedTeam: Story = {
-  args: {
-    variant: "filled-rounded",
-    tabs: basicTabs,
-    defaultValue: "team",
-    onValueChange: (value) => console.log("Tab changed to:", value),
-  },
-};
+// export const FilledRoundedTeam: Story = {
+//   args: {
+//     variant: "filled-rounded",
+//     tabs: basicTabs,
+//     defaultValue: "team",
+//     onValueChange: (value) => console.log("Tab changed to:", value),
+//   },
+// };
 
 // Variant 4: Pill
 export const PillDetails: Story = {
@@ -152,32 +152,32 @@ export const PillDetails: Story = {
   },
 };
 
-export const PillProducts: Story = {
-  args: {
-    variant: "pill",
-    tabs: basicTabs,
-    defaultValue: "products",
-    onValueChange: (value) => console.log("Tab changed to:", value),
-  },
-};
+// export const PillProducts: Story = {
+//   args: {
+//     variant: "pill",
+//     tabs: basicTabs,
+//     defaultValue: "products",
+//     onValueChange: (value) => console.log("Tab changed to:", value),
+//   },
+// };
 
-export const PillOrders: Story = {
-  args: {
-    variant: "pill",
-    tabs: basicTabs,
-    defaultValue: "orders",
-    onValueChange: (value) => console.log("Tab changed to:", value),
-  },
-};
+// export const PillOrders: Story = {
+//   args: {
+//     variant: "pill",
+//     tabs: basicTabs,
+//     defaultValue: "orders",
+//     onValueChange: (value) => console.log("Tab changed to:", value),
+//   },
+// };
 
-export const PillTeam: Story = {
-  args: {
-    variant: "pill",
-    tabs: basicTabs,
-    defaultValue: "team",
-    onValueChange: (value) => console.log("Tab changed to:", value),
-  },
-};
+// export const PillTeam: Story = {
+//   args: {
+//     variant: "pill",
+//     tabs: basicTabs,
+//     defaultValue: "team",
+//     onValueChange: (value) => console.log("Tab changed to:", value),
+//   },
+// };
 
 // Variant 5: Icon Tabs
 export const IconPosts: Story = {
