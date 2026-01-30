@@ -1,18 +1,63 @@
 import React from "react";
-import { View, PanResponder, Animated } from "react-native";
+import { View, PanResponder, Animated, ViewStyle, TextStyle } from "react-native";
 import { Text } from "@/components/text/Text";
+import { getElementClasses, getElementTextStyle } from "@/lib/component-styles";
 
-export default function RangeSlider() {
-  // ------------------ OPTIONS ------------------------ //
-  // (Use props._VALUE_ in this section if needed)
-  const minBoundary = 0;
-  const maxBoundary = 99;
-  const min_initVal = 12;
-  const max_initVal = 88;
-  // Next line is the position's difference of min slider and max slider
-  // To avoid overlap and blocking at the maximum boundary value
-  // Keep between 0.10 and 0.40 for best user experience
-  const manualOffsetBetweenSlider = 0.1;
+// Helper to get view style safely
+const getViewStyle = (styles: any, key: string): ViewStyle | undefined => {
+  return styles?.[key] as ViewStyle | undefined;
+};
+
+type SliderElements =
+  | "container"
+  | "sliderContainer"
+  | "track"
+  | "minSlider"
+  | "maxSlider"
+  | "minLine"
+  | "maxLine"
+  | "minLabel"
+  | "maxLabel"
+  | "labelContainer";
+
+export interface RangeSliderProps {
+  minBoundary?: number;
+  maxBoundary?: number;
+  minInitValue?: number;
+  maxInitValue?: number;
+  manualOffsetBetweenSlider?: number;
+  onValueChange?: (minValue: number, maxValue: number) => void;
+  className?: string;
+  style?: ViewStyle;
+  classes?: Partial<Record<SliderElements, string>>;
+  styles?: {
+    container?: ViewStyle;
+    sliderContainer?: ViewStyle;
+    track?: ViewStyle;
+    minSlider?: ViewStyle;
+    maxSlider?: ViewStyle;
+    minLine?: ViewStyle;
+    maxLine?: ViewStyle;
+    minLabel?: TextStyle;
+    maxLabel?: TextStyle;
+    labelContainer?: ViewStyle;
+  };
+}
+
+export default function RangeSlider({
+  minBoundary = 0,
+  maxBoundary = 99,
+  minInitValue = 12,
+  maxInitValue = 88,
+  manualOffsetBetweenSlider = 0.1,
+  onValueChange,
+  className,
+  style,
+  classes,
+  styles,
+}: RangeSliderProps) {
+  const min_initVal = minInitValue;
+  const max_initVal = maxInitValue;
 
   // ----------------- Common ----------------------- //
   const [forceRender, setForceRender] = React.useState(0);
@@ -132,6 +177,11 @@ export default function RangeSlider() {
     );
     setForceRender(newVal); // Update the state so the render function is called (and elements are updated on screen)
     state.currentVal = newVal - state.initOffSet - state.sliderWidth / 2;
+
+    // Call onValueChange callback with both slider values
+    if (onValueChange) {
+      onValueChange(min_animState.displayVal, max_animState.displayVal);
+    }
   };
 
   // ----------------- Min slider ----------------------- //
@@ -216,40 +266,47 @@ export default function RangeSlider() {
   const min_getSlider = () => {
     return (
       <Animated.View
-        className="items-center justify-center h-full aspect-square absolute -top-[5px] flex-row rounded-full overflow-visible"
-        style={{
-          transform: [
-            {
-              translateX: min_pan.x.interpolate({
-                inputRange: [
-                  Math.min(
-                    min_minBoundaryPosition,
-                    min_effectiveMaxBoundaryPosition,
-                  ),
-                  Math.max(
-                    min_minBoundaryPosition,
-                    min_effectiveMaxBoundaryPosition,
-                  ),
-                ],
-                outputRange: [
-                  Math.min(
-                    min_minBoundaryPosition,
-                    min_effectiveMaxBoundaryPosition,
-                  ),
-                  Math.max(
-                    min_minBoundaryPosition,
-                    min_effectiveMaxBoundaryPosition,
-                  ),
-                ],
-                extrapolate: "clamp",
-              }),
-            },
-          ],
-          left:
-            sliderCenter +
-            min_initOffset -
-            sliderHeight * manualOffsetBetweenSlider,
-        }}
+        className={getElementClasses(
+          classes,
+          "minSlider",
+          "items-center justify-center h-full aspect-square absolute -top-[5px] flex-row rounded-full overflow-visible"
+        )}
+        style={[
+          {
+            transform: [
+              {
+                translateX: min_pan.x.interpolate({
+                  inputRange: [
+                    Math.min(
+                      min_minBoundaryPosition,
+                      min_effectiveMaxBoundaryPosition,
+                    ),
+                    Math.max(
+                      min_minBoundaryPosition,
+                      min_effectiveMaxBoundaryPosition,
+                    ),
+                  ],
+                  outputRange: [
+                    Math.min(
+                      min_minBoundaryPosition,
+                      min_effectiveMaxBoundaryPosition,
+                    ),
+                    Math.max(
+                      min_minBoundaryPosition,
+                      min_effectiveMaxBoundaryPosition,
+                    ),
+                  ],
+                  extrapolate: "clamp",
+                }),
+              },
+            ],
+            left:
+              sliderCenter +
+              min_initOffset -
+              sliderHeight * manualOffsetBetweenSlider,
+          },
+          getViewStyle(styles, "minSlider"),
+        ]}
         {...min_panResponder.panHandlers}
       >
         <View className="shadow-md overflow-visible items-center justify-center flex-row aspect-square bg-foreground rounded-full border border-border">
@@ -264,48 +321,55 @@ export default function RangeSlider() {
   const min_getLine = () => {
     return (
       <Animated.View
-        className="h-full w-full absolute bg-muted"
-        style={{
-          transform: [
-            {
-              translateX: min_pan.x.interpolate({
-                inputRange: [
-                  Math.min(
-                    min_minBoundaryPosition,
-                    min_effectiveMaxBoundaryPosition,
-                  ),
-                  Math.max(
-                    min_minBoundaryPosition,
-                    min_effectiveMaxBoundaryPosition,
-                  ),
-                ],
-                outputRange: [
-                  Math.min(
-                    min_minBoundaryPosition +
-                      min_initOffset -
-                      sliderWidth / 2 -
-                      sliderHeight * manualOffsetBetweenSlider,
-                    min_effectiveMaxBoundaryPosition +
-                      min_initOffset -
-                      sliderWidth / 2 -
-                      sliderHeight * manualOffsetBetweenSlider,
-                  ),
-                  Math.max(
-                    min_minBoundaryPosition +
-                      min_initOffset -
-                      sliderWidth / 2 -
-                      sliderHeight * manualOffsetBetweenSlider,
-                    min_effectiveMaxBoundaryPosition +
-                      min_initOffset -
-                      sliderWidth / 2 -
-                      sliderHeight * manualOffsetBetweenSlider,
-                  ),
-                ],
-                extrapolate: "clamp",
-              }),
-            },
-          ],
-        }}
+        className={getElementClasses(
+          classes,
+          "minLine",
+          "h-full w-full absolute bg-muted"
+        )}
+        style={[
+          {
+            transform: [
+              {
+                translateX: min_pan.x.interpolate({
+                  inputRange: [
+                    Math.min(
+                      min_minBoundaryPosition,
+                      min_effectiveMaxBoundaryPosition,
+                    ),
+                    Math.max(
+                      min_minBoundaryPosition,
+                      min_effectiveMaxBoundaryPosition,
+                    ),
+                  ],
+                  outputRange: [
+                    Math.min(
+                      min_minBoundaryPosition +
+                        min_initOffset -
+                        sliderWidth / 2 -
+                        sliderHeight * manualOffsetBetweenSlider,
+                      min_effectiveMaxBoundaryPosition +
+                        min_initOffset -
+                        sliderWidth / 2 -
+                        sliderHeight * manualOffsetBetweenSlider,
+                    ),
+                    Math.max(
+                      min_minBoundaryPosition +
+                        min_initOffset -
+                        sliderWidth / 2 -
+                        sliderHeight * manualOffsetBetweenSlider,
+                      min_effectiveMaxBoundaryPosition +
+                        min_initOffset -
+                        sliderWidth / 2 -
+                        sliderHeight * manualOffsetBetweenSlider,
+                    ),
+                  ],
+                  extrapolate: "clamp",
+                }),
+              },
+            ],
+          },
+          getViewStyle(styles, "minLine"),
+        ]}
       />
     );
   };
@@ -379,40 +443,47 @@ export default function RangeSlider() {
   const max_getSlider = () => {
     return (
       <Animated.View
-        className="items-center justify-center h-full aspect-square absolute -top-[5px] flex-row rounded-full overflow-visible"
-        style={{
-          transform: [
-            {
-              translateX: max_pan.x.interpolate({
-                inputRange: [
-                  Math.min(
-                    max_effectiveMinBoundaryPosition,
-                    max_maxBoundaryPosition,
-                  ),
-                  Math.max(
-                    max_effectiveMinBoundaryPosition,
-                    max_maxBoundaryPosition,
-                  ),
-                ],
-                outputRange: [
-                  Math.min(
-                    max_effectiveMinBoundaryPosition,
-                    max_maxBoundaryPosition,
-                  ),
-                  Math.max(
-                    max_effectiveMinBoundaryPosition,
-                    max_maxBoundaryPosition,
-                  ),
-                ],
-                extrapolate: "clamp",
-              }),
-            },
-          ],
-          left:
-            sliderCenter +
-            max_initOffset +
-            sliderHeight * manualOffsetBetweenSlider,
-        }}
+        className={getElementClasses(
+          classes,
+          "maxSlider",
+          "items-center justify-center h-full aspect-square absolute -top-[5px] flex-row rounded-full overflow-visible"
+        )}
+        style={[
+          {
+            transform: [
+              {
+                translateX: max_pan.x.interpolate({
+                  inputRange: [
+                    Math.min(
+                      max_effectiveMinBoundaryPosition,
+                      max_maxBoundaryPosition,
+                    ),
+                    Math.max(
+                      max_effectiveMinBoundaryPosition,
+                      max_maxBoundaryPosition,
+                    ),
+                  ],
+                  outputRange: [
+                    Math.min(
+                      max_effectiveMinBoundaryPosition,
+                      max_maxBoundaryPosition,
+                    ),
+                    Math.max(
+                      max_effectiveMinBoundaryPosition,
+                      max_maxBoundaryPosition,
+                    ),
+                  ],
+                  extrapolate: "clamp",
+                }),
+              },
+            ],
+            left:
+              sliderCenter +
+              max_initOffset +
+              sliderHeight * manualOffsetBetweenSlider,
+          },
+          getViewStyle(styles, "maxSlider"),
+        ]}
         {...max_panResponder.panHandlers}
       >
         <View className="shadow-md overflow-visible items-center justify-center flex-row aspect-square bg-foreground rounded-full border border-border">
@@ -427,64 +498,99 @@ export default function RangeSlider() {
   const max_getLine = () => {
     return (
       <Animated.View
-        className="h-full w-full absolute bg-muted"
-        style={{
-          transform: [
-            {
-              translateX: max_pan.x.interpolate({
-                inputRange: [
-                  Math.min(
-                    max_effectiveMinBoundaryPosition,
-                    max_maxBoundaryPosition,
-                  ),
-                  Math.max(
-                    max_effectiveMinBoundaryPosition,
-                    max_maxBoundaryPosition,
-                  ),
-                ],
-                outputRange: [
-                  Math.min(
-                    max_effectiveMinBoundaryPosition +
-                      sliderWidth / 2 +
-                      max_initOffset +
-                      sliderHeight * manualOffsetBetweenSlider,
-                    max_maxBoundaryPosition +
-                      sliderWidth / 2 +
-                      max_initOffset +
-                      sliderHeight * manualOffsetBetweenSlider,
-                  ),
-                  Math.max(
-                    max_effectiveMinBoundaryPosition +
-                      sliderWidth / 2 +
-                      max_initOffset +
-                      sliderHeight * manualOffsetBetweenSlider,
-                    max_maxBoundaryPosition +
-                      sliderWidth / 2 +
-                      max_initOffset +
-                      sliderHeight * manualOffsetBetweenSlider,
-                  ),
-                ],
-                extrapolate: "clamp",
-              }),
-            },
-          ],
-        }}
+        className={getElementClasses(
+          classes,
+          "maxLine",
+          "h-full w-full absolute bg-muted"
+        )}
+        style={[
+          {
+            transform: [
+              {
+                translateX: max_pan.x.interpolate({
+                  inputRange: [
+                    Math.min(
+                      max_effectiveMinBoundaryPosition,
+                      max_maxBoundaryPosition,
+                    ),
+                    Math.max(
+                      max_effectiveMinBoundaryPosition,
+                      max_maxBoundaryPosition,
+                    ),
+                  ],
+                  outputRange: [
+                    Math.min(
+                      max_effectiveMinBoundaryPosition +
+                        sliderWidth / 2 +
+                        max_initOffset +
+                        sliderHeight * manualOffsetBetweenSlider,
+                      max_maxBoundaryPosition +
+                        sliderWidth / 2 +
+                        max_initOffset +
+                        sliderHeight * manualOffsetBetweenSlider,
+                    ),
+                    Math.max(
+                      max_effectiveMinBoundaryPosition +
+                        sliderWidth / 2 +
+                        max_initOffset +
+                        sliderHeight * manualOffsetBetweenSlider,
+                      max_maxBoundaryPosition +
+                        sliderWidth / 2 +
+                        max_initOffset +
+                        sliderHeight * manualOffsetBetweenSlider,
+                    ),
+                  ],
+                  extrapolate: "clamp",
+                }),
+              },
+            ],
+          },
+          getViewStyle(styles, "maxLine"),
+        ]}
       />
     );
   };
 
   // ----------------- Render ----------------------- //
   return (
-    <View className="items-center justify-center overflow-hidden w-full aspect-[4/1]">
+    <View
+      className={getElementClasses(
+        classes,
+        "container",
+        "items-center justify-center overflow-hidden w-full aspect-[4/1]"
+      )}
+      style={[style, getViewStyle(styles, "container")]}
+    >
       <View className="items-center justify-center overflow-hidden flex-1 flex-row">
-        <View className="items-center justify-center overflow-hidden flex-1">
-          <Text className="text-[11px] text-foreground">
+        <View
+          className={getElementClasses(
+            classes,
+            "labelContainer",
+            "items-center justify-center overflow-hidden flex-1"
+          )}
+          style={getViewStyle(styles, "labelContainer")}
+        >
+          <Text
+            className={getElementClasses(
+              classes,
+              "minLabel",
+              "text-[11px] text-foreground"
+            )}
+            style={getElementTextStyle(styles, "minLabel")}
+          >
             {min_animState.displayVal}
           </Text>
         </View>
         <View
-          className="items-center justify-center overflow-hidden h-full flex-[8] overflow-visible"
-          style={{ marginHorizontal: sliderHeight * manualOffsetBetweenSlider }}
+          className={getElementClasses(
+            classes,
+            "sliderContainer",
+            "items-center justify-center overflow-hidden h-full flex-[8] overflow-visible"
+          )}
+          style={[
+            { marginHorizontal: sliderHeight * manualOffsetBetweenSlider },
+            getViewStyle(styles, "sliderContainer"),
+          ]}
           onLayout={(event) =>
             initSliders(
               event.nativeEvent.layout.height,
@@ -492,15 +598,36 @@ export default function RangeSlider() {
             )
           }
         >
-          <View className="items-center justify-center overflow-hidden h-1 w-[80%] flex-row absolute left-[10%] top-1/2 -mt-[3px] rounded-[60px] bg-foreground">
+          <View
+            className={getElementClasses(
+              classes,
+              "track",
+              "items-center justify-center overflow-hidden h-1 w-[80%] flex-row absolute left-[10%] top-1/2 -mt-[3px] rounded-[60px] bg-foreground"
+            )}
+            style={getViewStyle(styles, "track")}
+          >
             {min_getLine()}
             {max_getLine()}
           </View>
           {min_getSlider()}
           {max_getSlider()}
         </View>
-        <View className="items-center justify-center overflow-hidden flex-1">
-          <Text className="text-[11px] text-foreground">
+        <View
+          className={getElementClasses(
+            classes,
+            "labelContainer",
+            "items-center justify-center overflow-hidden flex-1"
+          )}
+          style={getViewStyle(styles, "labelContainer")}
+        >
+          <Text
+            className={getElementClasses(
+              classes,
+              "maxLabel",
+              "text-[11px] text-foreground"
+            )}
+            style={getElementTextStyle(styles, "maxLabel")}
+          >
             {max_animState.displayVal}
           </Text>
         </View>

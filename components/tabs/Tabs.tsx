@@ -1,8 +1,14 @@
-import { Pressable, View } from "react-native";
+import { Pressable, View, ViewStyle, TextStyle } from "react-native";
 import { cn } from "@/lib/utils";
 import { Text } from "@/components/text/Text";
 import { fontFamilies } from "@/hooks/useFonts";
 import { useState } from "react";
+import { getElementClasses, getElementTextStyle } from "@/lib/component-styles";
+
+// Helper to get view style safely
+const getViewStyle = (styles: any, key: string): ViewStyle | undefined => {
+  return styles?.[key] as ViewStyle | undefined;
+};
 
 export type TabItem = {
   label: string;
@@ -78,12 +84,22 @@ const tabVariants = {
   },
 } as const;
 
+type TabsElements = "container" | "tab" | "tabIconWrapper" | "tabText";
+
 export interface TabsProps {
   variant?: keyof typeof tabVariants;
   tabs: TabItem[];
   defaultValue?: string;
   onValueChange?: (value: string) => void;
   className?: string;
+  style?: ViewStyle;
+  classes?: Partial<Record<TabsElements, string>>;
+  styles?: {
+    container?: ViewStyle;
+    tab?: ViewStyle;
+    tabIconWrapper?: ViewStyle;
+    tabText?: TextStyle;
+  };
 }
 
 export function Tabs({
@@ -92,6 +108,9 @@ export function Tabs({
   defaultValue,
   onValueChange,
   className,
+  style,
+  classes,
+  styles,
 }: TabsProps) {
   const [activeTab, setActiveTab] = useState(defaultValue || tabs[0]?.value);
 
@@ -100,28 +119,54 @@ export function Tabs({
     onValueChange?.(value);
   };
 
-  const styles = tabVariants[variant];
+  const variantStyles = tabVariants[variant];
 
   return (
-    <View className={cn(styles.container, className)}>
+    <View
+      className={getElementClasses(
+        classes,
+        "container",
+        cn(variantStyles.container, className)
+      )}
+      style={[style, getViewStyle(styles, "container")]}
+    >
       {tabs.map((tab) => {
         const isActive = activeTab === tab.value;
         return (
           <Pressable
             key={tab.value}
             onPress={() => handleTabPress(tab.value)}
-            className={cn(
-              styles.tab.base,
-              isActive ? styles.tab.active : styles.tab.inactive
+            className={getElementClasses(
+              classes,
+              "tab",
+              cn(
+                variantStyles.tab.base,
+                isActive ? variantStyles.tab.active : variantStyles.tab.inactive
+              )
             )}
+            style={getViewStyle(styles, "tab")}
           >
-            {tab.icon && <View>{tab.icon}</View>}
+            {tab.icon && (
+              <View
+                className={getElementClasses(classes, "tabIconWrapper", "")}
+                style={getViewStyle(styles, "tabIconWrapper")}
+              >
+                {tab.icon}
+              </View>
+            )}
             <Text
-              className={cn(
-                styles.text.base,
-                isActive ? styles.text.active : styles.text.inactive
+              className={getElementClasses(
+                classes,
+                "tabText",
+                cn(
+                  variantStyles.text.base,
+                  isActive ? variantStyles.text.active : variantStyles.text.inactive
+                )
               )}
-              style={{ fontFamily: fontFamilies.semibold }}
+              style={[
+                { fontFamily: fontFamilies.semibold },
+                getElementTextStyle(styles, "tabText"),
+              ]}
             >
               {tab.label}
             </Text>
