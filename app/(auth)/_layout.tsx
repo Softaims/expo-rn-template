@@ -1,5 +1,5 @@
 import { Stack } from 'expo-router';
-import { Button } from '@/components/buttons';
+import { Button } from '@/components';
 
 export default function AuthLayout() {
     return (

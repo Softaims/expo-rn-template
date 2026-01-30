@@ -1,10 +1,6 @@
 import { Link } from "expo-router";
 import { Text, View, ScrollView } from "react-native";
-import { Button } from "@/components/buttons";
-import { Tabs } from "@/components/tabs";
-import { Checkbox } from "@/components/checkbox";
-import { RadioButton } from "@/components/radio";
-import { Toggle } from "@/components/toggle";
+import { Button, Tabs, Checkbox, RadioButton, Toggle } from "@/components";
 import "../global.css";
 
 export default function Index() {

@@ -1,6 +1,6 @@
 import { Pressable, PressableProps, View, ViewStyle, TextStyle } from "react-native";
 import { cn } from "@/lib/utils";
-import { Text } from "@/components/text/Text";
+import { Text } from "@/components";
 import { fontFamilies } from "@/hooks/useFonts";
 import { getElementClasses } from "@/lib/component-styles";
 

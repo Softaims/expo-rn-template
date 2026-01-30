@@ -1,6 +1,6 @@
 import { Pressable, View, ViewStyle, TextStyle } from "react-native";
 import { cn } from "@/lib/utils";
-import { Text } from "@/components/text/Text";
+import { Text } from "@/components";
 import { useState } from "react";
 import { getElementClasses } from "@/lib/component-styles";
 
