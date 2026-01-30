@@ -112,29 +112,11 @@ export const BodyText4: Story = {
   },
 };
 
-export const AllVariants: Story = {
-  render: () => (
-    <View style={{ gap: 16 }}>
-      <Text variant="heading1">Heading 1 - Bold 28</Text>
-      <Text variant="heading2">Heading 2 - Bold 24</Text>
-      <Text variant="heading3">Heading 3 - Bold 22</Text>
-      <Text variant="subheading1">Subheading 1 - Semibold 20</Text>
-      <Text variant="subheading2">Subheading 2 - Bold 18</Text>
-      <Text variant="subheading3">Subheading 3 - Semibold 16</Text>
-      <Text variant="subheading4">Subheading 4 - Semibold 14</Text>
-      <Text variant="bodyText1">Body Text 1 - Medium 14</Text>
-      <Text variant="bodyText2">Body Text 2 - Medium 13</Text>
-      <Text variant="bodyText3">Body Text 3 - Medium 12</Text>
-      <Text variant="bodyText4">Body Text 4 - Medium 10</Text>
-    </View>
-  ),
-};
-
 export const WithCustomColor: Story = {
   args: {
     variant: "heading1",
     children: "Custom Color Text",
-    className: "text-primary",
+    className: "text-secondary",
   },
 };
 

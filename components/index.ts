@@ -21,3 +21,7 @@ export type { TextProps } from "./text";
 // Toggle
 export { Toggle } from "./toggle";
 export type { ToggleProps } from "./toggle";
+
+// Dropdown
+export { Dropdown, SelectedItem } from "./dropdown";
+export type { DropdownProps, DropdownOption, SelectedItemProps } from "./dropdown";

@@ -41,34 +41,6 @@ export const UnderlineDetails: Story = {
   },
 };
 
-export const UnderlineProducts: Story = {
-  args: {
-    variant: "underline",
-    tabs: basicTabs,
-    defaultValue: "products",
-    onValueChange: (value) => console.log("Tab changed to:", value),
-  },
-};
-
-export const UnderlineOrders: Story = {
-  args: {
-    variant: "underline",
-    tabs: basicTabs,
-    defaultValue: "orders",
-    onValueChange: (value) => console.log("Tab changed to:", value),
-  },
-};
-
-export const UnderlineTeam: Story = {
-  args: {
-    variant: "underline",
-    tabs: basicTabs,
-    defaultValue: "team",
-    onValueChange: (value) => console.log("Tab changed to:", value),
-  },
-};
-
-// Variant 2: Filled
 export const FilledDetails: Story = {
   args: {
     variant: "filled",
