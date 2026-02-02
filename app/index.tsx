@@ -1,13 +1,28 @@
 import { Link } from "expo-router";
 import { View, ScrollView } from "react-native";
-import { Button, Tabs, Checkbox, RadioButton, Toggle, Dropdown, Text, TextInput } from "@/components";
-import { ChevronDownIcon, CloseIcon, ArrowRightIcon, SendIcon } from "@/assets/icons";
+import {
+  Button,
+  Tabs,
+  Checkbox,
+  RadioButton,
+  Toggle,
+  Dropdown,
+  Text,
+  TextInput,
+  ProgressBar,
+} from "@/components";
+import {
+  ChevronDownIcon,
+  CloseIcon,
+  ArrowRightIcon,
+  SendIcon,
+} from "@/assets/icons";
 import { fontFamilies } from "@/hooks/useFonts";
 import { useState } from "react";
 import "../global.css";
 
 export default function Index() {
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const basicTabs = [
     { label: "Details", value: "details" },
     { label: "Products", value: "products" },
@@ -140,10 +155,7 @@ export default function Index() {
         <RadioButton label="Standard Radio" selected={true} />
 
         {/* Example 2: Custom circle */}
-        <RadioButton
-          selected
-          circleStyles="rounded-none border-0"
-        />
+        <RadioButton selected circleStyles="rounded-none border-0" />
 
         {/* Example 3: Custom styling */}
         <RadioButton
@@ -208,11 +220,7 @@ export default function Index() {
         />
 
         {/* Example 3: Pill variant with custom text */}
-        <Tabs
-          tabs={basicTabs}
-          variant="pill"
-          tabTextStyles="tracking-widest"
-        />
+        <Tabs tabs={basicTabs} variant="pill" tabTextStyles="tracking-widest" />
 
         {/* Example 4: Font Weight - Light */}
         <Tabs
@@ -229,11 +237,7 @@ export default function Index() {
         />
 
         {/* Example 6: Font Weight - Bold */}
-        <Tabs
-          tabs={basicTabs}
-          variant="pill"
-          fontFamily={fontFamilies.bold}
-        />
+        <Tabs tabs={basicTabs} variant="pill" fontFamily={fontFamilies.bold} />
 
         {/* Example 7: Font Weight - Extrabold */}
         <Tabs
@@ -279,7 +283,9 @@ export default function Index() {
           onChange={(val) => setDropdown3(val as string[])}
           multiSelect
           chevronIcon={<ChevronDownIcon width={16} height={16} color="#666" />}
-          selectedItemCloseIcon={<CloseIcon width={12} height={12} color="#666" />}
+          selectedItemCloseIcon={
+            <CloseIcon width={12} height={12} color="#666" />
+          }
         />
 
         {/* Example 4: Searchable with custom placeholder */}
@@ -301,8 +307,12 @@ export default function Index() {
           value={dropdown5}
           onChange={(val) => setDropdown5(val as string[])}
           multiSelect
-          chevronIcon={<ChevronDownIcon width={16} height={16} color="#3b82f6" />}
-          selectedItemCloseIcon={<CloseIcon width={12} height={12} color="#1e40af" />}
+          chevronIcon={
+            <ChevronDownIcon width={16} height={16} color="#3b82f6" />
+          }
+          selectedItemCloseIcon={
+            <CloseIcon width={12} height={12} color="#1e40af" />
+          }
           selectedItemContainerStyles="bg-blue-100 rounded-full px-4"
           selectedItemLabelStyles="text-blue-800 font-semibold"
           triggerStyles="border-[3px] rounded-xl"
@@ -370,7 +380,9 @@ export default function Index() {
           onChange={(val) => setDropdown5(val as string[])}
           multiSelect
           chevronIcon={<ChevronDownIcon width={16} height={16} color="#666" />}
-          selectedItemCloseIcon={<CloseIcon width={12} height={12} color="#666" />}
+          selectedItemCloseIcon={
+            <CloseIcon width={12} height={12} color="#666" />
+          }
           selectedItemContainerStyles="bg-blue-100 rounded-full px-4"
           selectedItemLabelStyles="text-blue-800 font-semibold"
         />
@@ -390,6 +402,19 @@ export default function Index() {
           placeholder="Enter your message"
         />
       </View>
+      
+      <ProgressBar
+        variant="stepperDots"
+        currentStep={3}
+        totalSteps={5}
+        labels={["Pattern", "Goal", "Users", "Success", "Resources"]}
+      />
+
+      <ProgressBar variant="barFill" progress={65} />
+
+      <ProgressBar variant="circleSteps" currentStep={2} totalSteps={5} />
+
+      <ProgressBar variant="barGroup" progress={50} currentStep={5} />
 
       <Link href="/storybook">Open Storybook</Link>
     </ScrollView>
