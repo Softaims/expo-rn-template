@@ -4,43 +4,34 @@ import { cn } from "@/lib/utils"; // Assuming you have this utility (like clsx/t
 const progressVariants = {
   base: "w-full",
   variant: {
-    // Variant 1: Classic step dots connected by lines (○ → ● → ○ ...)
     stepperDots: "flex-row items-center justify-between",
-
-    // Variant 2: Solid horizontal bars of different lengths
     barFill: "",
-
-    // Variant 3: Multiple short bars / grouped indicators (like mini progress items)
     barGroup: "flex-row items-center gap-1.5",
-
-    // Variant 4: Circle + dot hybrid (numbered or dotted steps)
     circleSteps: "flex-row items-center justify-between",
-
-    // Variant 5: Connected line with progress dots (modern minimal stepper)
     lineProgress: "flex-row items-center",
   },
 } as const;
 
-const labelVariants = {
-  variant: {
-    stepperDots: "text-xs text-muted-foreground mt-1.5",
-    barFill: "text-sm text-foreground mt-2",
-    barGroup: "text-xs text-muted-foreground",
-    circleSteps: "text-sm font-medium",
-    lineProgress: "text-sm text-muted-foreground mt-1",
-  },
-} as const;
+// const labelVariants = {
+//   variant: {
+//     stepperDots: "text-xs text-muted-foreground mt-1.5",
+//     barFill: "text-sm text-foreground mt-2",
+//     barGroup: "text-xs text-muted-foreground",
+//     circleSteps: "text-sm font-medium",
+//     lineProgress: "text-sm text-muted-foreground mt-1",
+//   },
+// } as const;
 
 export interface ProgressBarProps {
   variant?: keyof typeof progressVariants.variant;
-  progress?: number; // 0–100 for linear / fill types
-  currentStep?: number; // 1-based current step
-  totalSteps?: number; // total number of steps (for steppers)
-  labels?: string[]; // optional labels under steps (e.g. ["Pattern", "Goal", "Users", ...])
+  progress?: number;
+  currentStep?: number; 
+  totalSteps?: number;
+  labels?: string[];
   size?: "sm" | "md" | "lg";
   className?: string;
   style?: ViewStyle;
-  activeColor?: string; // override active color
+  activeColor?: string;
   inactiveColor?: string;
   showLabels?: boolean;
 }
