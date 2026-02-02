@@ -1,7 +1,7 @@
 import { View } from "react-native";
 import { Meta, StoryObj } from "@storybook/react-native";
 import { Button } from "./Button";
-import { SendIcon, ArrowRightIcon, ArrowLeftIcon } from "@/assets/icons";
+import { SendIcon, ArrowRightIcon, ArrowLeftIcon, CheckIcon } from "@/assets/icons";
 
 const meta = {
   component: Button,
@@ -30,6 +30,10 @@ const meta = {
 export default meta;
 
 type Story = StoryObj<typeof meta>;
+
+// -------------------
+// Basic Variants & Sizes
+// -------------------
 
 export const PrimaryLarge: Story = {
   args: {
@@ -76,209 +80,197 @@ export const SecondaryMedium: Story = {
   },
 };
 
-export const SecondarySmall: Story = {
+export const Disabled: Story = {
   args: {
     title: "Button",
+    variant: "primary",
+    size: "md",
+    disabled: true,
+    onPress: () => console.log("Pressed"),
+  },
+};
+
+export const Actioned: Story = {
+  args: {
+    title: "Button",
+    variant: "actioned",
+    size: "md",
+    onPress: () => console.log("Pressed"),
+  },
+};
+
+export const TextVariant: Story = {
+  args: {
+    title: "Button",
+    variant: "text",
+    size: "md",
+    onPress: () => console.log("Pressed"),
+  },
+};
+
+// -------------------
+// With Left Icons
+// -------------------
+
+export const PrimaryWithLeftIcon: Story = {
+  args: {
+    title: "Send Message",
+    variant: "primary",
+    size: "lg",
+  },
+  render: (args) => (
+    <Button
+      {...args}
+      leftIcon={<SendIcon width={20} height={20} color="#ffffff" />}
+      onPress={() => console.log("Pressed")}
+    />
+  ),
+};
+
+export const SecondaryWithLeftIcon: Story = {
+  args: {
+    title: "Go Back",
     variant: "secondary",
-    size: "sm",
-    onPress: () => console.log("Pressed"),
-  },
-};
-
-export const DisabledLarge: Story = {
-  args: {
-    title: "Button",
-    variant: "primary",
-    size: "lg",
-    disabled: true,
-    onPress: () => console.log("Pressed"),
-  },
-};
-
-export const DisabledMedium: Story = {
-  args: {
-    title: "Button",
-    variant: "primary",
     size: "md",
-    disabled: true,
-    onPress: () => console.log("Pressed"),
   },
+  render: (args) => (
+    <Button
+      {...args}
+      leftIcon={<ArrowLeftIcon width={18} height={18} color="#3b82f6" />}
+      onPress={() => console.log("Pressed")}
+    />
+  ),
 };
 
-export const DisabledSmall: Story = {
+export const SmallWithLeftIcon: Story = {
   args: {
-    title: "Button",
+    title: "Check",
     variant: "primary",
     size: "sm",
+  },
+  render: (args) => (
+    <Button
+      {...args}
+      leftIcon={<CheckIcon width={16} height={16} color="#ffffff" />}
+      onPress={() => console.log("Pressed")}
+    />
+  ),
+};
+
+// -------------------
+// With Right Icons
+// -------------------
+
+export const PrimaryWithRightIcon: Story = {
+  args: {
+    title: "Continue",
+    variant: "primary",
+    size: "lg",
+  },
+  render: (args) => (
+    <Button
+      {...args}
+      rightIcon={<ArrowRightIcon width={20} height={20} color="#ffffff" />}
+      onPress={() => console.log("Pressed")}
+    />
+  ),
+};
+
+export const SecondaryWithRightIcon: Story = {
+  args: {
+    title: "Next Step",
+    variant: "secondary",
+    size: "md",
+  },
+  render: (args) => (
+    <Button
+      {...args}
+      rightIcon={<ArrowRightIcon width={18} height={18} color="#3b82f6" />}
+      onPress={() => console.log("Pressed")}
+    />
+  ),
+};
+
+export const TextWithRightIcon: Story = {
+  args: {
+    title: "Learn More",
+    variant: "text",
+    size: "md",
+  },
+  render: (args) => (
+    <Button
+      {...args}
+      rightIcon={<ArrowRightIcon width={16} height={16} color="#3b82f6" />}
+      onPress={() => console.log("Pressed")}
+    />
+  ),
+};
+
+// -------------------
+// With Both Icons
+// -------------------
+
+export const WithBothIcons: Story = {
+  args: {
+    title: "Transfer",
+    variant: "primary",
+    size: "md",
+  },
+  render: (args) => (
+    <Button
+      {...args}
+      leftIcon={<ArrowLeftIcon width={18} height={18} color="#ffffff" />}
+      rightIcon={<ArrowRightIcon width={18} height={18} color="#ffffff" />}
+      onPress={() => console.log("Pressed")}
+    />
+  ),
+};
+
+// -------------------
+// Custom Styling
+// -------------------
+
+export const RoundedButton: Story = {
+  args: {
+    title: "Continue",
+    variant: "secondary",
+    containerStyles: "rounded-full",
+    innerWrapperStyles: "gap-3",
+  },
+  render: (args) => (
+    <Button
+      {...args}
+      rightIcon={<ArrowRightIcon width={18} height={18} color="#3b82f6" />}
+      onPress={() => console.log("Pressed")}
+    />
+  ),
+};
+
+export const CustomIconWrapper: Story = {
+  args: {
+    title: "Check Status",
+    variant: "primary",
+    leftIconWrapperStyles: "bg-white/20 rounded-full p-1",
+  },
+  render: (args) => (
+    <Button
+      {...args}
+      leftIcon={<CheckIcon width={18} height={18} color="#ffffff" />}
+      onPress={() => console.log("Pressed")}
+    />
+  ),
+};
+
+export const DisabledWithIcon: Story = {
+  args: {
+    title: "Disabled",
+    variant: "primary",
     disabled: true,
-    onPress: () => console.log("Pressed"),
   },
-};
-
-export const ActionedLarge: Story = {
-  args: {
-    title: "Button",
-    variant: "actioned",
-    size: "lg",
-    onPress: () => console.log("Pressed"),
-  },
-};
-
-export const ActionedMedium: Story = {
-  args: {
-    title: "Button",
-    variant: "actioned",
-    size: "md",
-    onPress: () => console.log("Pressed"),
-  },
-};
-
-export const ActionedSmall: Story = {
-  args: {
-    title: "Button",
-    variant: "actioned",
-    size: "sm",
-    onPress: () => console.log("Pressed"),
-  },
-};
-
-export const TextLarge: Story = {
-  args: {
-    title: "Button",
-    variant: "text",
-    size: "lg",
-    onPress: () => console.log("Pressed"),
-  },
-};
-
-export const TextMedium: Story = {
-  args: {
-    title: "Button",
-    variant: "text",
-    size: "md",
-    onPress: () => console.log("Pressed"),
-  },
-};
-
-export const TextSmall: Story = {
-  args: {
-    title: "Button",
-    variant: "text",
-    size: "sm",
-    onPress: () => console.log("Pressed"),
-  },
-};
-
-// With Icons - Left Position
-export const PrimaryWithIconLeft: Story = {
-  args: { title: "Button", variant: "primary", size: "lg" },
-  render: () => (
+  render: (args) => (
     <Button
-      title="Button"
-      variant="primary"
-      size="lg"
-      icon={<SendIcon />}
-      iconPosition="left"
-      onPress={() => console.log("Pressed")}
-    />
-  ),
-};
-
-export const PrimaryMediumWithIconLeft: Story = {
-  args: { title: "Button", variant: "primary", size: "md" },
-  render: () => (
-    <Button
-      title="Button"
-      variant="primary"
-      size="md"
-      icon={<SendIcon width={18} height={18} />}
-      iconPosition="left"
-      onPress={() => console.log("Pressed")}
-    />
-  ),
-};
-
-export const PrimarySmallWithIconLeft: Story = {
-  args: { title: "Button", variant: "primary", size: "sm" },
-  render: () => (
-    <Button
-      title="Button"
-      variant="primary"
-      size="sm"
-      icon={<SendIcon width={16} height={16} />}
-      iconPosition="left"
-      onPress={() => console.log("Pressed")}
-    />
-  ),
-};
-
-// With Icons - Right Position
-export const PrimaryWithIconRight: Story = {
-  args: { title: "Button", variant: "primary", size: "lg" },
-  render: () => (
-    <Button
-      title="Button"
-      variant="primary"
-      size="lg"
-      icon={<ArrowRightIcon />}
-      iconPosition="right"
-      onPress={() => console.log("Pressed")}
-    />
-  ),
-};
-
-export const PrimaryMediumWithIconRight: Story = {
-  args: { title: "Button", variant: "primary", size: "md" },
-  render: () => (
-    <Button
-      title="Button"
-      variant="primary"
-      size="md"
-      icon={<ArrowRightIcon width={18} height={18} />}
-      iconPosition="right"
-      onPress={() => console.log("Pressed")}
-    />
-  ),
-};
-
-export const PrimarySmallWithIconRight: Story = {
-  args: { title: "Button", variant: "primary", size: "sm" },
-  render: () => (
-    <Button
-      title="Button"
-      variant="primary"
-      size="sm"
-      icon={<ArrowRightIcon width={16} height={16} />}
-      iconPosition="right"
-      onPress={() => console.log("Pressed")}
-    />
-  ),
-};
-
-// Secondary with Icons
-export const SecondaryWithIconLeft: Story = {
-  args: { title: "Button", variant: "secondary", size: "md" },
-  render: () => (
-    <Button
-      title="Button"
-      variant="secondary"
-      size="md"
-      icon={<ArrowLeftIcon color="#000000" width={18} height={18} />}
-      iconPosition="left"
-      onPress={() => console.log("Pressed")}
-    />
-  ),
-};
-
-export const SecondaryWithIconRight: Story = {
-  args: { title: "Button", variant: "secondary", size: "md" },
-  render: () => (
-    <Button
-      title="Button"
-      variant="secondary"
-      size="md"
-      icon={<ArrowRightIcon color="#000000" width={18} height={18} />}
-      iconPosition="right"
+      {...args}
+      rightIcon={<SendIcon width={18} height={18} color="#9ca3af" />}
       onPress={() => console.log("Pressed")}
     />
   ),

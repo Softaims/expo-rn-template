@@ -1,7 +1,6 @@
 import { Pressable, PressableProps, View, ViewStyle } from "react-native";
 import { cn } from "@/lib/utils";
 import { Text } from "@/components";
-import { fontFamilies } from "@/hooks/useFonts";
 
 const buttonVariants = {
   base: "rounded-lg flex-row items-center justify-center",
@@ -40,15 +39,21 @@ export interface ButtonProps extends Omit<PressableProps, "onPress" | "style"> {
   className?: string;
   style?: ViewStyle;
   title: string;
-  icon?: React.ReactNode;
-  iconPosition?: "left" | "right";
   onPress?: () => void;
-  fontFamily?: string;
 
+  // Icon props (JSX elements)
+  leftIcon?: React.ReactNode;
+  rightIcon?: React.ReactNode;
+
+  // Styling props
   containerStyles?: string;
   innerWrapperStyles?: string;
   textStyles?: string;
-  iconWrapperStyles?: string;
+  leftIconWrapperStyles?: string;
+  rightIconWrapperStyles?: string;
+
+  // Font family (optional)
+  fontFamily?: string;
 }
 
 export function Button({
@@ -58,14 +63,15 @@ export function Button({
   className,
   style,
   title,
-  icon,
-  iconPosition = "left",
+  leftIcon,
+  rightIcon,
   onPress,
-  fontFamily = fontFamilies.semibold,
   containerStyles,
   innerWrapperStyles,
   textStyles,
-  iconWrapperStyles,
+  leftIconWrapperStyles,
+  rightIconWrapperStyles,
+  fontFamily,
   ...props
 }: ButtonProps) {
   const effectiveVariant = disabled ? "disabled" : variant;
@@ -85,9 +91,9 @@ export function Button({
       {...props}
     >
       <View className={cn("flex-row items-center justify-center gap-2", innerWrapperStyles)}>
-        {icon && iconPosition === "left" && (
-          <View className={iconWrapperStyles}>
-            {icon}
+        {leftIcon && (
+          <View className={leftIconWrapperStyles}>
+            {leftIcon}
           </View>
         )}
         <Text
@@ -96,13 +102,13 @@ export function Button({
             textVariants.size[size],
             textStyles
           )}
-          style={{ fontFamily }}
+          style={fontFamily ? { fontFamily } : undefined}
         >
           {title}
         </Text>
-        {icon && iconPosition === "right" && (
-          <View className={iconWrapperStyles}>
-            {icon}
+        {rightIcon && (
+          <View className={rightIconWrapperStyles}>
+            {rightIcon}
           </View>
         )}
       </View>

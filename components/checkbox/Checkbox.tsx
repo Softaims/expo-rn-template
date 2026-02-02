@@ -28,11 +28,18 @@ export interface CheckboxProps {
   className?: string;
   style?: ViewStyle;
 
-  // Simple Tailwind class styling for sub-elements
+  // Styling props
   containerStyles?: string;
-  boxStyles?: string;
-  checkmarkStyles?: string;
-  labelStyles?: string;
+  checkedBoxStyle?: string;
+  uncheckedBoxStyle?: string;
+  indeterminateBoxStyle?: string;
+  disabledBoxStyle?: string;
+  labelStyle?: string;
+  disabledLabelStyle?: string;
+
+  // Custom icons (JSX elements)
+  checkIcon?: React.ReactNode;
+  indeterminateIcon?: React.ReactNode;
 }
 
 export function Checkbox({
@@ -44,9 +51,14 @@ export function Checkbox({
   className,
   style,
   containerStyles,
-  boxStyles,
-  checkmarkStyles,
-  labelStyles,
+  checkedBoxStyle,
+  uncheckedBoxStyle,
+  indeterminateBoxStyle,
+  disabledBoxStyle,
+  labelStyle,
+  disabledLabelStyle,
+  checkIcon,
+  indeterminateIcon,
 }: CheckboxProps) {
   const [isChecked, setIsChecked] = useState(checked);
 
@@ -59,13 +71,35 @@ export function Checkbox({
 
   const getBoxStyle = () => {
     if (disabled) {
-      return isChecked || indeterminate
-        ? checkboxVariants.box.disabledChecked
-        : checkboxVariants.box.disabled;
+      return (
+        disabledBoxStyle ||
+        (isChecked || indeterminate
+          ? checkboxVariants.box.disabledChecked
+          : checkboxVariants.box.disabled)
+      );
     }
-    return isChecked || indeterminate
-      ? checkboxVariants.box.checked
-      : checkboxVariants.box.normal;
+
+    if (indeterminate) {
+      return indeterminateBoxStyle || checkboxVariants.box.checked;
+    }
+
+    if (isChecked) {
+      return checkedBoxStyle || checkboxVariants.box.checked;
+    }
+
+    return uncheckedBoxStyle || checkboxVariants.box.normal;
+  };
+
+  const renderIcon = () => {
+    if (indeterminate && indeterminateIcon) {
+      return indeterminateIcon;
+    }
+
+    if (isChecked && checkIcon) {
+      return checkIcon;
+    }
+
+    return null;
   };
 
   return (
@@ -75,21 +109,16 @@ export function Checkbox({
       className={cn(checkboxVariants.container, className, containerStyles)}
       style={style}
     >
-      <View className={cn(checkboxVariants.box.base, getBoxStyle(), boxStyles)}>
-        {indeterminate ? (
-          <View className={cn("w-2.5 h-0.5 bg-background rounded", checkmarkStyles)} />
-        ) : isChecked ? (
-          <View className={cn("items-center justify-center", checkmarkStyles)}>
-            <Text className="text-background text-xs font-bold">✓</Text>
-          </View>
-        ) : null}
+      <View className={cn(checkboxVariants.box.base, getBoxStyle())}>
+        {renderIcon()}
       </View>
       {label && (
         <Text
           className={cn(
             checkboxVariants.label.base,
-            disabled ? checkboxVariants.label.disabled : checkboxVariants.label.normal,
-            labelStyles
+            disabled
+              ? disabledLabelStyle || checkboxVariants.label.disabled
+              : labelStyle || checkboxVariants.label.normal
           )}
         >
           {label}

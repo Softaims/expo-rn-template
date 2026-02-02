@@ -31,129 +31,105 @@ const basicTabs = [
   { label: "Team", value: "team" },
 ];
 
-// Variant 1: Underline
-export const UnderlineDetails: Story = {
+// -------------------
+// Basic Variants
+// -------------------
+
+export const Underline: Story = {
   args: {
     variant: "underline",
     tabs: basicTabs,
     defaultValue: "details",
-    onValueChange: (value) => console.log("Tab changed to:", value),
   },
 };
 
-export const FilledDetails: Story = {
+export const Filled: Story = {
   args: {
     variant: "filled",
     tabs: basicTabs,
     defaultValue: "details",
-    onValueChange: (value) => console.log("Tab changed to:", value),
   },
 };
 
-// export const FilledProducts: Story = {
-//   args: {
-//     variant: "filled",
-//     tabs: basicTabs,
-//     defaultValue: "products",
-//     onValueChange: (value) => console.log("Tab changed to:", value),
-//   },
-// };
+export const FilledRounded: Story = {
+  args: {
+    variant: "filled-rounded",
+    tabs: basicTabs,
+    defaultValue: "details",
+  },
+};
 
-// export const FilledOrders: Story = {
-//   args: {
-//     variant: "filled",
-//     tabs: basicTabs,
-//     defaultValue: "orders",
-//     onValueChange: (value) => console.log("Tab changed to:", value),
-//   },
-// };
-
-// export const FilledTeam: Story = {
-//   args: {
-//     variant: "filled",
-//     tabs: basicTabs,
-//     defaultValue: "team",
-//     onValueChange: (value) => console.log("Tab changed to:", value),
-//   },
-// };
-
-// Variant 3: Filled Rounded
-// export const FilledRoundedDetails: Story = {
-//   args: {
-//     variant: "filled-rounded",
-//     tabs: basicTabs,
-//     defaultValue: "details",
-//     onValueChange: (value) => console.log("Tab changed to:", value),
-//   },
-// };
-
-// export const FilledRoundedProducts: Story = {
-//   args: {
-//     variant: "filled-rounded",
-//     tabs: basicTabs,
-//     defaultValue: "products",
-//     onValueChange: (value) => console.log("Tab changed to:", value),
-//   },
-// };
-
-// export const FilledRoundedOrders: Story = {
-//   args: {
-//     variant: "filled-rounded",
-//     tabs: basicTabs,
-//     defaultValue: "orders",
-//     onValueChange: (value) => console.log("Tab changed to:", value),
-//   },
-// };
-
-// export const FilledRoundedTeam: Story = {
-//   args: {
-//     variant: "filled-rounded",
-//     tabs: basicTabs,
-//     defaultValue: "team",
-//     onValueChange: (value) => console.log("Tab changed to:", value),
-//   },
-// };
-
-// Variant 4: Pill
-export const PillDetails: Story = {
+export const Pill: Story = {
   args: {
     variant: "pill",
     tabs: basicTabs,
     defaultValue: "details",
-    onValueChange: (value) => console.log("Tab changed to:", value),
   },
 };
 
-// export const PillProducts: Story = {
-//   args: {
-//     variant: "pill",
-//     tabs: basicTabs,
-//     defaultValue: "products",
-//     onValueChange: (value) => console.log("Tab changed to:", value),
-//   },
-// };
+// -------------------
+// Custom Styling
+// -------------------
 
-// export const PillOrders: Story = {
-//   args: {
-//     variant: "pill",
-//     tabs: basicTabs,
-//     defaultValue: "orders",
-//     onValueChange: (value) => console.log("Tab changed to:", value),
-//   },
-// };
+export const CustomActiveInactive: Story = {
+  args: {
+    variant: "filled",
+    tabs: basicTabs,
+    defaultValue: "products",
+    containerStyles: "gap-4",
+    activeTabStyle: "bg-blue-600 px-6 py-4 rounded-xl",
+    inactiveTabStyle: "bg-gray-100 px-6 py-4 rounded-xl",
+    activeTextStyle: "text-white text-lg font-bold",
+    inactiveTextStyle: "text-gray-500 text-lg",
+  },
+};
 
-// export const PillTeam: Story = {
-//   args: {
-//     variant: "pill",
-//     tabs: basicTabs,
-//     defaultValue: "team",
-//     onValueChange: (value) => console.log("Tab changed to:", value),
-//   },
-// };
+export const CustomPillColors: Story = {
+  args: {
+    variant: "pill",
+    tabs: basicTabs,
+    defaultValue: "orders",
+    activeTabStyle: "bg-green-500",
+    inactiveTabStyle: "bg-green-100",
+    activeTextStyle: "text-white font-semibold tracking-widest",
+    inactiveTextStyle: "text-green-700 tracking-widest",
+  },
+};
 
-// Variant 5: Icon Tabs
-export const IconPosts: Story = {
-  args: { variant: "icon", tabs: basicTabs, defaultValue: "posts" },
+export const CustomUnderline: Story = {
+  args: {
+    variant: "underline",
+    tabs: basicTabs,
+    defaultValue: "team",
+    activeTabStyle: "border-purple-500",
+    inactiveTabStyle: "border-transparent",
+    activeTextStyle: "text-purple-600 font-bold",
+    inactiveTextStyle: "text-gray-400",
+  },
+};
+
+export const CustomOrange: Story = {
+  args: {
+    variant: "filled",
+    tabs: basicTabs,
+    defaultValue: "details",
+    activeTabStyle: "bg-orange-500 rounded-full",
+    inactiveTabStyle: "bg-orange-100 rounded-full",
+    activeTextStyle: "text-white font-bold",
+    inactiveTextStyle: "text-orange-600",
+  },
+};
+
+// -------------------
+// Icon Tabs
+// -------------------
+
+export const IconTabs: Story = {
+  args: {
+    variant: "icon",
+    tabs: basicTabs,
+    defaultValue: "posts",
+  },
   render: () => (
     <Tabs
       variant="icon"
@@ -170,13 +146,16 @@ export const IconPosts: Story = {
         },
       ]}
       defaultValue="posts"
-      onValueChange={(value) => console.log("Tab changed to:", value)}
     />
   ),
 };
 
-export const IconSaved: Story = {
-  args: { variant: "icon", tabs: basicTabs, defaultValue: "saved" },
+export const IconTabsCustom: Story = {
+  args: {
+    variant: "icon",
+    tabs: basicTabs,
+    defaultValue: "saved",
+  },
   render: () => (
     <Tabs
       variant="icon"
@@ -193,7 +172,34 @@ export const IconSaved: Story = {
         },
       ]}
       defaultValue="saved"
-      onValueChange={(value) => console.log("Tab changed to:", value)}
+      activeTabStyle="border-blue-500"
+      inactiveTabStyle="border-gray-300"
+      activeTextStyle="text-blue-600 font-bold"
+      inactiveTextStyle="text-gray-400"
     />
   ),
+};
+
+// -------------------
+// Minimal Override
+// -------------------
+
+export const MinimalOverride: Story = {
+  args: {
+    variant: "underline",
+    tabs: basicTabs,
+    defaultValue: "products",
+    activeTextStyle: "text-blue-600 font-extrabold",
+  },
+};
+
+// -------------------
+// No Customization
+// -------------------
+
+export const Default: Story = {
+  args: {
+    variant: "filled",
+    tabs: basicTabs,
+  },
 };

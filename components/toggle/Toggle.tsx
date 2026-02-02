@@ -29,11 +29,16 @@ export interface ToggleProps {
   className?: string;
   style?: ViewStyle;
 
-  // Simple Tailwind class styling for sub-elements
+  // Styling props
   containerStyles?: string;
-  trackStyles?: string;
-  thumbStyles?: string;
-  labelStyles?: string;
+  activeTrackStyle?: string;
+  inactiveTrackStyle?: string;
+  disabledTrackStyle?: string;
+  activeThumbStyle?: string;
+  inactiveThumbStyle?: string;
+  disabledThumbStyle?: string;
+  labelStyle?: string;
+  disabledLabelStyle?: string;
 }
 
 export function Toggle({
@@ -44,9 +49,14 @@ export function Toggle({
   className,
   style,
   containerStyles,
-  trackStyles,
-  thumbStyles,
-  labelStyles,
+  activeTrackStyle,
+  inactiveTrackStyle,
+  disabledTrackStyle,
+  activeThumbStyle,
+  inactiveThumbStyle,
+  disabledThumbStyle,
+  labelStyle,
+  disabledLabelStyle,
 }: ToggleProps) {
   const [isActive, setIsActive] = useState(value);
   const translateX = useRef(new Animated.Value(value ? 20 : 2)).current;
@@ -57,7 +67,7 @@ export function Toggle({
       toValue: value ? 20 : 2,
       useNativeDriver: true,
     }).start();
-  }, [value]);
+  }, [value, translateX]);
 
   const handlePress = () => {
     if (disabled) return;
@@ -71,8 +81,27 @@ export function Toggle({
   };
 
   const getTrackStyle = () => {
-    if (disabled) return toggleVariants.track.disabled;
-    return isActive ? toggleVariants.track.active : toggleVariants.track.inactive;
+    if (disabled) {
+      return disabledTrackStyle || toggleVariants.track.disabled;
+    }
+
+    if (isActive) {
+      return activeTrackStyle || toggleVariants.track.active;
+    }
+
+    return inactiveTrackStyle || toggleVariants.track.inactive;
+  };
+
+  const getThumbStyle = () => {
+    if (disabled) {
+      return disabledThumbStyle || toggleVariants.thumb.base;
+    }
+
+    if (isActive) {
+      return activeThumbStyle || toggleVariants.thumb.base;
+    }
+
+    return inactiveThumbStyle || toggleVariants.thumb.base;
   };
 
   return (
@@ -82,11 +111,9 @@ export function Toggle({
       className={cn(toggleVariants.container, className, containerStyles)}
       style={style}
     >
-      <View
-        className={cn(toggleVariants.track.base, getTrackStyle(), trackStyles)}
-      >
+      <View className={cn(toggleVariants.track.base, getTrackStyle())}>
         <Animated.View
-          className={cn(toggleVariants.thumb.base, thumbStyles)}
+          className={cn(getThumbStyle())}
           style={{
             transform: [{ translateX }],
           }}
@@ -97,9 +124,8 @@ export function Toggle({
           className={cn(
             toggleVariants.label.base,
             disabled
-              ? toggleVariants.label.disabled
-              : toggleVariants.label.normal,
-            labelStyles
+              ? disabledLabelStyle || toggleVariants.label.disabled
+              : labelStyle || toggleVariants.label.normal
           )}
         >
           {label}

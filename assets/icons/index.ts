@@ -5,6 +5,8 @@ export { PostsIcon } from "./PostsIcon";
 export { BookmarkIcon } from "./BookmarkIcon";
 export { ChevronDownIcon } from "./ChevronDownIcon";
 export { CloseIcon } from "./CloseIcon";
+export { CheckIcon } from "./CheckIcon";
+export { MinusIcon } from "./MinusIcon";
 export * from "./EnvelopeIcon";
 export * from "./LockIcon";
 export * from "./EyeOpenIcon";
