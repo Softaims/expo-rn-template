@@ -1,15 +1,6 @@
-import { Pressable, View, ViewStyle, TextStyle } from "react-native";
+import { Pressable, View, ViewStyle } from "react-native";
 import { cn } from "@/lib/utils";
 import { Text } from "@/components";
-import { getElementClasses } from "@/lib/component-styles";
-
-const getViewStyle = (styles: any, key: string): ViewStyle | undefined => {
-  return styles?.[key] as ViewStyle | undefined;
-};
-
-const getTextStyle = (styles: any, key: string): TextStyle | undefined => {
-  return styles?.[key] as TextStyle | undefined;
-};
 
 const selectedItemVariants = {
   container: {
@@ -26,8 +17,6 @@ const selectedItemVariants = {
   closeIcon: "text-foreground text-xs",
 } as const;
 
-type SelectedItemElements = "container" | "label" | "closeButton" | "closeIcon";
-
 export interface SelectedItemProps {
   label: string;
   onRemove?: () => void;
@@ -36,13 +25,12 @@ export interface SelectedItemProps {
   closeIcon?: React.ReactNode;
   className?: string;
   style?: ViewStyle;
-  classes?: Partial<Record<SelectedItemElements, string>>;
-  styles?: {
-    container?: ViewStyle;
-    label?: TextStyle;
-    closeButton?: ViewStyle;
-    closeIcon?: TextStyle;
-  };
+
+  // Simple Tailwind class styling for sub-elements
+  containerStyles?: string;
+  labelStyles?: string;
+  closeButtonStyles?: string;
+  closeIconWrapperStyles?: string;
 }
 
 export function SelectedItem({
@@ -53,8 +41,10 @@ export function SelectedItem({
   closeIcon,
   className,
   style,
-  classes,
-  styles,
+  containerStyles,
+  labelStyles,
+  closeButtonStyles,
+  closeIconWrapperStyles,
 }: SelectedItemProps) {
   const getContainerStyle = () => {
     return disabled
@@ -70,39 +60,19 @@ export function SelectedItem({
 
   return (
     <View
-      className={getElementClasses(
-        classes,
-        "container",
-        cn(
-          selectedItemVariants.container.base,
-          getContainerStyle(),
-          className
-        )
-      )}
-      style={[style, getViewStyle(styles, "container")]}
+      className={cn(selectedItemVariants.container.base, getContainerStyle(), className, containerStyles)}
+      style={style}
     >
-      <Text
-        className={getElementClasses(
-          classes,
-          "label",
-          cn(selectedItemVariants.label.base, getLabelStyle())
-        )}
-        style={getTextStyle(styles, "label")}
-      >
+      <Text className={cn(selectedItemVariants.label.base, getLabelStyle(), labelStyles)}>
         {label}
       </Text>
       {showClose && onRemove && closeIcon && (
         <Pressable
           onPress={onRemove}
           disabled={disabled}
-          className={getElementClasses(
-            classes,
-            "closeButton",
-            selectedItemVariants.closeButton
-          )}
-          style={getViewStyle(styles, "closeButton")}
+          className={cn(selectedItemVariants.closeButton, closeButtonStyles)}
         >
-          <View>
+          <View className={closeIconWrapperStyles}>
             {closeIcon}
           </View>
         </Pressable>

@@ -60,9 +60,7 @@ export const AfterMultiSelect = () => {
         onChange={(val) => setValues(val as string[])}
         multiSelect
         chevronIcon={<ChevronDownIcon width={16} height={16} color="#666" />}
-        selectedItemProps={{
-          closeIcon: <CloseIcon width={12} height={12} color="#666" />,
-        }}
+        selectedItemCloseIcon={<CloseIcon width={12} height={12} color="#666" />}
       />
     </View>
   );

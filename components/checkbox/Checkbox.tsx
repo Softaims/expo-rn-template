@@ -1,18 +1,7 @@
-import { Pressable, View, ViewStyle, TextStyle } from "react-native";
+import { Pressable, View, ViewStyle } from "react-native";
 import { cn } from "@/lib/utils";
 import { Text } from "@/components";
 import { useState } from "react";
-import { getElementClasses } from "@/lib/component-styles";
-
-// Helper to get view style safely
-const getViewStyle = (styles: any, key: string): ViewStyle | undefined => {
-  return styles?.[key] as ViewStyle | undefined;
-};
-
-// Helper to get text style safely
-const getTextStyle = (styles: any, key: string): TextStyle | undefined => {
-  return styles?.[key] as TextStyle | undefined;
-};
 
 const checkboxVariants = {
   container: "flex-row items-center gap-3",
@@ -30,8 +19,6 @@ const checkboxVariants = {
   },
 } as const;
 
-type CheckboxElements = "container" | "box" | "checkmark" | "label";
-
 export interface CheckboxProps {
   label?: string;
   checked?: boolean;
@@ -40,13 +27,12 @@ export interface CheckboxProps {
   onCheckedChange?: (checked: boolean) => void;
   className?: string;
   style?: ViewStyle;
-  classes?: Partial<Record<CheckboxElements, string>>;
-  styles?: {
-    container?: ViewStyle;
-    box?: ViewStyle;
-    checkmark?: ViewStyle;
-    label?: TextStyle;
-  };
+
+  // Simple Tailwind class styling for sub-elements
+  containerStyles?: string;
+  boxStyles?: string;
+  checkmarkStyles?: string;
+  labelStyles?: string;
 }
 
 export function Checkbox({
@@ -57,8 +43,10 @@ export function Checkbox({
   onCheckedChange,
   className,
   style,
-  classes,
-  styles,
+  containerStyles,
+  boxStyles,
+  checkmarkStyles,
+  labelStyles,
 }: CheckboxProps) {
   const [isChecked, setIsChecked] = useState(checked);
 
@@ -84,56 +72,25 @@ export function Checkbox({
     <Pressable
       onPress={handlePress}
       disabled={disabled}
-      className={getElementClasses(
-        classes,
-        "container",
-        cn(checkboxVariants.container, className)
-      )}
-      style={[style, getViewStyle(styles, "container")]}
+      className={cn(checkboxVariants.container, className, containerStyles)}
+      style={style}
     >
-      <View
-        className={getElementClasses(
-          classes,
-          "box",
-          cn(checkboxVariants.box.base, getBoxStyle())
-        )}
-        style={getViewStyle(styles, "box")}
-      >
+      <View className={cn(checkboxVariants.box.base, getBoxStyle(), boxStyles)}>
         {indeterminate ? (
-          <View
-            className={getElementClasses(
-              classes,
-              "checkmark",
-              "w-2.5 h-0.5 bg-background rounded"
-            )}
-            style={getViewStyle(styles, "checkmark")}
-          />
+          <View className={cn("w-2.5 h-0.5 bg-background rounded", checkmarkStyles)} />
         ) : isChecked ? (
-          <View
-            className={getElementClasses(
-              classes,
-              "checkmark",
-              "items-center justify-center"
-            )}
-            style={getViewStyle(styles, "checkmark")}
-          >
+          <View className={cn("items-center justify-center", checkmarkStyles)}>
             <Text className="text-background text-xs font-bold">✓</Text>
           </View>
         ) : null}
       </View>
       {label && (
         <Text
-          className={getElementClasses(
-            classes,
-            "label",
-            cn(
-              checkboxVariants.label.base,
-              disabled
-                ? checkboxVariants.label.disabled
-                : checkboxVariants.label.normal
-            )
+          className={cn(
+            checkboxVariants.label.base,
+            disabled ? checkboxVariants.label.disabled : checkboxVariants.label.normal,
+            labelStyles
           )}
-          style={getTextStyle(styles, "label")}
         >
           {label}
         </Text>

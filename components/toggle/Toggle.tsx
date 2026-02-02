@@ -1,13 +1,7 @@
-import { Pressable, View, Animated, ViewStyle, TextStyle } from "react-native";
+import { Pressable, View, Animated, ViewStyle } from "react-native";
 import { cn } from "@/lib/utils";
 import { Text } from "@/components";
 import { useState, useEffect, useRef } from "react";
-import { getElementClasses, getElementTextStyle } from "@/lib/component-styles";
-
-// Helper to get view style safely
-const getViewStyle = (styles: any, key: string): ViewStyle | undefined => {
-  return styles?.[key] as ViewStyle | undefined;
-};
 
 const toggleVariants = {
   container: "flex-row items-center gap-3",
@@ -27,8 +21,6 @@ const toggleVariants = {
   },
 } as const;
 
-type ToggleElements = "container" | "track" | "thumb" | "label";
-
 export interface ToggleProps {
   label?: string;
   value?: boolean;
@@ -36,13 +28,12 @@ export interface ToggleProps {
   onValueChange?: (value: boolean) => void;
   className?: string;
   style?: ViewStyle;
-  classes?: Partial<Record<ToggleElements, string>>;
-  styles?: {
-    container?: ViewStyle;
-    track?: ViewStyle;
-    thumb?: ViewStyle;
-    label?: TextStyle;
-  };
+
+  // Simple Tailwind class styling for sub-elements
+  containerStyles?: string;
+  trackStyles?: string;
+  thumbStyles?: string;
+  labelStyles?: string;
 }
 
 export function Toggle({
@@ -52,8 +43,10 @@ export function Toggle({
   onValueChange,
   className,
   style,
-  classes,
-  styles,
+  containerStyles,
+  trackStyles,
+  thumbStyles,
+  labelStyles,
 }: ToggleProps) {
   const [isActive, setIsActive] = useState(value);
   const translateX = useRef(new Animated.Value(value ? 20 : 2)).current;
@@ -86,48 +79,28 @@ export function Toggle({
     <Pressable
       onPress={handlePress}
       disabled={disabled}
-      className={getElementClasses(
-        classes,
-        "container",
-        cn(toggleVariants.container, className)
-      )}
-      style={[style, getViewStyle(styles, "container")]}
+      className={cn(toggleVariants.container, className, containerStyles)}
+      style={style}
     >
       <View
-        className={getElementClasses(
-          classes,
-          "track",
-          cn(toggleVariants.track.base, getTrackStyle())
-        )}
-        style={getViewStyle(styles, "track")}
+        className={cn(toggleVariants.track.base, getTrackStyle(), trackStyles)}
       >
         <Animated.View
-          className={getElementClasses(
-            classes,
-            "thumb",
-            toggleVariants.thumb.base
-          )}
-          style={[
-            {
-              transform: [{ translateX }],
-            },
-            getViewStyle(styles, "thumb"),
-          ]}
+          className={cn(toggleVariants.thumb.base, thumbStyles)}
+          style={{
+            transform: [{ translateX }],
+          }}
         />
       </View>
       {label && (
         <Text
-          className={getElementClasses(
-            classes,
-            "label",
-            cn(
-              toggleVariants.label.base,
-              disabled
-                ? toggleVariants.label.disabled
-                : toggleVariants.label.normal
-            )
+          className={cn(
+            toggleVariants.label.base,
+            disabled
+              ? toggleVariants.label.disabled
+              : toggleVariants.label.normal,
+            labelStyles
           )}
-          style={getElementTextStyle(styles, "label")}
         >
           {label}
         </Text>

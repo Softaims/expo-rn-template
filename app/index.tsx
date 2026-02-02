@@ -2,6 +2,7 @@ import { Link } from "expo-router";
 import { View, ScrollView } from "react-native";
 import { Button, Tabs, Checkbox, RadioButton, Toggle, Dropdown, Text, TextInput } from "@/components";
 import { ChevronDownIcon, CloseIcon, ArrowRightIcon, SendIcon } from "@/assets/icons";
+import { fontFamilies } from "@/hooks/useFonts";
 import { useState } from "react";
 import "../global.css";
 
@@ -22,7 +23,7 @@ export default function Index() {
   ];
 
   // Dropdown states
-  const [dropdown1, setDropdown1] = useState<string>("");
+  const [dropdown1, setDropdown1] = useState<string | null>(null);
   const [dropdown2, setDropdown2] = useState<string>("");
   const [dropdown3, setDropdown3] = useState<string[]>([]);
   const [dropdown4, setDropdown4] = useState<string>("");
@@ -42,82 +43,64 @@ export default function Index() {
           Button Style Overrides
         </Text>
 
-        {/* Example 1: Backwards compatible */}
-        <Button
-          title="Standard Button"
-          className="mt-2"
-          onPress={() => console.log("Standard")}
-        />
-
-        {/* Example 2: Classes override - customize text */}
-        <Button
-          title="Custom Text Style"
-          classes={{
-            text: "text-2xl font-black uppercase text-blue-500",
-          }}
-          onPress={() => console.log("Custom text")}
-        />
-
-        {/* Example 3: Multiple element overrides */}
-        <Button
-          title="Multi Override"
-          classes={{
-            container: "rounded-full shadow-lg",
-            text: "tracking-widest",
-            innerWrapper: "gap-4",
-          }}
-          onPress={() => console.log("Multi override")}
-        />
-
-        {/* Example 4: Inline styles */}
-        <Button
-          title="Inline Styles"
-          styles={{
-            container: { shadowOpacity: 0.5, shadowRadius: 10 },
-            text: { letterSpacing: 3 },
-          }}
-          onPress={() => console.log("Inline styles")}
-        />
-
-        {/* Example 5: Hybrid approach */}
-        <Button
-          title="Hybrid Override"
-          className="mt-4"
-          classes={{ text: "font-bold" }}
-          styles={{
-            container: { transform: [{ scale: 0.95 }] },
-            text: { textTransform: "uppercase" },
-          }}
-          onPress={() => console.log("Hybrid")}
-        />
-
-        {/* Example 6: Button with Icon (Right) */}
-        <Button
-          title="Next"
-          icon={<ArrowRightIcon width={20} height={20} color="#fff" />}
-          iconPosition="right"
-          onPress={() => console.log("Next")}
-        />
-
-        {/* Example 7: Button with Icon (Left) */}
-        <Button
-          title="Send Message"
-          icon={<SendIcon width={20} height={20} color="#fff" />}
-          iconPosition="left"
-          onPress={() => console.log("Send")}
-        />
-
         {/* Example 8: Icon Button with Custom Styles */}
         <Button
           title="Continue"
           icon={<ArrowRightIcon width={18} height={18} color="#3b82f6" />}
           iconPosition="right"
           variant="secondary"
-          classes={{
-            container: "rounded-full",
-            innerWrapper: "gap-3",
-          }}
+          containerStyles="rounded-full"
+          innerWrapperStyles="gap-3"
           onPress={() => console.log("Continue")}
+        />
+
+        {/* Example 9: Font Weight - Thin */}
+        <Button
+          title="Thin Font"
+          fontFamily={fontFamilies.thin}
+          onPress={() => console.log("Thin")}
+        />
+
+        {/* Example 10: Font Weight - Light */}
+        <Button
+          title="Light Font"
+          fontFamily={fontFamilies.light}
+          onPress={() => console.log("Light")}
+        />
+
+        {/* Example 11: Font Weight - Regular */}
+        <Button
+          title="Regular Font"
+          fontFamily={fontFamilies.regular}
+          onPress={() => console.log("Regular")}
+        />
+
+        {/* Example 12: Font Weight - Medium */}
+        <Button
+          title="Medium Font"
+          fontFamily={fontFamilies.medium}
+          onPress={() => console.log("Medium")}
+        />
+
+        {/* Example 13: Font Weight - Semibold */}
+        <Button
+          title="Semibold Font"
+          fontFamily={fontFamilies.semibold}
+          onPress={() => console.log("Semibold")}
+        />
+
+        {/* Example 14: Font Weight - Bold */}
+        <Button
+          title="Bold Font"
+          fontFamily={fontFamilies.bold}
+          onPress={() => console.log("Bold")}
+        />
+
+        {/* Example 15: Font Weight - Extrabold */}
+        <Button
+          title="Extrabold Font"
+          fontFamily={fontFamilies.extrabold}
+          onPress={() => console.log("Extrabold")}
         />
       </View>
 
@@ -130,25 +113,20 @@ export default function Index() {
         {/* Example 1: Standard */}
         <Checkbox label="Standard Checkbox" checked={true} />
 
-        {/* Example 2: Custom classes */}
+        {/* Example 2: Custom styling */}
         <Checkbox
           label="Custom Styled"
           checked={true}
-          classes={{
-            box: "w-8 h-8 rounded-xl border-4",
-            label: "text-xl font-bold",
-            checkmark: "w-4 h-1",
-          }}
+          boxStyles="w-8 h-8 rounded-xl border-4"
+          labelStyles="text-xl font-bold"
+          checkmarkStyles="w-4 h-1"
         />
 
-        {/* Example 3: Inline styles */}
+        {/* Example 3: Custom label */}
         <Checkbox
-          label="Inline Styled"
+          label="Custom Label"
           checked={true}
-          styles={{
-            box: { transform: [{ rotate: "45deg" }] },
-            label: { letterSpacing: 2 },
-          }}
+          labelStyles="text-lg tracking-wide font-semibold"
         />
       </View>
 
@@ -161,38 +139,26 @@ export default function Index() {
         {/* Example 1: Standard */}
         <RadioButton label="Standard Radio" selected={true} />
 
-        {/* base over */}
+        {/* Example 2: Custom circle */}
         <RadioButton
           selected
-          styles={{
-            circle: {
-              borderRadius: 0,
-              borderWidth: 0,
-            },
-          }}
+          circleStyles="rounded-none border-0"
         />
 
-        {/* Example 2: Custom classes */}
+        {/* Example 3: Custom styling */}
         <RadioButton
           label="Custom Styled"
           selected={true}
-          // className="mt-4"
-          classes={{
-            circle: "w-8 h-8 border-4",
-            dot: "w-4 h-4 bg-green-500",
-            label: "text-lg font-bold",
-          }}
+          circleStyles="w-8 h-8 border-4"
+          dotStyles="w-4 h-4 bg-green-500"
+          labelStyles="text-lg font-bold"
         />
 
-        {/* Example 3: Inline styles */}
+        {/* Example 4: Custom label */}
         <RadioButton
-          label="Inline Styled"
+          label="Custom Label"
           selected={true}
-          styles={{
-            circle: { borderWidth: 3 },
-            dot: { backgroundColor: "#3b82f6" },
-            label: { letterSpacing: 1 },
-          }}
+          labelStyles="tracking-wider text-base"
         />
       </View>
 
@@ -205,26 +171,21 @@ export default function Index() {
         {/* Example 1: Standard */}
         <Toggle label="Standard Toggle" value={true} />
 
-        {/* Example 2: Custom classes */}
+        {/* Example 2: Custom styling */}
         <Toggle
           label="Custom Styled"
           value={true}
-          classes={{
-            track: "w-16 h-8 rounded-xl",
-            thumb: "w-7 h-7",
-            label: "text-lg font-bold",
-          }}
+          trackStyles="w-16 h-8 rounded-xl"
+          thumbStyles="w-7 h-7"
+          labelStyles="text-lg font-bold"
         />
 
-        {/* Example 3: Inline styles */}
+        {/* Example 3: Custom track */}
         <Toggle
-          label="Inline Styled"
+          label="Custom Track"
           value={true}
-          styles={{
-            track: { opacity: 0.8 },
-            thumb: { shadowOpacity: 0.5, shadowRadius: 5 },
-            label: { letterSpacing: 1 },
-          }}
+          trackStyles="opacity-80"
+          labelStyles="tracking-wider"
         />
       </View>
 
@@ -237,25 +198,48 @@ export default function Index() {
         {/* Example 1: Standard */}
         <Tabs tabs={basicTabs} />
 
-        {/* Example 2: Custom classes */}
+        {/* Example 2: Custom styling */}
         <Tabs
           tabs={basicTabs}
           variant="filled"
-          classes={{
-            container: "gap-4",
-            tab: "px-6 py-4 rounded-xl",
-            tabText: "text-lg font-black",
-          }}
+          containerStyles="gap-4"
+          tabStyles="px-6 py-4 rounded-xl"
+          tabTextStyles="text-lg font-black"
         />
 
-        {/* Example 3: Inline styles */}
+        {/* Example 3: Pill variant with custom text */}
         <Tabs
           tabs={basicTabs}
           variant="pill"
-          styles={{
-            tab: { transform: [{ scale: 0.95 }] },
-            tabText: { letterSpacing: 2 },
-          }}
+          tabTextStyles="tracking-widest"
+        />
+
+        {/* Example 4: Font Weight - Light */}
+        <Tabs
+          tabs={basicTabs}
+          variant="underline"
+          fontFamily={fontFamilies.light}
+        />
+
+        {/* Example 5: Font Weight - Medium */}
+        <Tabs
+          tabs={basicTabs}
+          variant="filled"
+          fontFamily={fontFamilies.medium}
+        />
+
+        {/* Example 6: Font Weight - Bold */}
+        <Tabs
+          tabs={basicTabs}
+          variant="pill"
+          fontFamily={fontFamilies.bold}
+        />
+
+        {/* Example 7: Font Weight - Extrabold */}
+        <Tabs
+          tabs={basicTabs}
+          variant="icon"
+          fontFamily={fontFamilies.extrabold}
         />
       </View>
 
@@ -274,19 +258,17 @@ export default function Index() {
           chevronIcon={<ChevronDownIcon width={16} height={16} color="#666" />}
         />
 
-        {/* Example 2: Custom classes */}
+        {/* Example 2: Custom styling */}
         <Dropdown
           placeholder="Custom Styled"
           options={dropdownOptions}
           value={dropdown2}
           onChange={(val) => setDropdown2(val as string)}
-          chevronIcon={<ChevronDownIcon width={16} height={16} color="#666" />}
-          classes={{
-            trigger: "rounded-xl border-4 bg-blue-50",
-            placeholder: "text-lg font-bold",
-            dropdown: "rounded-xl",
-            option: "py-4",
-          }}
+          chevronIcon={<ChevronDownIcon width={16} height={16} color="red" />}
+          triggerStyles="rounded-xl border-4 bg-blue-50"
+          placeholderStyles="text-lg font-bold"
+          dropdownStyles="rounded-xl"
+          optionStyles="py-4"
         />
 
         {/* Example 3: Multi-Select */}
@@ -297,9 +279,7 @@ export default function Index() {
           onChange={(val) => setDropdown3(val as string[])}
           multiSelect
           chevronIcon={<ChevronDownIcon width={16} height={16} color="#666" />}
-          selectedItemProps={{
-            closeIcon: <CloseIcon width={12} height={12} color="#666" />,
-          }}
+          selectedItemCloseIcon={<CloseIcon width={12} height={12} color="#666" />}
         />
 
         {/* Example 4: Searchable with custom placeholder */}
@@ -314,7 +294,7 @@ export default function Index() {
           chevronIcon={<ChevronDownIcon width={16} height={16} color="#666" />}
         />
 
-        {/* Example 5: Multi-Select with Inline Styles */}
+        {/* Example 5: Multi-Select with Custom Styling */}
         <Dropdown
           placeholder="Styled Multi-Select"
           options={dropdownOptions}
@@ -322,21 +302,12 @@ export default function Index() {
           onChange={(val) => setDropdown5(val as string[])}
           multiSelect
           chevronIcon={<ChevronDownIcon width={16} height={16} color="#3b82f6" />}
-          selectedItemProps={{
-            closeIcon: <CloseIcon width={12} height={12} color="#1e40af" />,
-            classes: {
-              container: "bg-blue-100 rounded-full px-4",
-              label: "text-blue-800 font-semibold",
-            },
-          }}
-          styles={{
-            trigger: { borderWidth: 3, borderRadius: 12 },
-            selectedItemsWrapper: { marginTop: 12 },
-            dropdown: { maxHeight: 250 },
-          }}
-          classes={{
-            selectedText: "text-lg font-semibold",
-          }}
+          selectedItemCloseIcon={<CloseIcon width={12} height={12} color="#1e40af" />}
+          selectedItemContainerStyles="bg-blue-100 rounded-full px-4"
+          selectedItemLabelStyles="text-blue-800 font-semibold"
+          triggerStyles="border-[3px] rounded-xl"
+          selectedItemsWrapperStyles="mt-3"
+          selectedTextStyles="text-lg font-semibold"
         />
 
         {/* Example 6: Auto-Suggest */}
@@ -399,13 +370,9 @@ export default function Index() {
           onChange={(val) => setDropdown5(val as string[])}
           multiSelect
           chevronIcon={<ChevronDownIcon width={16} height={16} color="#666" />}
-          selectedItemProps={{
-            closeIcon: <CloseIcon width={12} height={12} color="#666" />,
-            classes: {
-              container: "bg-blue-100 rounded-full px-4",
-              label: "text-blue-800 font-semibold",
-            },
-          }}
+          selectedItemCloseIcon={<CloseIcon width={12} height={12} color="#666" />}
+          selectedItemContainerStyles="bg-blue-100 rounded-full px-4"
+          selectedItemLabelStyles="text-blue-800 font-semibold"
         />
       </View>
 

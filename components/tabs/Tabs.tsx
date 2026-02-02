@@ -1,14 +1,8 @@
-import { Pressable, View, ViewStyle, TextStyle } from "react-native";
+import { Pressable, View, ViewStyle } from "react-native";
 import { cn } from "@/lib/utils";
 import { Text } from "@/components";
 import { fontFamilies } from "@/hooks/useFonts";
 import { useState } from "react";
-import { getElementClasses, getElementTextStyle } from "@/lib/component-styles";
-
-// Helper to get view style safely
-const getViewStyle = (styles: any, key: string): ViewStyle | undefined => {
-  return styles?.[key] as ViewStyle | undefined;
-};
 
 export type TabItem = {
   label: string;
@@ -84,8 +78,6 @@ const tabVariants = {
   },
 } as const;
 
-type TabsElements = "container" | "tab" | "tabIconWrapper" | "tabText";
-
 export interface TabsProps {
   variant?: keyof typeof tabVariants;
   tabs: TabItem[];
@@ -93,13 +85,13 @@ export interface TabsProps {
   onValueChange?: (value: string) => void;
   className?: string;
   style?: ViewStyle;
-  classes?: Partial<Record<TabsElements, string>>;
-  styles?: {
-    container?: ViewStyle;
-    tab?: ViewStyle;
-    tabIconWrapper?: ViewStyle;
-    tabText?: TextStyle;
-  };
+  fontFamily?: string;
+
+  // Simple Tailwind class styling for sub-elements
+  containerStyles?: string;
+  tabStyles?: string;
+  tabIconWrapperStyles?: string;
+  tabTextStyles?: string;
 }
 
 export function Tabs({
@@ -109,8 +101,11 @@ export function Tabs({
   onValueChange,
   className,
   style,
-  classes,
-  styles,
+  fontFamily = fontFamilies.semibold,
+  containerStyles,
+  tabStyles,
+  tabIconWrapperStyles,
+  tabTextStyles,
 }: TabsProps) {
   const [activeTab, setActiveTab] = useState(defaultValue || tabs[0]?.value);
 
@@ -122,51 +117,31 @@ export function Tabs({
   const variantStyles = tabVariants[variant];
 
   return (
-    <View
-      className={getElementClasses(
-        classes,
-        "container",
-        cn(variantStyles.container, className)
-      )}
-      style={[style, getViewStyle(styles, "container")]}
-    >
+    <View className={cn(variantStyles.container, className, containerStyles)} style={style}>
       {tabs.map((tab) => {
         const isActive = activeTab === tab.value;
         return (
           <Pressable
             key={tab.value}
             onPress={() => handleTabPress(tab.value)}
-            className={getElementClasses(
-              classes,
-              "tab",
-              cn(
-                variantStyles.tab.base,
-                isActive ? variantStyles.tab.active : variantStyles.tab.inactive
-              )
+            className={cn(
+              variantStyles.tab.base,
+              isActive ? variantStyles.tab.active : variantStyles.tab.inactive,
+              tabStyles
             )}
-            style={getViewStyle(styles, "tab")}
           >
             {tab.icon && (
-              <View
-                className={getElementClasses(classes, "tabIconWrapper", "")}
-                style={getViewStyle(styles, "tabIconWrapper")}
-              >
+              <View className={tabIconWrapperStyles}>
                 {tab.icon}
               </View>
             )}
             <Text
-              className={getElementClasses(
-                classes,
-                "tabText",
-                cn(
-                  variantStyles.text.base,
-                  isActive ? variantStyles.text.active : variantStyles.text.inactive
-                )
+              className={cn(
+                variantStyles.text.base,
+                isActive ? variantStyles.text.active : variantStyles.text.inactive,
+                tabTextStyles
               )}
-              style={[
-                { fontFamily: fontFamilies.semibold },
-                getElementTextStyle(styles, "tabText"),
-              ]}
+              style={{ fontFamily }}
             >
               {tab.label}
             </Text>

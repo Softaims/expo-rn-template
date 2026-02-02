@@ -1,18 +1,7 @@
-import { Pressable, PressableProps, View, ViewStyle, TextStyle } from "react-native";
+import { Pressable, PressableProps, View, ViewStyle } from "react-native";
 import { cn } from "@/lib/utils";
 import { Text } from "@/components";
 import { fontFamilies } from "@/hooks/useFonts";
-import { getElementClasses } from "@/lib/component-styles";
-
-// Helper to get view style safely
-const getViewStyle = (styles: any, key: string): ViewStyle | undefined => {
-  return styles?.[key] as ViewStyle | undefined;
-};
-
-// Helper to get text style safely
-const getTextStyle = (styles: any, key: string): TextStyle | undefined => {
-  return styles?.[key] as TextStyle | undefined;
-};
 
 const buttonVariants = {
   base: "rounded-lg flex-row items-center justify-center",
@@ -45,8 +34,6 @@ const textVariants = {
   },
 } as const;
 
-type ButtonElements = "container" | "innerWrapper" | "text" | "iconWrapper";
-
 export interface ButtonProps extends Omit<PressableProps, "onPress" | "style"> {
   variant?: keyof typeof buttonVariants.variant;
   size?: keyof typeof buttonVariants.size;
@@ -56,13 +43,12 @@ export interface ButtonProps extends Omit<PressableProps, "onPress" | "style"> {
   icon?: React.ReactNode;
   iconPosition?: "left" | "right";
   onPress?: () => void;
-  classes?: Partial<Record<ButtonElements, string>>;
-  styles?: {
-    container?: ViewStyle;
-    innerWrapper?: ViewStyle;
-    text?: TextStyle;
-    iconWrapper?: ViewStyle;
-  };
+  fontFamily?: string;
+
+  containerStyles?: string;
+  innerWrapperStyles?: string;
+  textStyles?: string;
+  iconWrapperStyles?: string;
 }
 
 export function Button({
@@ -75,8 +61,11 @@ export function Button({
   icon,
   iconPosition = "left",
   onPress,
-  classes,
-  styles,
+  fontFamily = fontFamilies.semibold,
+  containerStyles,
+  innerWrapperStyles,
+  textStyles,
+  iconWrapperStyles,
   ...props
 }: ButtonProps) {
   const effectiveVariant = disabled ? "disabled" : variant;
@@ -84,57 +73,35 @@ export function Button({
   return (
     <Pressable
       disabled={disabled}
-      className={getElementClasses(
-        classes,
-        "container",
-        cn(
-          buttonVariants.base,
-          buttonVariants.variant[effectiveVariant],
-          buttonVariants.size[size],
-          className
-        )
+      className={cn(
+        buttonVariants.base,
+        buttonVariants.variant[effectiveVariant],
+        buttonVariants.size[size],
+        className,
+        containerStyles
       )}
-      style={[style, getViewStyle(styles, "container")]}
+      style={style}
       onPress={onPress}
       {...props}
     >
-      <View
-        className={getElementClasses(
-          classes,
-          "innerWrapper",
-          "flex-row items-center justify-center gap-2"
-        )}
-        style={getViewStyle(styles, "innerWrapper")}
-      >
+      <View className={cn("flex-row items-center justify-center gap-2", innerWrapperStyles)}>
         {icon && iconPosition === "left" && (
-          <View
-            className={getElementClasses(classes, "iconWrapper", "")}
-            style={getViewStyle(styles, "iconWrapper")}
-          >
+          <View className={iconWrapperStyles}>
             {icon}
           </View>
         )}
         <Text
-          className={getElementClasses(
-            classes,
-            "text",
-            cn(
-              textVariants.variant[effectiveVariant],
-              textVariants.size[size]
-            )
+          className={cn(
+            textVariants.variant[effectiveVariant],
+            textVariants.size[size],
+            textStyles
           )}
-          style={[
-            { fontFamily: fontFamilies.semibold },
-            getTextStyle(styles, "text"),
-          ]}
+          style={{ fontFamily }}
         >
           {title}
         </Text>
         {icon && iconPosition === "right" && (
-          <View
-            className={getElementClasses(classes, "iconWrapper", "")}
-            style={getViewStyle(styles, "iconWrapper")}
-          >
+          <View className={iconWrapperStyles}>
             {icon}
           </View>
         )}
