@@ -1,5 +1,5 @@
 import { View, ViewStyle, Text } from "react-native";
-import { cn } from "@/lib/utils"; // Assuming you have this utility (like clsx/tailwind-merge)
+import { cn } from "@/lib/utils";
 
 const progressVariants = {
   base: "w-full",
@@ -12,28 +12,26 @@ const progressVariants = {
   },
 } as const;
 
-// const labelVariants = {
-//   variant: {
-//     stepperDots: "text-xs text-muted-foreground mt-1.5",
-//     barFill: "text-sm text-foreground mt-2",
-//     barGroup: "text-xs text-muted-foreground",
-//     circleSteps: "text-sm font-medium",
-//     lineProgress: "text-sm text-muted-foreground mt-1",
-//   },
-// } as const;
-
 export interface ProgressBarProps {
   variant?: keyof typeof progressVariants.variant;
   progress?: number;
-  currentStep?: number; 
+  currentStep?: number;
   totalSteps?: number;
+  label?: string;
   labels?: string[];
   size?: "sm" | "md" | "lg";
   className?: string;
   style?: ViewStyle;
-  activeColor?: string;
-  inactiveColor?: string;
-  showLabels?: boolean;
+
+  // Styling props
+  activeStyle?: string;
+  inactiveStyle?: string;
+  currentStyle?: string;
+  labelStyle?: string;
+  textInsideStyle?: string;
+
+  // Display options
+  textInside?: string | string[];
 }
 
 export function ProgressBar({
@@ -41,13 +39,17 @@ export function ProgressBar({
   progress = 0,
   currentStep = 1,
   totalSteps = 5,
+  label,
   labels,
   size = "md",
   className,
   style,
-  activeColor = "#3b82f6", // blue-500 like primary
-  inactiveColor = "#d1d5db", // gray-300
-  showLabels = true,
+  activeStyle,
+  inactiveStyle,
+  currentStyle,
+  labelStyle,
+  textInsideStyle,
+  textInside,
 }: ProgressBarProps) {
   const effectiveProgress = Math.min(Math.max(progress, 0), 100);
   const stepCount = totalSteps || 5;
@@ -61,11 +63,23 @@ export function ProgressBar({
 
   const { dotSize, lineHeight, fontSize } = getSizeStyle();
 
+  // Default styles
+  const defaultActiveStyle = "bg-primary border-primary";
+  const defaultInactiveStyle = "bg-muted border-muted";
+  const defaultCurrentStyle = "bg-white";
+
+  const getTextInsideForIndex = (index: number): string | undefined => {
+    if (!textInside) return undefined;
+    if (typeof textInside === "string") return textInside;
+    return textInside[index];
+  };
+
   const renderStepperDots = () => {
     const items = [];
     for (let i = 1; i <= stepCount; i++) {
       const isActive = i <= current;
       const isCurrent = i === current;
+      const text = getTextInsideForIndex(i - 1);
 
       items.push(
         <View key={i} className="items-center flex-1">
@@ -73,32 +87,28 @@ export function ProgressBar({
             className={cn(
               "rounded-full border-2 items-center justify-center",
               isActive
-                ? "border-primary bg-primary"
-                : "border-muted bg-background",
+                ? activeStyle || defaultActiveStyle
+                : inactiveStyle || defaultInactiveStyle,
             )}
             style={{
               width: dotSize + 8,
               height: dotSize + 8,
-              borderColor: isActive ? activeColor : inactiveColor,
-              backgroundColor: isActive ? activeColor : "transparent",
             }}
           >
             {isCurrent && (
               <View
-                className="rounded-full bg-white border-blue-50"
+                className={cn("rounded-full", currentStyle || defaultCurrentStyle)}
                 style={{ width: dotSize, height: dotSize }}
               />
             )}
+            {text && (
+              <Text
+                className={cn("absolute text-xs font-medium", textInsideStyle)}
+              >
+                {text}
+              </Text>
+            )}
           </View>
-
-          {/* {showLabels && labels && labels[i - 1] && (
-            <Text
-              className={cn(labelVariants.variant[variant], "text-center mt-4")}
-              style={{ fontSize }}
-            >
-              {labels[i - 1]}
-            </Text>
-          )} */}
         </View>,
       );
 
@@ -107,10 +117,14 @@ export function ProgressBar({
         items.push(
           <View
             key={`line-${i}`}
-            className="flex-1 mx-1"
+            className={cn(
+              "flex-1 mx-1",
+              i < current
+                ? activeStyle || defaultActiveStyle
+                : inactiveStyle || defaultInactiveStyle,
+            )}
             style={{
               height: lineHeight,
-              backgroundColor: i < current ? activeColor : inactiveColor,
             }}
           />,
         );
@@ -120,26 +134,40 @@ export function ProgressBar({
   };
 
   const renderBarFill = () => {
-    // Variant 2 style – one long bar with fill
+    const text = typeof textInside === "string" ? textInside : undefined;
+
     return (
       <View
-        className={cn("h-2.5 rounded-full overflow-hidden bg-muted", className)}
+        className={cn(
+          "h-2.5 rounded-full overflow-hidden relative",
+          inactiveStyle || "bg-muted",
+          className,
+        )}
         style={style}
       >
         <View
-          className="h-full rounded-full"
+          className={cn("h-full rounded-full", activeStyle || "bg-primary")}
           style={{
             width: `${effectiveProgress}%`,
-            backgroundColor: activeColor,
           }}
         />
+        {text && (
+          <Text
+            className={cn(
+              "absolute inset-0 text-center text-xs font-medium",
+              textInsideStyle,
+            )}
+            style={{ lineHeight: 10 }}
+          >
+            {text}
+          </Text>
+        )}
       </View>
     );
   };
 
   const renderBarGroup = () => {
-    // Variant 3 style – many small bars
-    const barCount = 8; // example – can be dynamic
+    const barCount = 8;
     return (
       <View
         className={cn("flex-row items-center gap-1", className)}
@@ -149,22 +177,26 @@ export function ProgressBar({
           const stepNumber = i + 1;
           const filled = (i + 1) / barCount <= effectiveProgress / 100;
           const isCurrent = stepNumber === current;
-          const borderWidth = isCurrent ? 2 : 0;
+          const text = getTextInsideForIndex(i);
 
           return (
             <View
               key={i}
-              className="h-6 w-6 rounded-full"
-              style={{
-                backgroundColor: isCurrent
-                  ? "#fff"
+              className={cn(
+                "h-6 w-6 rounded-full items-center justify-center",
+                isCurrent
+                  ? currentStyle || "bg-white border-2"
                   : filled
-                    ? activeColor
-                    : inactiveColor,
-                borderWidth: borderWidth,
-                borderColor: isCurrent ? activeColor : "transparent",
-              }}
-            />
+                    ? activeStyle || defaultActiveStyle
+                    : inactiveStyle || defaultInactiveStyle,
+              )}
+            >
+              {text && (
+                <Text className={cn("text-xs font-medium", textInsideStyle)}>
+                  {text}
+                </Text>
+              )}
+            </View>
           );
         })}
       </View>
@@ -172,29 +204,30 @@ export function ProgressBar({
   };
 
   const renderCircleSteps = () => {
-    // Variant 4 style – numbered circles
     const items = [];
     for (let i = 1; i <= stepCount; i++) {
       const isActive = i <= current;
+      const text = getTextInsideForIndex(i - 1) || String(i);
+
       items.push(
         <View key={i} className="items-center flex-1">
           <View
             className={cn(
               "rounded-full w-10 h-10 items-center justify-center border-2",
               isActive
-                ? "bg-primary border-primary"
-                : "bg-background border-muted",
+                ? activeStyle || defaultActiveStyle
+                : inactiveStyle || "bg-background border-muted",
             )}
-            style={{ borderColor: isActive ? activeColor : inactiveColor }}
           >
             <Text
               className={cn(
                 "font-medium",
-                isActive ? "text-primary-foreground" : "text-muted-foreground",
+                textInsideStyle ||
+                  (isActive ? "text-primary-foreground" : "text-muted-foreground"),
               )}
               style={{ fontSize: fontSize + 2 }}
             >
-              {i}
+              {text}
             </Text>
           </View>
         </View>,
@@ -204,10 +237,12 @@ export function ProgressBar({
         items.push(
           <View
             key={`conn-${i}`}
-            className="flex-1 h-1 mx-2"
-            style={{
-              backgroundColor: i < current ? activeColor : inactiveColor,
-            }}
+            className={cn(
+              "flex-1 h-1 mx-2",
+              i < current
+                ? activeStyle || "bg-primary"
+                : inactiveStyle || "bg-muted",
+            )}
           />,
         );
       }
@@ -230,32 +265,52 @@ export function ProgressBar({
     }
   };
 
-  return (
-    <View
-      className={cn(
-        progressVariants.base,
-        progressVariants.variant[variant],
-        className,
-      )}
-      style={style}
-    >
-      {renderContent()}
+  const renderLabel = () => {
+    // Single generic label for any variant
+    if (label) {
+      return (
+        <Text
+          className={cn(
+            "text-sm text-muted-foreground mt-2",
+            labelStyle,
+          )}
+        >
+          {label}
+        </Text>
+      );
+    }
 
-      {showLabels &&
-        labels &&
-        variant !== "stepperDots" &&
-        variant !== "circleSteps" && (
-          <View className="flex-row justify-between mt-2">
-            {labels.map((label, i) => (
-              <Text
-                key={i}
-                className="text-xs text-muted-foreground flex-1 text-center"
-              >
-                {label}
-              </Text>
-            ))}
-          </View>
-        )}
+    // Multiple labels
+    if (labels && labels.length > 0) {
+      return (
+        <View className="flex-row justify-between mt-2">
+          {labels.map((labelText, i) => (
+            <Text
+              key={i}
+              className={cn(
+                "text-xs text-muted-foreground flex-1 text-center",
+                labelStyle,
+              )}
+            >
+              {labelText}
+            </Text>
+          ))}
+        </View>
+      );
+    }
+
+    return null;
+  };
+
+  return (
+    <View className={cn(progressVariants.base, className)}>
+      <View
+        className={cn(progressVariants.variant[variant])}
+        style={style}
+      >
+        {renderContent()}
+      </View>
+      {renderLabel()}
     </View>
   );
 }

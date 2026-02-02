@@ -208,7 +208,7 @@ export default function Index() {
         </Text>
 
         {/* Example 1: Standard */}
-        <Tabs tabs={basicTabs} />
+        <Tabs tabs={basicTabs}  />
 
         {/* Example 2: Custom styling */}
         <Tabs
@@ -402,19 +402,132 @@ export default function Index() {
           placeholder="Enter your message"
         />
       </View>
-      
-      <ProgressBar
-        variant="stepperDots"
-        currentStep={3}
-        totalSteps={5}
-        labels={["Pattern", "Goal", "Users", "Success", "Resources"]}
-      />
 
-      <ProgressBar variant="barFill" progress={65} />
+      {/* Section: ProgressBar Examples */}
+      <View style={{ gap: 16 }}>
+        <Text className="text-foreground text-xl font-bold">
+          ProgressBar Examples
+        </Text>
 
-      <ProgressBar variant="circleSteps" currentStep={2} totalSteps={5} />
+        {/* Example 1: Stepper Dots with Custom Styling */}
+        <View style={{ gap: 8 }}>
+          <Text className="text-sm font-semibold">Stepper Dots</Text>
+          <ProgressBar
+            variant="stepperDots"
+            currentStep={3}
+            totalSteps={5}
+            labels={["Pattern", "Goal", "Users", "Success", "Resources"]}
+            activeStyle="bg-green-500 border-green-500"
+            inactiveStyle="bg-gray-200 border-gray-300"
+            currentStyle="bg-white"
+            labelStyle="text-xs text-gray-600 mt-2"
+          />
+        </View>
 
-      <ProgressBar variant="barGroup" progress={50} currentStep={5} />
+        {/* Example 2: Bar Fill with Text Inside */}
+        <View style={{ gap: 8 }}>
+          <Text className="text-sm font-semibold">Bar Fill with Text</Text>
+          <ProgressBar
+            variant="barFill"
+            progress={65}
+            label="Overall Progress"
+            textInside="65%"
+            activeStyle="bg-blue-500"
+            inactiveStyle="bg-gray-100"
+            textInsideStyle="text-white font-bold"
+            labelStyle="text-sm text-red-600 font-medium"
+          />
+        </View>
+
+        {/* Example 3: Circle Steps with Custom Numbers */}
+        <View style={{ gap: 8 }}>
+          <Text className="text-sm font-semibold">Circle Steps</Text>
+          <ProgressBar
+            variant="circleSteps"
+            currentStep={2}
+            totalSteps={4}
+            labels={["Start", "Process", "Review", "Complete"]}
+            activeStyle="bg-purple-500 border-purple-500"
+            inactiveStyle="bg-gray-100 border-gray-300"
+            textInsideStyle="text-white font-semibold"
+            labelStyle="text-xs text-purple-600 mt-2"
+          />
+        </View>
+
+        {/* Example 4: Bar Group with Text */}
+        <View style={{ gap: 8 }}>
+          <Text className="text-sm font-semibold">Bar Group</Text>
+          <ProgressBar
+            variant="barGroup"
+            progress={50}
+            currentStep={4}
+            label="Progress: 4 out of 8"
+            activeStyle="bg-red-500"
+            inactiveStyle="bg-gray-200"
+            currentStyle="bg-white border-red-500"
+            labelStyle="text-sm font-medium text-red-600"
+          />
+        </View>
+
+        {/* Example 5: Stepper with Text Inside Each Dot */}
+        <View style={{ gap: 8 }}>
+          <Text className="text-sm font-semibold">
+            Stepper with Text Inside
+          </Text>
+          <ProgressBar
+            variant="stepperDots"
+            currentStep={2}
+            totalSteps={3}
+            textInside={["1", "2", "3"]}
+            activeStyle="bg-orange-500 border-orange-500"
+            inactiveStyle="bg-gray-200 border-gray-300"
+            textInsideStyle="text-white text-xs font-bold"
+            size="lg"
+          />
+        </View>
+
+        {/* Example 6: Circle Steps with Custom Text */}
+        <View style={{ gap: 8 }}>
+          <Text className="text-sm font-semibold">
+            Circle Steps with Icons/Text
+          </Text>
+          <ProgressBar
+            variant="circleSteps"
+            currentStep={3}
+            totalSteps={5}
+            textInside={["✓", "✓", "✓", "4", "5"]}
+            activeStyle="bg-teal-500 border-teal-500"
+            inactiveStyle="bg-gray-100 border-gray-300"
+            textInsideStyle="text-white font-bold text-base"
+          />
+        </View>
+
+        {/* Example 7: Small Size */}
+        <View style={{ gap: 8 }}>
+          <Text className="text-sm font-semibold">Small Size</Text>
+          <ProgressBar
+            variant="stepperDots"
+            currentStep={2}
+            totalSteps={5}
+            size="sm"
+            activeStyle="bg-indigo-500 border-indigo-500"
+            inactiveStyle="bg-gray-200 border-gray-300"
+          />
+        </View>
+
+        {/* Example 8: Large Size */}
+        <View style={{ gap: 8 }}>
+          <Text className="text-sm font-semibold">Large Size</Text>
+          <ProgressBar
+            variant="stepperDots"
+            currentStep={3}
+            totalSteps={5}
+            size="lg"
+            activeStyle="bg-pink-500 border-pink-500"
+            inactiveStyle="bg-gray-200 border-gray-300"
+          />
+        </View>
+      </View>
 
       <Link href="/storybook">Open Storybook</Link>
     </ScrollView>
