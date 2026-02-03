@@ -1,6 +1,7 @@
 import { Meta, StoryObj } from "@storybook/react-native";
 import { View } from "react-native";
 import { TextInput } from "./TextInput";
+import { CountryCode } from "react-native-country-picker-modal";
 
 const meta = {
   component: TextInput,
@@ -63,5 +64,44 @@ export const ChatField: Story = {
     type: 'chat',
     label: 'Chat Field',
     placeholder: 'Enter your message',
+  },
+};
+
+export const PhoneField: Story = {
+  args: {
+    type: 'phone-basic',
+    label: 'Phone Field',
+    placeholder: 'Enter your phone',
+  },
+};
+export const PhoneCodeField: Story = {
+  args: {
+    type: 'phone-code',
+    label: 'Phone Code Field',
+    placeholder: 'Enter your phone',
+    countryCode: 'PK',
+    callingCode: '92',
+    setCountryCode: (countryCode: CountryCode) => {
+      console.log(countryCode);
+    },
+    setCallingCode: (callingCode: string) => {
+      console.log(callingCode);
+    },
+  },
+};
+
+export const PhoneCodeIconField: Story = {
+  args: {
+    type: 'phone-code-icon',
+    label: 'Phone Code Icon Field',
+    placeholder: 'Enter your phone',
+    countryCode: 'PK',
+    callingCode: '92',
+    setCountryCode: (countryCode: CountryCode) => {
+      console.log(countryCode);
+    },
+    setCallingCode: (callingCode: string) => {
+      console.log(callingCode);
+    },
   },
 };

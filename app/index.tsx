@@ -54,6 +54,9 @@ export default function Index() {
         gap: 32,
       }}
     >
+      <View style={{ marginTop: 100 }}>
+        <Link href="/storybook">Open Storybook</Link>
+      </View>
       {/* Section: Button Examples */}
       <View style={{ gap: 16 }}>
         <Text className="text-foreground text-xl font-bold">
@@ -727,7 +730,6 @@ export default function Index() {
         </View>
       </View>
 
-      <Link href="/storybook">Open Storybook</Link>
     </ScrollView>
   );
 }

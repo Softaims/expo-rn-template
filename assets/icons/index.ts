@@ -15,3 +15,5 @@ export * from "./MagnifierIcon";
 export * from "./CloseCircleIcon";
 export * from "./PlaneIcon";
 export * from "./PaperClipIcon";
+export * from "./PhoneIcon";
+export * from "./AltArrowDownIcon";
