@@ -10,6 +10,7 @@ export interface RangeSliderProps {
   step?: number;
   low: number;
   high: number;
+  single?: boolean;
   onValueChanged: (low: number, high: number) => void;
 
   // Custom styling (style objects only)
@@ -34,12 +35,12 @@ export function RangeSlider({
   step = 1,
   low,
   high,
+  single = false,
   onValueChanged,
   thumbStyle,
   lowThumbStyle,
   highThumbStyle,
   railStyle,
-  railSelectedStyle,
   valueTextStyle,
   renderThumb,
   renderRail,
@@ -58,14 +59,20 @@ export function RangeSlider({
     />
   );
 
-  // Default rail component
+  // In single mode with disableRange, the library renders:
+  //   rail = full background, railSelected = from low thumb to max
+  // Single: rail (#e5e7eb fill) visible from min to thumb, railSelected transparent
+  // Range:  rail (#e5e7eb background), railSelected (black between thumbs)
   const DefaultRail = () => (
     <View style={[styles.rail, railStyle]} />
   );
 
-  // Default selected rail component
   const DefaultRailSelected = () => (
-    <View style={[styles.railSelected, railSelectedStyle]} />
+    <View
+      style={[
+        styles.railSelected 
+      ]}
+    />
   );
 
   // Default value renderers
@@ -73,16 +80,18 @@ export function RangeSlider({
     <Text style={[styles.valueText, valueTextStyle]}>{value}</Text>
   );
 
-  const DefaultHighValue = (value: number) => (
-    <Text style={[styles.valueText, valueTextStyle]}>{value}</Text>
-  );
+  const DefaultHighValue = (value: number) => {
+    if (single) return <></>;
+    return <Text style={[styles.valueText, valueTextStyle]}>{value}</Text>;
+  };
 
   return (
     <RangeSliderLib
       min={min}
       max={max}
       step={step}
-      low={low}
+      disableRange={single}
+      low={single ? high : low}
       high={high}
       renderThumb={renderThumb || DefaultThumb}
       renderRail={renderRail || DefaultRail}

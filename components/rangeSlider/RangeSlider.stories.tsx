@@ -43,3 +43,26 @@ const BasicExample = () => {
 };
 
 export const Basic = () => <BasicExample />;
+
+const SingleValueExample = () => {
+  const [value, setValue] = useState(50);
+
+  return (
+    <RangeSlider
+      min={0}
+      max={100}
+      step={1}
+      single
+      low={value}
+      high={value}
+      thumbStyle={{ backgroundColor: "#000" }}
+      railSelectedStyle={{ backgroundColor: "red" }}
+      onValueChanged={(newValue) => {
+        setValue(newValue);
+        console.log(`Value: ${newValue}`);
+      }}
+    />
+  );
+};
+
+export const SingleValue = () => <SingleValueExample />;
