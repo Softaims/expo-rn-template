@@ -366,11 +366,21 @@ export default function Index() {
 
         {/* Example 7: Custom disabled styling */}
         <Toggle
-          label="Custom Disabled"
+          label="Custom Disabled Active"
           value={true}
           disabled
-          disabledTrackStyle="bg-gray-200 opacity-40"
-          disabledThumbStyle="bg-gray-400 opacity-60"
+          disabledActiveTrackStyle="bg-white shadow-sm"
+          disabledActiveThumbStyle="bg-gray-300"
+          disabledLabelStyle="text-gray-400 opacity-50"
+        />
+
+        {/* Example 7b: Custom disabled inactive styling */}
+        <Toggle
+          label="Custom Disabled Inactive"
+          value={false}
+          disabled
+          disabledInactiveTrackStyle="bg-gray-300"
+          disabledInactiveThumbStyle="bg-white shadow-sm"
           disabledLabelStyle="text-gray-400 opacity-50"
         />
 

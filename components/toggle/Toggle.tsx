@@ -31,10 +31,12 @@ export interface ToggleProps {
   containerStyles?: string;
   activeTrackStyle?: string;
   inactiveTrackStyle?: string;
-  disabledTrackStyle?: string;
+  disabledInactiveTrackStyle?: string;
+  disabledActiveTrackStyle?: string;
   activeThumbStyle?: string;
   inactiveThumbStyle?: string;
-  disabledThumbStyle?: string;
+  disabledInactiveThumbStyle?: string;
+  disabledActiveThumbStyle?: string;
   labelStyle?: string;
   disabledLabelStyle?: string;
 }
@@ -47,10 +49,12 @@ export function Toggle({
   containerStyles,
   activeTrackStyle,
   inactiveTrackStyle,
-  disabledTrackStyle,
+  disabledInactiveTrackStyle,
+  disabledActiveTrackStyle,
   activeThumbStyle,
   inactiveThumbStyle,
-  disabledThumbStyle,
+  disabledInactiveThumbStyle,
+  disabledActiveThumbStyle,
   labelStyle,
   disabledLabelStyle,
 }: ToggleProps) {
@@ -77,41 +81,25 @@ export function Toggle({
   };
 
   const getTrackStyle = () => {
-    let state = "inactive";
-    if (disabled) {
-      state = "disabled";
+    if (disabled && isActive) {
+      return cn(toggleVariants.track.disabled, disabledActiveTrackStyle);
+    } else if (disabled && !isActive) {
+      return cn(toggleVariants.track.disabled, disabledInactiveTrackStyle);
     } else if (isActive) {
-      state = "active";
+      return cn(toggleVariants.track.active, activeTrackStyle);
     }
-
-    switch (state) {
-      case "disabled":
-        return cn(toggleVariants.track.disabled, disabledTrackStyle);
-      case "active":
-        return cn(toggleVariants.track.active, activeTrackStyle);
-      case "inactive":
-      default:
-        return cn(toggleVariants.track.inactive, inactiveTrackStyle);
-    }
+    return cn(toggleVariants.track.inactive, inactiveTrackStyle);
   };
 
   const getThumbStyle = () => {
-    let state = "inactive";
-    if (disabled) {
-      state = "disabled";
+    if (disabled && isActive) {
+      return cn(toggleVariants.thumb.base, disabledActiveThumbStyle);
+    } else if (disabled && !isActive) {
+      return cn(toggleVariants.thumb.base, disabledInactiveThumbStyle);
     } else if (isActive) {
-      state = "active";
+      return cn(toggleVariants.thumb.base, activeThumbStyle);
     }
-
-    switch (state) {
-      case "disabled":
-        return cn(toggleVariants.thumb.base, disabledThumbStyle);
-      case "active":
-        return cn(toggleVariants.thumb.base, activeThumbStyle);
-      case "inactive":
-      default:
-        return cn(toggleVariants.thumb.base, inactiveThumbStyle);
-    }
+    return cn(toggleVariants.thumb.base, inactiveThumbStyle);
   };
 
   return (

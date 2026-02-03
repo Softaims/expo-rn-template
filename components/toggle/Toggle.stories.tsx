@@ -45,22 +45,25 @@ export const Active: Story = {
   },
 };
 
-// -------------------
-// Disabled States
-// -------------------
 
 export const DisabledInactive: Story = {
   args: {
-    label: "Disabled Inactive",
+    label: "Disable Inactive",
     value: false,
     disabled: true,
+    disabledInactiveTrackStyle: "bg-gray-300",
+    disabledInactiveThumbStyle: "bg-white shadow-sm",
+    disabledLabelStyle: "text-gray-500",
   },
 };
 
 export const DisabledActive: Story = {
   args: {
-    label: "Disabled Active",
+    label: "Disable Active",
     value: true,
     disabled: true,
+    disabledActiveTrackStyle: "bg-white shadow-sm",
+    disabledActiveThumbStyle: "bg-gray-300",
+    disabledLabelStyle: "text-gray-500",
   },
 };
