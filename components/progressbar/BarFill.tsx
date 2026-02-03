@@ -3,21 +3,21 @@ import { cn } from "@/lib/utils";
 
 export interface BarFillProps {
   progress: number;
-  label?: string;
   containerStyles?: string;
 
   activeStyle?: string;
   inactiveStyle?: string;
 
+  label?: string;
   labelStyle?: string;
 }
 
 export function BarFill({
   progress = 0,
-  label,
   containerStyles,
   activeStyle,
   inactiveStyle,
+  label,
   labelStyle,
 }: BarFillProps) {
   const effectiveProgress = Math.min(Math.max(progress, 0), 100);

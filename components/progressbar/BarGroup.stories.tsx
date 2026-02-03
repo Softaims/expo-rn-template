@@ -30,33 +30,3 @@ export const Basic: Story = {
   },
 };
 
-export const CustomStyled: Story = {
-  args: {
-    progress: 50,
-    currentStep: 4,
-    totalSteps: 8,
-    activeThumbStyle: "bg-red-500",
-    inactiveThumbStyle: "bg-gray-200",
-    currentThumbStyle: "bg-white border-2 border-red-500",
-  },
-};
-
-export const WithTextInside: Story = {
-  args: {
-    steps: [
-      { id: 1, textInside: "1" },
-      { id: 2, textInside: "2" },
-      { id: 3, textInside: "3" },
-      { id: 4, textInside: "4" },
-      { id: 5, textInside: "5" },
-      { id: 6, textInside: "6" },
-      { id: 7, textInside: "7" },
-      { id: 8, textInside: "8" },
-    ],
-    progress: 50,
-    currentStep: 4,
-    textInsideStyle: "text-white font-bold text-xs",
-    activeThumbStyle: "bg-blue-500",
-    inactiveThumbStyle: "bg-gray-200",
-  },
-};

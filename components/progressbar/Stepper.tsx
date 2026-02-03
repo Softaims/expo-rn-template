@@ -1,25 +1,6 @@
 import { View, Text } from "react-native";
 import { cn } from "@/lib/utils";
 
-// Example steps structure:
-// const steps = [
-//   {
-//     id: 1,
-//     title: "One", // optional
-//     textInside: "1", // optional - text to display inside the thumb
-//   },
-//   {
-//     id: 2,
-//     title: "Two",
-//     textInside: "2",
-//   },
-//   {
-//     id: 3,
-//     title: "Three",
-//     textInside: "3",
-//   }
-// ]
-
 export interface Step {
   id: number;
   title?: string;
@@ -47,6 +28,7 @@ export interface StepperProps {
   // Text inside thumb styles
   activeThumbLabelStyle?: string;
   inactiveThumbLabelStyle?: string;
+  currentThumbLabelStyle?: string;
 }
 
 export function Stepper({
@@ -62,6 +44,7 @@ export function Stepper({
   inactiveTitleStyle,
   activeThumbLabelStyle,
   inactiveThumbLabelStyle,
+  currentThumbLabelStyle,
 }: StepperProps) {
   const totalSteps = steps.length;
   const current = Math.max(1, Math.min(currentStep, totalSteps));
@@ -69,7 +52,7 @@ export function Stepper({
   // Default styles
   const defaultActiveThumbStyle = "bg-primary border-primary";
   const defaultInactiveThumbStyle = "bg-muted border-muted";
-  const defaultCurrentThumbStyle = "bg-white";
+  const defaultCurrentThumbStyle = "bg-white ";
   const defaultProgressbarActiveStyle = "bg-primary";
   const defaultProgressbarInactiveStyle = "bg-muted";
 
@@ -85,22 +68,26 @@ export function Stepper({
 
       // Dot/Thumb
       dotsAndLines.push(
-        <View key={step.id} className="items-center flex-1">
+        <View key={step.id} className="items-center">
           <View
             className={cn(
-              "rounded-full border-2 items-center justify-center w-[26px] h-[26px]",
-              isActive
-                ? cn(defaultActiveThumbStyle, activeThumbStyle)
-                : cn(defaultInactiveThumbStyle, inactiveThumbStyle),
+              "rounded-full border-2 items-center justify-center w-6 h-6",
+              isCurrent
+                ? cn(defaultCurrentThumbStyle, currentThumbStyle)
+                : isActive
+                  ? cn(defaultActiveThumbStyle, activeThumbStyle)
+                  : cn(defaultInactiveThumbStyle, inactiveThumbStyle),
             )}
           >
             {step.textInside ? (
               <Text
                 className={cn(
                   "absolute text-xs font-medium",
-                  isActive
-                    ? activeThumbLabelStyle
-                    : inactiveThumbLabelStyle
+                  isCurrent
+                    ? currentThumbLabelStyle
+                    : isActive
+                      ? activeThumbLabelStyle
+                      : inactiveThumbLabelStyle
                 )}
               >
                 {step.textInside}
@@ -138,7 +125,7 @@ export function Stepper({
           <View
             key={`line-${step.id}`}
             className={cn(
-              "h-[5px] flex-1 mx-1",
+              "h-[5px] flex-1",
               stepNumber < current
                 ? cn(defaultProgressbarActiveStyle, progressbarActiveStyle)
                 : cn(defaultProgressbarInactiveStyle, progressbarInactiveStyle),

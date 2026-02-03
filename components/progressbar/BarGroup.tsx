@@ -59,11 +59,11 @@ export function BarGroup({
   // Default styles
   const defaultActiveThumbStyle = "bg-primary border-primary";
   const defaultInactiveThumbStyle = "bg-muted border-muted";
-  const defaultCurrentThumbStyle = "bg-white border-primary border-2";
+  const defaultCurrentThumbStyle = "bg-white border-primary border-[1px] ";
 
   return (
     <View className={cn("w-full", containerStyles)}>
-      <View className="flex-row items-center gap-1 w-full">
+      <View className="flex-row items-center justify-between">
         {barSteps.map((step, i) => {
           const stepNumber = i + 1;
           const filled = stepNumber / numSteps <= effectiveProgress / 100;
@@ -73,7 +73,7 @@ export function BarGroup({
             <View
               key={step.id}
               className={cn(
-                "h-6 w-6 rounded-full items-center justify-center flex-1",
+                "h-2 w-2 rounded-full items-center justify-center",
                 isCurrent
                   ? cn(defaultCurrentThumbStyle, currentThumbStyle)
                   : filled

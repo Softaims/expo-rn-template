@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, ViewStyle, TextStyle } from "react-native";
 import RangeSliderLib from "react-native-sticky-range-slider";
 
 const THUMB_RADIUS = 12;
@@ -12,12 +12,13 @@ export interface RangeSliderProps {
   high: number;
   onValueChanged: (low: number, high: number) => void;
 
-  // Custom styling
-  thumbRadius?: number;
-  lowThumbColor?: string;
-  highThumbColor?: string;
-  railColor?: string;
-  railSelectedColor?: string;
+  // Custom styling (style objects only)
+  thumbStyle?: ViewStyle;
+  lowThumbStyle?: ViewStyle;
+  highThumbStyle?: ViewStyle;
+  railStyle?: ViewStyle;
+  railSelectedStyle?: ViewStyle;
+  valueTextStyle?: TextStyle;
 
   // Custom renderers (optional)
   renderThumb?: (type: "high" | "low") => React.ReactElement;
@@ -34,11 +35,12 @@ export function RangeSlider({
   low,
   high,
   onValueChanged,
-  thumbRadius = THUMB_RADIUS,
-  lowThumbColor = "#8b5cf6",
-  highThumbColor = "#3b82f6",
-  railColor = "#e5e7eb",
-  railSelectedColor = "#3b82f6",
+  thumbStyle,
+  lowThumbStyle,
+  highThumbStyle,
+  railStyle,
+  railSelectedStyle,
+  valueTextStyle,
   renderThumb,
   renderRail,
   renderRailSelected,
@@ -50,33 +52,29 @@ export function RangeSlider({
     <View
       style={[
         styles.thumb,
-        {
-          width: thumbRadius * 2,
-          height: thumbRadius * 2,
-          borderRadius: thumbRadius,
-          backgroundColor: type === "high" ? highThumbColor : lowThumbColor,
-        },
+        thumbStyle,
+        type === "high" ? highThumbStyle : lowThumbStyle,
       ]}
     />
   );
 
   // Default rail component
   const DefaultRail = () => (
-    <View style={[styles.rail, { backgroundColor: railColor }]} />
+    <View style={[styles.rail, railStyle]} />
   );
 
   // Default selected rail component
   const DefaultRailSelected = () => (
-    <View style={[styles.railSelected, { backgroundColor: railSelectedColor }]} />
+    <View style={[styles.railSelected, railSelectedStyle]} />
   );
 
   // Default value renderers
   const DefaultLowValue = (value: number) => (
-    <Text style={styles.valueText}>{value}</Text>
+    <Text style={[styles.valueText, valueTextStyle]}>{value}</Text>
   );
 
   const DefaultHighValue = (value: number) => (
-    <Text style={styles.valueText}>{value}</Text>
+    <Text style={[styles.valueText, valueTextStyle]}>{value}</Text>
   );
 
   return (
@@ -98,8 +96,10 @@ export function RangeSlider({
 
 const styles = StyleSheet.create({
   thumb: {
-    borderWidth: 2,
-    borderColor: "#ffffff",
+    width: THUMB_RADIUS * 2,
+    height: THUMB_RADIUS * 2,
+    borderRadius: THUMB_RADIUS,
+    backgroundColor: "#000",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -113,10 +113,12 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 4,
     borderRadius: 2,
+    backgroundColor: "#e5e7eb",
   },
   railSelected: {
     height: 4,
     borderRadius: 2,
+    backgroundColor: "#000",
   },
   valueText: {
     fontSize: 14,
