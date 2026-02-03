@@ -1,4 +1,4 @@
-import { Pressable, View, ViewStyle } from "react-native";
+import { Pressable, View } from "react-native";
 import { cn } from "@/lib/utils";
 import { Text } from "@/components";
 import { useState } from "react";
@@ -25,8 +25,6 @@ export interface CheckboxProps {
   indeterminate?: boolean;
   disabled?: boolean;
   onCheckedChange?: (checked: boolean) => void;
-  className?: string;
-  style?: ViewStyle;
 
   // Styling props
   containerStyles?: string;
@@ -48,8 +46,6 @@ export function Checkbox({
   indeterminate = false,
   disabled = false,
   onCheckedChange,
-  className,
-  style,
   containerStyles,
   checkedBoxStyle,
   uncheckedBoxStyle,
@@ -70,44 +66,58 @@ export function Checkbox({
   };
 
   const getBoxStyle = () => {
-    if (disabled) {
-      return (
-        disabledBoxStyle ||
-        (isChecked || indeterminate
-          ? checkboxVariants.box.disabledChecked
-          : checkboxVariants.box.disabled)
-      );
+    // Create a state key for switch statement
+    let state = "normal";
+    if (disabled && (isChecked || indeterminate)) {
+      state = "disabled-checked";
+    } else if (disabled) {
+      state = "disabled";
+    } else if (indeterminate) {
+      state = "indeterminate";
+    } else if (isChecked) {
+      state = "checked";
     }
 
-    if (indeterminate) {
-      return indeterminateBoxStyle || checkboxVariants.box.checked;
+    switch (state) {
+      case "disabled-checked":
+        return cn(checkboxVariants.box.disabledChecked, disabledBoxStyle);
+      case "disabled":
+        return cn(checkboxVariants.box.disabled, disabledBoxStyle);
+      case "indeterminate":
+        return cn(checkboxVariants.box.checked, indeterminateBoxStyle);
+      case "checked":
+        return cn(checkboxVariants.box.checked, checkedBoxStyle);
+      case "normal":
+      default:
+        return cn(checkboxVariants.box.normal, uncheckedBoxStyle);
     }
-
-    if (isChecked) {
-      return checkedBoxStyle || checkboxVariants.box.checked;
-    }
-
-    return uncheckedBoxStyle || checkboxVariants.box.normal;
   };
 
   const renderIcon = () => {
+    // Create a state key for switch statement
+    let iconState = "none";
     if (indeterminate && indeterminateIcon) {
-      return indeterminateIcon;
+      iconState = "indeterminate";
+    } else if (isChecked && checkIcon) {
+      iconState = "checked";
     }
 
-    if (isChecked && checkIcon) {
-      return checkIcon;
+    switch (iconState) {
+      case "indeterminate":
+        return indeterminateIcon;
+      case "checked":
+        return checkIcon;
+      case "none":
+      default:
+        return null;
     }
-
-    return null;
   };
 
   return (
     <Pressable
       onPress={handlePress}
       disabled={disabled}
-      className={cn(checkboxVariants.container, className, containerStyles)}
-      style={style}
+      className={cn(checkboxVariants.container, containerStyles)}
     >
       <View className={cn(checkboxVariants.box.base, getBoxStyle())}>
         {renderIcon()}
@@ -116,9 +126,14 @@ export function Checkbox({
         <Text
           className={cn(
             checkboxVariants.label.base,
-            disabled
-              ? disabledLabelStyle || checkboxVariants.label.disabled
-              : labelStyle || checkboxVariants.label.normal
+            (() => {
+              switch (true) {
+                case disabled:
+                  return cn(checkboxVariants.label.disabled, disabledLabelStyle);
+                default:
+                  return cn(checkboxVariants.label.normal, labelStyle);
+              }
+            })()
           )}
         >
           {label}

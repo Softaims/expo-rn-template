@@ -250,12 +250,15 @@ export const CustomIconWrapper: Story = {
   args: {
     title: "Check Status",
     variant: "primary",
-    leftIconWrapperStyles: "bg-white/20 rounded-full p-1",
   },
   render: (args) => (
     <Button
       {...args}
-      leftIcon={<CheckIcon width={18} height={18} color="#ffffff" />}
+      leftIcon={
+        <View className="bg-white/20 rounded-full p-1">
+          <CheckIcon width={18} height={18} color="#ffffff" />
+        </View>
+      }
       onPress={() => console.log("Pressed")}
     />
   ),

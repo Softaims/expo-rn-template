@@ -1,4 +1,4 @@
-import { Pressable, PressableProps, View, ViewStyle } from "react-native";
+import { Pressable, PressableProps, View } from "react-native";
 import { cn } from "@/lib/utils";
 import { Text } from "@/components";
 
@@ -36,8 +36,6 @@ const textVariants = {
 export interface ButtonProps extends Omit<PressableProps, "onPress" | "style"> {
   variant?: keyof typeof buttonVariants.variant;
   size?: keyof typeof buttonVariants.size;
-  className?: string;
-  style?: ViewStyle;
   title: string;
   onPress?: () => void;
 
@@ -49,19 +47,12 @@ export interface ButtonProps extends Omit<PressableProps, "onPress" | "style"> {
   containerStyles?: string;
   innerWrapperStyles?: string;
   textStyles?: string;
-  leftIconWrapperStyles?: string;
-  rightIconWrapperStyles?: string;
-
-  // Font family (optional)
-  fontFamily?: string;
 }
 
 export function Button({
   variant = "primary",
   size = "md",
   disabled,
-  className,
-  style,
   title,
   leftIcon,
   rightIcon,
@@ -69,9 +60,6 @@ export function Button({
   containerStyles,
   innerWrapperStyles,
   textStyles,
-  leftIconWrapperStyles,
-  rightIconWrapperStyles,
-  fontFamily,
   ...props
 }: ButtonProps) {
   const effectiveVariant = disabled ? "disabled" : variant;
@@ -83,34 +71,23 @@ export function Button({
         buttonVariants.base,
         buttonVariants.variant[effectiveVariant],
         buttonVariants.size[size],
-        className,
-        containerStyles
+        containerStyles,
       )}
-      style={style}
       onPress={onPress}
       {...props}
     >
-      <View className={cn("flex-row items-center justify-center gap-2", innerWrapperStyles)}>
-        {leftIcon && (
-          <View className={leftIconWrapperStyles}>
-            {leftIcon}
-          </View>
-        )}
+      <View className={cn("flex-row", innerWrapperStyles)}>
+        {leftIcon}
         <Text
           className={cn(
             textVariants.variant[effectiveVariant],
             textVariants.size[size],
-            textStyles
+            textStyles,
           )}
-          style={fontFamily ? { fontFamily } : undefined}
         >
           {title}
         </Text>
-        {rightIcon && (
-          <View className={rightIconWrapperStyles}>
-            {rightIcon}
-          </View>
-        )}
+        {rightIcon}
       </View>
     </Pressable>
   );

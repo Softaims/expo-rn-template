@@ -1,4 +1,4 @@
-import { View, ViewStyle, Text } from "react-native";
+import { View, Text } from "react-native";
 import { cn } from "@/lib/utils";
 
 const progressVariants = {
@@ -20,10 +20,9 @@ export interface ProgressBarProps {
   label?: string;
   labels?: string[];
   size?: "sm" | "md" | "lg";
-  className?: string;
-  style?: ViewStyle;
 
   // Styling props
+  containerStyles?: string;
   activeStyle?: string;
   inactiveStyle?: string;
   currentStyle?: string;
@@ -42,8 +41,7 @@ export function ProgressBar({
   label,
   labels,
   size = "md",
-  className,
-  style,
+  containerStyles,
   activeStyle,
   inactiveStyle,
   currentStyle,
@@ -87,8 +85,8 @@ export function ProgressBar({
             className={cn(
               "rounded-full border-2 items-center justify-center",
               isActive
-                ? activeStyle || defaultActiveStyle
-                : inactiveStyle || defaultInactiveStyle,
+                ? cn(defaultActiveStyle, activeStyle)
+                : cn(defaultInactiveStyle, inactiveStyle),
             )}
             style={{
               width: dotSize + 8,
@@ -97,7 +95,7 @@ export function ProgressBar({
           >
             {isCurrent && (
               <View
-                className={cn("rounded-full", currentStyle || defaultCurrentStyle)}
+                className={cn("rounded-full", defaultCurrentStyle, currentStyle)}
                 style={{ width: dotSize, height: dotSize }}
               />
             )}
@@ -140,13 +138,11 @@ export function ProgressBar({
       <View
         className={cn(
           "h-2.5 rounded-full overflow-hidden relative",
-          inactiveStyle || "bg-muted",
-          className,
+          cn("bg-muted", inactiveStyle)
         )}
-        style={style}
       >
         <View
-          className={cn("h-full rounded-full", activeStyle || "bg-primary")}
+          className={cn("h-full rounded-full bg-primary", activeStyle)}
           style={{
             width: `${effectiveProgress}%`,
           }}
@@ -170,8 +166,7 @@ export function ProgressBar({
     const barCount = 8;
     return (
       <View
-        className={cn("flex-row items-center gap-1", className)}
-        style={style}
+        className={cn("flex-row items-center gap-1")}
       >
         {Array.from({ length: barCount }).map((_, i) => {
           const stepNumber = i + 1;
@@ -185,10 +180,10 @@ export function ProgressBar({
               className={cn(
                 "h-6 w-6 rounded-full items-center justify-center",
                 isCurrent
-                  ? currentStyle || "bg-white border-2"
+                  ? cn("bg-white border-2", currentStyle)
                   : filled
-                    ? activeStyle || defaultActiveStyle
-                    : inactiveStyle || defaultInactiveStyle,
+                    ? cn(defaultActiveStyle, activeStyle)
+                    : cn(defaultInactiveStyle, inactiveStyle),
               )}
             >
               {text && (
@@ -215,15 +210,17 @@ export function ProgressBar({
             className={cn(
               "rounded-full w-10 h-10 items-center justify-center border-2",
               isActive
-                ? activeStyle || defaultActiveStyle
-                : inactiveStyle || "bg-background border-muted",
+                ? cn(defaultActiveStyle, activeStyle)
+                : cn("bg-background border-muted", inactiveStyle),
             )}
           >
             <Text
               className={cn(
                 "font-medium",
-                textInsideStyle ||
-                  (isActive ? "text-primary-foreground" : "text-muted-foreground"),
+                cn(
+                  isActive ? "text-primary-foreground" : "text-muted-foreground",
+                  textInsideStyle
+                ),
               )}
               style={{ fontSize: fontSize + 2 }}
             >
@@ -240,8 +237,8 @@ export function ProgressBar({
             className={cn(
               "flex-1 h-1 mx-2",
               i < current
-                ? activeStyle || "bg-primary"
-                : inactiveStyle || "bg-muted",
+                ? cn("bg-primary", activeStyle)
+                : cn("bg-muted", inactiveStyle),
             )}
           />,
         );
@@ -303,10 +300,9 @@ export function ProgressBar({
   };
 
   return (
-    <View className={cn(progressVariants.base, className)}>
+    <View className={cn(progressVariants.base, containerStyles)}>
       <View
         className={cn(progressVariants.variant[variant])}
-        style={style}
       >
         {renderContent()}
       </View>

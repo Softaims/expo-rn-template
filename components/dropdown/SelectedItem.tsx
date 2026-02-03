@@ -1,4 +1,4 @@
-import { Pressable, View, ViewStyle } from "react-native";
+import { Pressable, View } from "react-native";
 import { cn } from "@/lib/utils";
 import { Text } from "@/components";
 
@@ -23,14 +23,11 @@ export interface SelectedItemProps {
   disabled?: boolean;
   showClose?: boolean;
   closeIcon?: React.ReactNode;
-  className?: string;
-  style?: ViewStyle;
 
   // Simple Tailwind class styling for sub-elements
   containerStyles?: string;
   labelStyles?: string;
   closeButtonStyles?: string;
-  closeIconWrapperStyles?: string;
 }
 
 export function SelectedItem({
@@ -39,12 +36,9 @@ export function SelectedItem({
   disabled = false,
   showClose = true,
   closeIcon,
-  className,
-  style,
   containerStyles,
   labelStyles,
   closeButtonStyles,
-  closeIconWrapperStyles,
 }: SelectedItemProps) {
   const getContainerStyle = () => {
     return disabled
@@ -60,8 +54,7 @@ export function SelectedItem({
 
   return (
     <View
-      className={cn(selectedItemVariants.container.base, getContainerStyle(), className, containerStyles)}
-      style={style}
+      className={cn(selectedItemVariants.container.base, getContainerStyle(), containerStyles)}
     >
       <Text className={cn(selectedItemVariants.label.base, getLabelStyle(), labelStyles)}>
         {label}
@@ -72,9 +65,7 @@ export function SelectedItem({
           disabled={disabled}
           className={cn(selectedItemVariants.closeButton, closeButtonStyles)}
         >
-          <View className={closeIconWrapperStyles}>
-            {closeIcon}
-          </View>
+          {closeIcon}
         </Pressable>
       )}
     </View>

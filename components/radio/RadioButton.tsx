@@ -1,4 +1,4 @@
-import { Pressable, View, ViewStyle } from "react-native";
+import { Pressable, View } from "react-native";
 import { cn } from "@/lib/utils";
 import { Text } from "@/components";
 
@@ -27,8 +27,6 @@ export interface RadioButtonProps {
   selected?: boolean;
   inactive?: boolean;
   onSelect?: () => void;
-  className?: string;
-  style?: ViewStyle;
 
   // Styling props
   containerStyles?: string;
@@ -49,8 +47,6 @@ export function RadioButton({
   selected = false,
   inactive = false,
   onSelect,
-  className,
-  style,
   containerStyles,
   selectedCircleStyle,
   unselectedCircleStyle,
@@ -67,23 +63,31 @@ export function RadioButton({
   };
 
   const getCircleStyle = () => {
+    let state = "unselected";
     if (inactive) {
-      return inactiveCircleStyle || radioVariants.circle.inactive;
+      state = "inactive";
+    } else if (selected) {
+      state = "selected";
     }
 
-    if (selected) {
-      return selectedCircleStyle || radioVariants.circle.selected;
+    switch (state) {
+      case "inactive":
+        return cn(radioVariants.circle.inactive, inactiveCircleStyle);
+      case "selected":
+        return cn(radioVariants.circle.selected, selectedCircleStyle);
+      case "unselected":
+      default:
+        return cn(radioVariants.circle.unselected, unselectedCircleStyle);
     }
-
-    return unselectedCircleStyle || radioVariants.circle.unselected;
   };
 
   const getDotStyle = () => {
-    if (inactive) {
-      return inactiveDotStyle || radioVariants.dot.inactive;
+    switch (true) {
+      case inactive:
+        return cn(radioVariants.dot.inactive, inactiveDotStyle);
+      default:
+        return cn(radioVariants.dot.selected, selectedDotStyle);
     }
-
-    return selectedDotStyle || radioVariants.dot.selected;
   };
 
   const renderContent = () => {
@@ -102,8 +106,7 @@ export function RadioButton({
     <Pressable
       onPress={handlePress}
       disabled={inactive}
-      className={cn(radioVariants.container, className, containerStyles)}
-      style={style}
+      className={cn(radioVariants.container, containerStyles)}
     >
       <View className={cn(radioVariants.circle.base, getCircleStyle())}>
         {renderContent()}
@@ -113,8 +116,8 @@ export function RadioButton({
           className={cn(
             radioVariants.label.base,
             inactive
-              ? inactiveLabelStyle || radioVariants.label.inactive
-              : labelStyle || radioVariants.label.normal
+              ? cn(radioVariants.label.inactive, inactiveLabelStyle)
+              : cn(radioVariants.label.normal, labelStyle)
           )}
         >
           {label}

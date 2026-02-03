@@ -1,4 +1,4 @@
-import { Pressable, View, ViewStyle } from "react-native";
+import { Pressable, View } from "react-native";
 import { cn } from "@/lib/utils";
 import { Text } from "@/components";
 import { useState } from "react";
@@ -82,19 +82,13 @@ export interface TabsProps {
   tabs: TabItem[];
   defaultValue?: string;
   onValueChange?: (value: string) => void;
-  className?: string;
-  style?: ViewStyle;
 
   // Styling props
-  containerStyles?: string; 
+  containerStyles?: string;
   activeTabStyle?: string;
   inactiveTabStyle?: string;
   activeTextStyle?: string;
   inactiveTextStyle?: string;
-  iconWrapperStyle?: string;
-
-  // Font family (optional, only applies if provided)
-  fontFamily?: string;
 }
 
 export function Tabs({
@@ -102,15 +96,11 @@ export function Tabs({
   tabs,
   defaultValue,
   onValueChange,
-  className,
-  style,
   containerStyles,
   activeTabStyle,
   inactiveTabStyle,
   activeTextStyle,
   inactiveTextStyle,
-  iconWrapperStyle,
-  fontFamily,
 }: TabsProps) {
   const [activeTab, setActiveTab] = useState(defaultValue || tabs[0]?.value);
 
@@ -122,7 +112,7 @@ export function Tabs({
   const variantStyles = tabVariants[variant];
 
   return (
-    <View className={cn(variantStyles.container, className, containerStyles)} style={style}>
+    <View className={cn(variantStyles.container, containerStyles)}>
       {tabs.map((tab) => {
         const isActive = activeTab === tab.value;
         return (
@@ -132,25 +122,18 @@ export function Tabs({
             className={cn(
               variantStyles.tab.base,
               isActive
-                ?  variantStyles.tab.active + ' ' + activeTabStyle
-                : variantStyles.tab.inactive + ' ' + inactiveTabStyle
-                // ? activeTabStyle || variantStyles.tab.active
-                // : inactiveTabStyle || variantStyles.tab.inactive
+                ? cn(variantStyles.tab.active, activeTabStyle)
+                : cn(variantStyles.tab.inactive, inactiveTabStyle)
             )}
           >
-            {tab.icon && (
-              <View className={iconWrapperStyle}>
-                {tab.icon}
-              </View>
-            )}
+            {tab.icon}
             <Text
               className={cn(
                 variantStyles.text.base,
                 isActive
-                  ? activeTextStyle || variantStyles.text.active
-                  : inactiveTextStyle || variantStyles.text.inactive
+                  ? cn(variantStyles.text.active, activeTextStyle)
+                  : cn(variantStyles.text.inactive, inactiveTextStyle)
               )}
-              style={fontFamily ? { fontFamily } : undefined}
             >
               {tab.label}
             </Text>

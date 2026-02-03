@@ -19,9 +19,7 @@ import {
   SendIcon,
   CheckIcon,
   MinusIcon,
-  PostsIcon,
 } from "@/assets/icons";
-import { fontFamilies } from "@/hooks/useFonts";
 import { useState } from "react";
 import "../global.css";
 
@@ -56,14 +54,6 @@ export default function Index() {
         gap: 32,
       }}
     >
-      <View style={{marginTop:100}}>
-        <Link href="/storybook">Open Storybook</Link>
-      </View>
-
-      {/* <Text variant=' ' className="`"> wow</Text> */}
-
-
-
       {/* Section: Button Examples */}
       <View style={{ gap: 16 }}>
         <Text className="text-foreground text-xl font-bold">
@@ -90,17 +80,22 @@ export default function Index() {
           title="Continue"
           rightIcon={<ArrowRightIcon width={18} height={18} color="#3b82f6" />}
           variant="secondary"
-          containerStyles="rounded-full"
-          innerWrapperStyles="gap-3"
+          containerStyles="rounded-full justify-start px-4"
+          // innerWrapperStyles="items-start"
           onPress={() => console.log("Continue")}
         />
 
         {/* Example 4: Button with Both Icons */}
         <Button
           title="Transfer"
-          leftIcon={<ArrowLeftIcon width={18} height={18} color="#ffffff" />}
+          leftIcon={
+            <View className="bg-red-400 rounded-full p-1">
+              <ArrowLeftIcon width={18} height={18} color="#ffffff" />
+            </View>
+          }
           rightIcon={<ArrowRightIcon width={18} height={18} color="#ffffff" />}
           variant="primary"
+          innerWrapperStyles="gap-4"
           onPress={() => console.log("Transfer")}
         />
 
@@ -130,13 +125,24 @@ export default function Index() {
           onPress={() => console.log("Back")}
         />
 
-        {/* Example 8: Custom Icon Wrapper Styles */}
+        {/* Example 8: Text Centered, Icon at Far Right */}
         <Button
-          title="Check Status"
-          leftIcon={<CheckIcon width={18} height={18} color="#ffffff" />}
+          title="Continue centered"
+          rightIcon={<ArrowRightIcon width={18} height={18} color="#ffffff" />}
           variant="primary"
-          leftIconWrapperStyles="bg-white/20 rounded-full p-1"
-          onPress={() => console.log("Check")}
+          containerStyles="w-full"
+          textStyles="flex-1 text-center"
+          onPress={() => console.log("Continue Far")}
+        />
+
+        {/* Example 8b: Icons at Both Edges, Text Centered */}
+        <Button
+          title="Transfer"
+          leftIcon={<ArrowLeftIcon width={18} height={18} color="#ffffff" />}
+          rightIcon={<ArrowRightIcon width={18} height={18} color="#ffffff" />}
+          variant="primary"
+          textStyles="flex-1 text-center"
+          onPress={() => console.log("Transfer Edges")}
         />
 
         {/* Example 9: Disabled with Icon */}
@@ -155,12 +161,11 @@ export default function Index() {
           onPress={() => console.log("Learn More")}
         />
 
-        {/* Example 11: Font Weight - Semibold */}
+        {/* Example 11: Button with No Icons */}
         <Button
-          title="Custom Font"
-          fontFamily={fontFamilies.semibold}
-          leftIcon={<SendIcon width={18} height={18} color="#ffffff" />}
-          onPress={() => console.log("Custom Font")}
+          title="Simple Button"
+          variant="primary"
+          onPress={() => console.log("Simple")}
         />
       </View>
 
@@ -192,7 +197,9 @@ export default function Index() {
           label="Indeterminate State"
           indeterminate={true}
           indeterminateBoxStyle="bg-orange-500 border-orange-500"
-          indeterminateIcon={<MinusIcon width={12} height={12} color="#ffffff" />}
+          indeterminateIcon={
+            <MinusIcon width={12} height={12} color="#ffffff" />
+          }
         />
 
         {/* Example 4: Custom icon - ArrowRight */}
@@ -208,17 +215,15 @@ export default function Index() {
         <Checkbox
           label="Custom Indeterminate"
           indeterminate={true}
-          indeterminateIcon={<CloseIcon width={12} height={12} color="#ffffff" />}
+          indeterminateIcon={
+            <CloseIcon width={12} height={12} color="#ffffff" />
+          }
           indeterminateBoxStyle="bg-red-500 border-red-500 rounded-lg"
           labelStyle="text-red-600"
         />
 
         {/* Example 6: Disabled states */}
-        <Checkbox
-          label="Disabled Unchecked"
-          disabled={true}
-          checked={false}
-        />
+        <Checkbox label="Disabled Unchecked" disabled={true} checked={false} />
 
         {/* Example 7: Disabled Checked */}
         <Checkbox
@@ -290,11 +295,7 @@ export default function Index() {
         />
 
         {/* Example 7: Inactive/Disabled */}
-        <RadioButton
-          label="Inactive Radio"
-          selected={true}
-          inactive={true}
-        />
+        <RadioButton label="Inactive Radio" selected={true} inactive={true} />
 
         {/* Example 8: Custom inactive styling */}
         <RadioButton
@@ -359,11 +360,7 @@ export default function Index() {
         />
 
         {/* Example 6: Disabled */}
-        <Toggle
-          label="Disabled Toggle"
-          value={true}
-          disabled
-        />
+        <Toggle label="Disabled Toggle" value={true} disabled />
 
         {/* Example 7: Custom disabled styling */}
         <Toggle
@@ -431,7 +428,6 @@ export default function Index() {
         <Tabs
           tabs={basicTabs}
           variant="filled"
-          fontFamily={fontFamilies.bold}
           activeTabStyle="bg-orange-500"
           inactiveTabStyle="bg-orange-100"
           activeTextStyle="text-white"
@@ -731,16 +727,7 @@ export default function Index() {
         </View>
       </View>
 
-
-      <Tabs
-        tabs={[
-          { label: "Orders", value: "orders", icon: <PostsIcon width={18} height={18} /> },
-          { label: "Team", value: "team", icon: <PostsIcon width={18} height={18} /> },
-        ]}
-        variant="icon"
-      />
-
-
+      <Link href="/storybook">Open Storybook</Link>
     </ScrollView>
   );
 }

@@ -1,4 +1,4 @@
-import { Pressable, View, Animated, ViewStyle } from "react-native";
+import { Pressable, View, Animated } from "react-native";
 import { cn } from "@/lib/utils";
 import { Text } from "@/components";
 import { useState, useEffect, useRef } from "react";
@@ -26,8 +26,6 @@ export interface ToggleProps {
   value?: boolean;
   disabled?: boolean;
   onValueChange?: (value: boolean) => void;
-  className?: string;
-  style?: ViewStyle;
 
   // Styling props
   containerStyles?: string;
@@ -46,8 +44,6 @@ export function Toggle({
   value = false,
   disabled = false,
   onValueChange,
-  className,
-  style,
   containerStyles,
   activeTrackStyle,
   inactiveTrackStyle,
@@ -81,35 +77,48 @@ export function Toggle({
   };
 
   const getTrackStyle = () => {
+    let state = "inactive";
     if (disabled) {
-      return disabledTrackStyle || toggleVariants.track.disabled;
+      state = "disabled";
+    } else if (isActive) {
+      state = "active";
     }
 
-    if (isActive) {
-      return activeTrackStyle || toggleVariants.track.active;
+    switch (state) {
+      case "disabled":
+        return cn(toggleVariants.track.disabled, disabledTrackStyle);
+      case "active":
+        return cn(toggleVariants.track.active, activeTrackStyle);
+      case "inactive":
+      default:
+        return cn(toggleVariants.track.inactive, inactiveTrackStyle);
     }
-
-    return inactiveTrackStyle || toggleVariants.track.inactive;
   };
 
   const getThumbStyle = () => {
+    let state = "inactive";
     if (disabled) {
-      return disabledThumbStyle || toggleVariants.thumb.base;
+      state = "disabled";
+    } else if (isActive) {
+      state = "active";
     }
 
-    if (isActive) {
-      return activeThumbStyle || toggleVariants.thumb.base;
+    switch (state) {
+      case "disabled":
+        return cn(toggleVariants.thumb.base, disabledThumbStyle);
+      case "active":
+        return cn(toggleVariants.thumb.base, activeThumbStyle);
+      case "inactive":
+      default:
+        return cn(toggleVariants.thumb.base, inactiveThumbStyle);
     }
-
-    return inactiveThumbStyle || toggleVariants.thumb.base;
   };
 
   return (
     <Pressable
       onPress={handlePress}
       disabled={disabled}
-      className={cn(toggleVariants.container, className, containerStyles)}
-      style={style}
+      className={cn(toggleVariants.container, containerStyles)}
     >
       <View className={cn(toggleVariants.track.base, getTrackStyle())}>
         <Animated.View
@@ -124,8 +133,8 @@ export function Toggle({
           className={cn(
             toggleVariants.label.base,
             disabled
-              ? disabledLabelStyle || toggleVariants.label.disabled
-              : labelStyle || toggleVariants.label.normal
+              ? cn(toggleVariants.label.disabled, disabledLabelStyle)
+              : cn(toggleVariants.label.normal, labelStyle)
           )}
         >
           {label}

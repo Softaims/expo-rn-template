@@ -1,7 +1,6 @@
 import {
   Pressable,
   View,
-  ViewStyle,
   ScrollView,
   TextInput,
 } from "react-native";
@@ -61,8 +60,6 @@ export interface DropdownProps {
   maxHeight?: number;
   emptyMessage?: string;
   chevronIcon?: React.ReactNode;
-  className?: string;
-  style?: ViewStyle;
   placeholderTextColor?: string;
 
   // Simple Tailwind class styling for 12 sub-elements
@@ -83,7 +80,6 @@ export interface DropdownProps {
   selectedItemLabelStyles?: string;
   selectedItemCloseIcon?: React.ReactNode;
   selectedItemCloseButtonStyles?: string;
-  selectedItemCloseIconWrapperStyles?: string;
 }
 
 export function Dropdown({
@@ -102,8 +98,6 @@ export function Dropdown({
   maxHeight = 300,
   emptyMessage = "No options found",
   chevronIcon,
-  className,
-  style,
   placeholderTextColor,
   containerStyles,
   triggerStyles,
@@ -120,7 +114,6 @@ export function Dropdown({
   selectedItemLabelStyles,
   selectedItemCloseIcon,
   selectedItemCloseButtonStyles,
-  selectedItemCloseIconWrapperStyles,
 }: DropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -195,7 +188,7 @@ export function Dropdown({
   };
 
   return (
-    <View className={cn(className || "", containerStyles)} style={style}>
+    <View className={cn(containerStyles)}>
       {multiSelect && selectedValues.length > 0 && (
         <View className={cn(dropdownVariants.selectedItemsWrapper, selectedItemsWrapperStyles)}>
           {selectedValues.map((optionValue) => {
@@ -210,7 +203,6 @@ export function Dropdown({
                 containerStyles={selectedItemContainerStyles}
                 labelStyles={selectedItemLabelStyles}
                 closeButtonStyles={selectedItemCloseButtonStyles}
-                closeIconWrapperStyles={selectedItemCloseIconWrapperStyles}
               />
             );
           })}
