@@ -1,7 +1,7 @@
-import { View } from "react-native";
+import { BookmarkIcon, PostsIcon } from "@/assets/icons";
 import { Meta, StoryObj } from "@storybook/react-native";
+import { View } from "react-native";
 import { Tabs } from "./Tabs";
-import { PostsIcon, BookmarkIcon } from "@/assets/icons";
 
 const meta = {
   component: Tabs,
@@ -25,7 +25,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 const basicTabs = [
-  { label: "Details", value: "details" },
+  { label: "Details", value: "details", }, // unique value for each tab
   { label: "Products", value: "products" },
   { label: "Orders", value: "orders" },
   { label: "Team", value: "team" },
@@ -40,24 +40,40 @@ export const Underline: Story = {
     variant: "underline",
     tabs: basicTabs,
     defaultValue: "details",
+
+    // Naming_Convention: persist container styles, remove className
+    // Remove font family prop
+
+
+    // containerStyles: "gap-4 bg-red-500",
+    // activeTabStyle: "bg-blue-500",
+
+
   },
 };
+
 
 export const Filled: Story = {
   args: {
     variant: "filled",
     tabs: basicTabs,
     defaultValue: "details",
+
+    // 🚨🚨🚨🚨🚨🚨🚨🚨  props overriding logic wrong
+    // containerStyles: "border-[1px]",
+    // activeTabStyle: 'flex-1',
+    // inactiveTabStyle: 'flex-1',
   },
 };
 
-export const FilledRounded: Story = {
-  args: {
-    variant: "filled-rounded",
-    tabs: basicTabs,
-    defaultValue: "details",
-  },
-};
+// remove extra
+// export const FilledRounded: Story = {
+//   args: {
+//     variant: "filled-rounded",
+//     tabs: basicTabs,
+//     defaultValue: "details",
+//   },
+// };
 
 export const Pill: Story = {
   args: {
@@ -71,18 +87,18 @@ export const Pill: Story = {
 // Custom Styling
 // -------------------
 
-export const CustomActiveInactive: Story = {
-  args: {
-    variant: "filled",
-    tabs: basicTabs,
-    defaultValue: "products",
-    containerStyles: "gap-4",
-    activeTabStyle: "bg-blue-600 px-6 py-4 rounded-xl",
-    inactiveTabStyle: "bg-gray-100 px-6 py-4 rounded-xl",
-    activeTextStyle: "text-white text-lg font-bold",
-    inactiveTextStyle: "text-gray-500 text-lg",
-  },
-};
+// export const CustomActiveInactive: Story = {
+//   args: {
+//     variant: "filled",
+//     tabs: basicTabs,
+//     defaultValue: "products",
+//     containerStyles: "gap-4",
+//     activeTabStyle: "bg-blue-600 px-6 py-4 rounded-xl",
+//     inactiveTabStyle: "bg-gray-100 px-6 py-4 rounded-xl",
+//     activeTextStyle: "text-white text-lg font-bold",
+//     inactiveTextStyle: "text-gray-500 text-lg",
+//   },
+// };
 
 export const CustomPillColors: Story = {
   args: {
@@ -124,31 +140,24 @@ export const CustomOrange: Story = {
 // Icon Tabs
 // -------------------
 
-export const IconTabs: Story = {
-  args: {
-    variant: "icon",
-    tabs: basicTabs,
-    defaultValue: "posts",
-  },
-  render: () => (
-    <Tabs
-      variant="icon"
-      tabs={[
-        {
-          label: "Posts",
-          value: "posts",
-          icon: <PostsIcon width={18} height={18} />,
-        },
-        {
-          label: "Saved Posts",
-          value: "saved",
-          icon: <BookmarkIcon width={18} height={18} />,
-        },
-      ]}
-      defaultValue="posts"
-    />
-  ),
-};
+// export const IconTabs: Story = {
+//   args: {
+//     variant: "icon",
+//     tabs: [
+//       { label: "Orders", value: "orders", icon: <PostsIcon width={18} height={18} /> },
+//       { label: "Team", value: "team", icon: <PostsIcon width={18} height={18} /> },
+//     ],
+//     defaultValue: "posts",
+
+
+
+//   },
+//   // parameters: {
+//   //   docs: {
+//   //     source: { type: 'code', transform: () => null }, // Prevents rendering complex JSX in source blocks
+//   //   },
+//   // },
+// };
 
 export const IconTabsCustom: Story = {
   args: {

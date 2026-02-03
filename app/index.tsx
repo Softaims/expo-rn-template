@@ -19,6 +19,7 @@ import {
   SendIcon,
   CheckIcon,
   MinusIcon,
+  PostsIcon,
 } from "@/assets/icons";
 import { fontFamilies } from "@/hooks/useFonts";
 import { useState } from "react";
@@ -55,6 +56,14 @@ export default function Index() {
         gap: 32,
       }}
     >
+      <View style={{marginTop:100}}>
+        <Link href="/storybook">Open Storybook</Link>
+      </View>
+
+      {/* <Text variant=' ' className="`"> wow</Text> */}
+
+
+
       {/* Section: Button Examples */}
       <View style={{ gap: 16 }}>
         <Text className="text-foreground text-xl font-bold">
@@ -722,7 +731,16 @@ export default function Index() {
         </View>
       </View>
 
-      <Link href="/storybook">Open Storybook</Link>
+
+      <Tabs
+        tabs={[
+          { label: "Orders", value: "orders", icon: <PostsIcon width={18} height={18} /> },
+          { label: "Team", value: "team", icon: <PostsIcon width={18} height={18} /> },
+        ]}
+        variant="icon"
+      />
+
+
     </ScrollView>
   );
 }

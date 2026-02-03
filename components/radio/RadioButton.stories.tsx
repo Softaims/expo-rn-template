@@ -57,7 +57,8 @@ export const InactiveUnselected: Story = {
   args: {
     label: "Inactive Unselected",
     selected: false,
-    inactive: true,
+
+    inactive: true, 
   },
 };
 

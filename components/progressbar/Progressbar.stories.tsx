@@ -34,16 +34,46 @@ type Story = StoryObj<typeof meta>;
 // Basic Variants
 // -------------------
 
+// const steps=[
+//   {
+//     id:1,
+//     title:"One", // optional
+//   },
+//   {
+//     id:2,
+//     title:"Two",
+//   },
+//   {
+//     id:3,
+//     title:"Three",
+//   }
+// ]
+
 export const StepperDots: Story = {
   args: {
     variant: "stepperDots",
     currentStep: 2,
-    totalSteps: 5,
-    labels: ["One", "Two", "Three", "Four", "Five"],
-    size: "md",
+    totalSteps: 4,
+    labels: ["One", "Two", "Three", "Four"],
+    
+    size: "sm", // not required, make it responsive to the screen size
+
     activeStyle: "bg-blue-500 border-blue-500",
     inactiveStyle: "bg-gray-200 border-gray-300",
-    currentStyle: "bg-white",
+    currentStyle: "bg-red-500 border-red-500 border-0",
+
+    // currentThumbStyle
+    // activeThumbStyle
+    // inactiveThumbStyle
+
+    // progressbarActiveStyle
+    // progressbarInactiveStyle
+
+    // activeTitlStyles
+    // inactiveTitleStyle
+
+    // activeThumbLabelStyles
+    // inactiveThumbLabelStyles
   },
 };
 
@@ -54,22 +84,53 @@ export const CircleSteps: Story = {
     totalSteps: 5,
     labels: ["Step 1", "Step 2", "Step 3", "Step 4", "Step 5"],
     size: "md",
-    activeStyle: "bg-green-500 border-green-500",
-    inactiveStyle: "bg-gray-200 border-gray-300",
-    textInsideStyle: "text-white font-semibold",
+    // activeStyle: "bg-green-500 border-green-500",
+    // inactiveStyle: "bg-gray-200 border-gray-300",
+    // textInsideStyle: "text-white font-semibold",
   },
 };
+
+
+
+
+
+
+
+
+
+
+
 
 export const BarFill: Story = {
   args: {
     variant: "barFill",
     progress: 60,
-    label: "Overall Progress: 60%",
-    activeStyle: "bg-amber-500",
-    inactiveStyle: "bg-gray-100",
-    labelStyle: "text-sm text-amber-600 font-medium",
+    // label: "Overall Progress: 60%",
+    // activeStyle: "bg-amber-500",
+    // inactiveStyle: "bg-gray-100",
+    // labelStyle: "text-sm text-amber-600 font-medium",
   },
 };
+
+// export const BarFillWithText: Story = {
+//   args: {
+//     variant: "barFill",
+//     progress: 75,
+//     textInside: "75%",
+//     label: "Loading...",
+//     activeStyle: "bg-blue-600",
+//     inactiveStyle: "bg-blue-100",
+//     textInsideStyle: "text-white font-bold text-xs",
+//     labelStyle: "text-sm text-blue-700 mt-2",
+//   },
+// };
+
+
+
+
+
+
+
 
 export const BarGroup: Story = {
   args: {
@@ -77,28 +138,19 @@ export const BarGroup: Story = {
     progress: 50,
     currentStep: 4,
     totalSteps: 8,
-    activeStyle: "bg-red-500",
-    inactiveStyle: "bg-gray-200",
-    currentStyle: "bg-white border-2 border-red-500",
+    // activeStyle: "bg-red-500",
+    // inactiveStyle: "bg-gray-200",
+    // currentStyle: "bg-white border-2 border-red-500",
+
+    // activeThumbStyle
+    // inactiveThumbStyle
+    // currentThumbStyle
   },
 };
 
 // -------------------
 // Text Inside Progress
 // -------------------
-
-export const BarFillWithText: Story = {
-  args: {
-    variant: "barFill",
-    progress: 75,
-    textInside: "75%",
-    label: "Loading...",
-    activeStyle: "bg-blue-600",
-    inactiveStyle: "bg-blue-100",
-    textInsideStyle: "text-white font-bold text-xs",
-    labelStyle: "text-sm text-blue-700 mt-2",
-  },
-};
 
 export const StepperDotsWithText: Story = {
   args: {

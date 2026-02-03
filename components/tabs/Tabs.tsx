@@ -86,7 +86,7 @@ export interface TabsProps {
   style?: ViewStyle;
 
   // Styling props
-  containerStyles?: string;
+  containerStyles?: string; 
   activeTabStyle?: string;
   inactiveTabStyle?: string;
   activeTextStyle?: string;
@@ -132,8 +132,10 @@ export function Tabs({
             className={cn(
               variantStyles.tab.base,
               isActive
-                ? activeTabStyle || variantStyles.tab.active
-                : inactiveTabStyle || variantStyles.tab.inactive
+                ?  variantStyles.tab.active + ' ' + activeTabStyle
+                : variantStyles.tab.inactive + ' ' + inactiveTabStyle
+                // ? activeTabStyle || variantStyles.tab.active
+                // : inactiveTabStyle || variantStyles.tab.inactive
             )}
           >
             {tab.icon && (

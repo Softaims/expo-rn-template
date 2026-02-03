@@ -50,7 +50,13 @@ export const Checked: Story = {
   args: {
     label: "Checked",
     checked: true,
+
+    containerStyles: "gap-4",
+    checkedBoxStyle: "bg-green-500 border-green-500 w-6 h-6",
+    // uncheckedBoxStyle: "border-gray-300 w-6 h-6",
   },
+
+  // Use icons from figma
   render: (args) => (
     <Checkbox
       {...args}
