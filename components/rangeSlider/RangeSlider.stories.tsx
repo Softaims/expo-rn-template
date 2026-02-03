@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Meta, StoryObj } from "@storybook/react-native";
-import RangeSlider from "react-native-sticky-range-slider";
+import { RangeSlider } from "./RangeSlider";
 
 const THUMB_RADIUS = 12;
 
 // Custom thumb component
-const Thumb = (type: "high" | "low") => (
+const CustomThumb = (type: "high" | "low") => (
   <View
     style={[
       styles.thumb,
@@ -16,17 +16,17 @@ const Thumb = (type: "high" | "low") => (
 );
 
 // Custom rail component
-const Rail = () => <View style={styles.rail} />;
+const CustomRail = () => <View style={styles.rail} />;
 
 // Custom selected rail component
-const RailSelected = () => <View style={styles.railSelected} />;
+const CustomRailSelected = () => <View style={styles.railSelected} />;
 
 // Custom value renderers
-const LowValue = (value: number) => (
+const CustomLowValue = (value: number) => (
   <Text style={styles.valueText}>{value}</Text>
 );
 
-const HighValue = (value: number) => (
+const CustomHighValue = (value: number) => (
   <Text style={styles.valueText}>{value}</Text>
 );
 
@@ -45,6 +45,28 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
+const BasicExample = () => {
+  const [low, setLow] = useState(20);
+  const [high, setHigh] = useState(80);
+
+  return (
+    <RangeSlider
+      min={0}
+      max={100}
+      step={1}
+      low={low}
+      high={high}
+      onValueChanged={(newLow, newHigh) => {
+        setLow(newLow);
+        setHigh(newHigh);
+        console.log(`Range: ${newLow} - ${newHigh}`);
+      }}
+    />
+  );
+};
+
+export const Basic = () => <BasicExample />;
+
 const CustomStyledExample = () => {
   const [low, setLow] = useState(30);
   const [high, setHigh] = useState(70);
@@ -56,11 +78,11 @@ const CustomStyledExample = () => {
       step={1}
       low={low}
       high={high}
-      renderThumb={Thumb}
-      renderRail={Rail}
-      renderRailSelected={RailSelected}
-      renderLowValue={LowValue}
-      renderHighValue={HighValue}
+      renderThumb={CustomThumb}
+      renderRail={CustomRail}
+      renderRailSelected={CustomRailSelected}
+      renderLowValue={CustomLowValue}
+      renderHighValue={CustomHighValue}
       onValueChanged={(newLow, newHigh) => {
         setLow(newLow);
         setHigh(newHigh);
@@ -70,9 +92,32 @@ const CustomStyledExample = () => {
   );
 };
 
-export const CustomStyled: Story = {
-  render: () => <CustomStyledExample />,
+export const CustomStyled = () => <CustomStyledExample />;
+
+const ColorCustomExample = () => {
+  const [low, setLow] = useState(25);
+  const [high, setHigh] = useState(75);
+
+  return (
+    <RangeSlider
+      min={0}
+      max={100}
+      step={5}
+      low={low}
+      high={high}
+      lowThumbColor="#10b981"
+      highThumbColor="#ef4444"
+      railColor="#d1d5db"
+      railSelectedColor="#6366f1"
+      onValueChanged={(newLow, newHigh) => {
+        setLow(newLow);
+        setHigh(newHigh);
+      }}
+    />
+  );
 };
+
+export const ColorCustom = () => <ColorCustomExample />;
 
 const styles = StyleSheet.create({
   thumb: {

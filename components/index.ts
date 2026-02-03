@@ -1,14 +1,6 @@
-// Buttons
-export { Button } from "./buttons";
-export type { ButtonProps } from "./buttons";
-
-// Checkbox
-export { Checkbox } from "./checkbox";
-export type { CheckboxProps } from "./checkbox";
-
-// Radio
-export { RadioButton } from "./radio";
-export type { RadioButtonProps } from "./radio";
+// Buttons (includes Checkbox and RadioButton)
+export { Button, Checkbox, RadioButton } from "./buttons";
+export type { ButtonProps, CheckboxProps, RadioButtonProps } from "./buttons";
 
 // Tabs
 export { Tabs } from "./tabs";
@@ -26,8 +18,13 @@ export type { ToggleProps } from "./toggle";
 export { Dropdown, SelectedItem } from "./dropdown";
 export type { DropdownProps, DropdownOption, SelectedItemProps } from "./dropdown";
 
-export { ProgressBar } from "./progressbar";
-export type { ProgressBarProps } from "./progressbar";
+// Progress Components
+export { Stepper, BarFill, BarGroup } from "./progressbar";
+export type { StepperProps, Step, BarFillProps, BarGroupProps, BarStep } from "./progressbar";
+
+// Range Slider
+export { RangeSlider } from "./rangeSlider";
+export type { RangeSliderProps } from "./rangeSlider";
 
 // Inputs
 export * from "./inputs";

@@ -9,12 +9,12 @@ const buttonVariants = {
     secondary: "bg-background border-2 border-primary",
     disabled: "bg-muted",
     actioned: "bg-accent",
-    text: "bg-transparent",
+    text: "bg-red",
   },
   size: {
     lg: "px-6 py-4",
-    md: "px-5 py-3",
-    sm: "px-4 py-2",
+    md: "px-5 py-2",
+    sm: "px-4 py-2 w-36",
   },
 } as const;
 
@@ -22,14 +22,14 @@ const textVariants = {
   variant: {
     primary: "text-primary-foreground",
     secondary: "text-primary",
-    disabled: "text-muted-foreground",
+    disabled: "text-white",
     actioned: "text-accent-foreground",
     text: "text-primary",
   },
   size: {
-    lg: "text-lg",
-    md: "text-base",
-    sm: "text-[15px]",
+    lg: "text-lg font-semibold text-[18px]",
+    md: "text-base font-semibold text-base",
+    sm: "text-[14px] font-semibold",
   },
 } as const;
 

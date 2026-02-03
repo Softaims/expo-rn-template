@@ -9,7 +9,9 @@ import {
   Dropdown,
   Text,
   TextInput,
-  ProgressBar,
+  Stepper,
+  BarFill,
+  BarGroup,
 } from "@/components";
 import {
   ChevronDownIcon,
@@ -610,60 +612,71 @@ export default function Index() {
         {/* Example 1: Stepper Dots with Custom Styling */}
         <View style={{ gap: 8 }}>
           <Text className="text-sm font-semibold">Stepper Dots</Text>
-          <ProgressBar
-            variant="stepperDots"
+          <Stepper
+            steps={[
+              { id: 1, title: "Pattern" },
+              { id: 2, title: "Goal" },
+              { id: 3, title: "Users" },
+              { id: 4, title: "Success" },
+              { id: 5, title: "Resources" },
+            ]}
             currentStep={3}
-            totalSteps={5}
-            labels={["Pattern", "Goal", "Users", "Success", "Resources"]}
-            activeStyle="bg-green-500 border-green-500"
-            inactiveStyle="bg-gray-200 border-gray-300"
-            currentStyle="bg-white"
-            labelStyle="text-xs text-gray-600 mt-2"
+            activeThumbStyle="bg-green-500 border-green-500"
+            inactiveThumbStyle="bg-gray-200 border-gray-300"
+            currentThumbStyle="bg-white"
+            activeTitleStyle="text-xs text-gray-600 mt-2"
           />
         </View>
 
         {/* Example 2: Bar Fill with Text Inside */}
         <View style={{ gap: 8 }}>
           <Text className="text-sm font-semibold">Bar Fill with Text</Text>
-          <ProgressBar
-            variant="barFill"
+          <BarFill
             progress={65}
             label="Overall Progress"
-            textInside="65%"
             activeStyle="bg-blue-500"
             inactiveStyle="bg-gray-100"
-            textInsideStyle="text-white font-bold"
             labelStyle="text-sm text-red-600 font-medium"
           />
         </View>
 
-        {/* Example 3: Circle Steps with Custom Numbers */}
+        {/* Example 3: Stepper with Numbers */}
         <View style={{ gap: 8 }}>
-          <Text className="text-sm font-semibold">Circle Steps</Text>
-          <ProgressBar
-            variant="circleSteps"
+          <Text className="text-sm font-semibold">Stepper with Numbers</Text>
+          <Stepper
+            steps={[
+              { id: 1, title: "Start", textInside: "1" },
+              { id: 2, title: "Process", textInside: "2" },
+              { id: 3, title: "Review", textInside: "3" },
+              { id: 4, title: "Complete", textInside: "4" },
+            ]}
             currentStep={2}
-            totalSteps={4}
-            labels={["Start", "Process", "Review", "Complete"]}
-            activeStyle="bg-purple-500 border-purple-500"
-            inactiveStyle="bg-gray-100 border-gray-300"
-            textInsideStyle="text-white font-semibold"
-            labelStyle="text-xs text-purple-600 mt-2"
+            activeThumbStyle="bg-purple-500 border-purple-500"
+            inactiveThumbStyle="bg-gray-100 border-gray-300"
+            activeThumbLabelStyle="text-white font-semibold"
+            activeTitleStyle="text-xs text-purple-600 mt-2"
           />
         </View>
 
         {/* Example 4: Bar Group with Text */}
         <View style={{ gap: 8 }}>
           <Text className="text-sm font-semibold">Bar Group</Text>
-          <ProgressBar
-            variant="barGroup"
+          <BarGroup
+            steps={[
+              { id: 1 },
+              { id: 2 },
+              { id: 3 },
+              { id: 4 },
+              { id: 5 },
+              { id: 6 },
+              { id: 7 },
+              { id: 8 },
+            ]}
             progress={50}
             currentStep={4}
-            label="Progress: 4 out of 8"
-            activeStyle="bg-red-500"
-            inactiveStyle="bg-gray-200"
-            currentStyle="bg-white border-red-500"
-            labelStyle="text-sm font-medium text-red-600"
+            activeThumbStyle="bg-red-500"
+            inactiveThumbStyle="bg-gray-200"
+            currentThumbStyle="bg-white border-red-500"
           />
         </View>
 
@@ -672,57 +685,70 @@ export default function Index() {
           <Text className="text-sm font-semibold">
             Stepper with Text Inside
           </Text>
-          <ProgressBar
-            variant="stepperDots"
+          <Stepper
+            steps={[
+              { id: 1, textInside: "1" },
+              { id: 2, textInside: "2" },
+              { id: 3, textInside: "3" },
+            ]}
             currentStep={2}
-            totalSteps={3}
-            textInside={["1", "2", "3"]}
-            activeStyle="bg-orange-500 border-orange-500"
-            inactiveStyle="bg-gray-200 border-gray-300"
-            textInsideStyle="text-white text-xs font-bold"
-            size="lg"
+            activeThumbStyle="bg-orange-500 border-orange-500"
+            inactiveThumbStyle="bg-gray-200 border-gray-300"
+            activeThumbLabelStyle="text-white text-xs font-bold"
           />
         </View>
 
-        {/* Example 6: Circle Steps with Custom Text */}
+        {/* Example 6: Stepper with Icons/Text */}
         <View style={{ gap: 8 }}>
           <Text className="text-sm font-semibold">
-            Circle Steps with Icons/Text
+            Stepper with Icons/Text
           </Text>
-          <ProgressBar
-            variant="circleSteps"
+          <Stepper
+            steps={[
+              { id: 1, textInside: "✓" },
+              { id: 2, textInside: "✓" },
+              { id: 3, textInside: "✓" },
+              { id: 4, textInside: "4" },
+              { id: 5, textInside: "5" },
+            ]}
             currentStep={3}
-            totalSteps={5}
-            textInside={["✓", "✓", "✓", "4", "5"]}
-            activeStyle="bg-teal-500 border-teal-500"
-            inactiveStyle="bg-gray-100 border-gray-300"
-            textInsideStyle="text-white font-bold text-base"
+            activeThumbStyle="bg-teal-500 border-teal-500"
+            inactiveThumbStyle="bg-gray-100 border-gray-300"
+            activeThumbLabelStyle="text-white font-bold"
           />
         </View>
 
-        {/* Example 7: Small Size */}
+        {/* Example 7: Stepper Without Labels */}
         <View style={{ gap: 8 }}>
-          <Text className="text-sm font-semibold">Small Size</Text>
-          <ProgressBar
-            variant="stepperDots"
+          <Text className="text-sm font-semibold">Stepper Without Labels</Text>
+          <Stepper
+            steps={[
+              { id: 1 },
+              { id: 2 },
+              { id: 3 },
+              { id: 4 },
+              { id: 5 },
+            ]}
             currentStep={2}
-            totalSteps={5}
-            size="sm"
-            activeStyle="bg-indigo-500 border-indigo-500"
-            inactiveStyle="bg-gray-200 border-gray-300"
+            activeThumbStyle="bg-indigo-500 border-indigo-500"
+            inactiveThumbStyle="bg-gray-200 border-gray-300"
           />
         </View>
 
-        {/* Example 8: Large Size */}
+        {/* Example 8: Stepper Without Labels */}
         <View style={{ gap: 8 }}>
-          <Text className="text-sm font-semibold">Large Size</Text>
-          <ProgressBar
-            variant="stepperDots"
+          <Text className="text-sm font-semibold">Stepper Minimal</Text>
+          <Stepper
+            steps={[
+              { id: 1 },
+              { id: 2 },
+              { id: 3 },
+              { id: 4 },
+              { id: 5 },
+            ]}
             currentStep={3}
-            totalSteps={5}
-            size="lg"
-            activeStyle="bg-pink-500 border-pink-500"
-            inactiveStyle="bg-gray-200 border-gray-300"
+            activeThumbStyle="bg-pink-500 border-pink-500"
+            inactiveThumbStyle="bg-gray-200 border-gray-300"
           />
         </View>
       </View>
