@@ -6,14 +6,14 @@ import { useState } from "react";
 export type TabItem = {
   label: string;
   value: string;
-  icon?: React.ReactNode;
+  icon?: (isActive: boolean) => React.ReactNode;
 };
 
 const tabVariants = {
   underline: {
     container: "flex-row border-b border-border",
     tab: {
-      base: "px-4 py-3 border-b-2",
+      base: "flex-1 px-4 py-3 border-b-2 items-center justify-center",
       active: "border-primary",
       inactive: "border-transparent",
     },
@@ -26,9 +26,9 @@ const tabVariants = {
   filled: {
     container: "flex-row gap-2",
     tab: {
-      base: "px-4 py-2 rounded-lg",
+      base: "flex-1 px-4 py-2 rounded-lg items-center justify-center",
       active: "bg-primary",
-      inactive: "bg-muted",
+      inactive: "bg-transparent",
     },
     text: {
       base: "",
@@ -39,7 +39,7 @@ const tabVariants = {
   "filled-rounded": {
     container: "flex-row gap-2",
     tab: {
-      base: "px-4 py-2 rounded-lg",
+      base: "flex-1 px-4 py-2 rounded-lg items-center justify-center",
       active: "bg-primary",
       inactive: "bg-muted",
     },
@@ -52,9 +52,9 @@ const tabVariants = {
   pill: {
     container: "flex-row gap-2",
     tab: {
-      base: "px-4 py-2 rounded-full",
+      base: "flex-1 px-4 py-2 rounded-full items-center justify-center",
       active: "bg-primary",
-      inactive: "bg-muted",
+      inactive: "bg-transparent",
     },
     text: {
       base: "",
@@ -65,7 +65,7 @@ const tabVariants = {
   icon: {
     container: "flex-row border-b border-border",
     tab: {
-      base: "px-6 py-3 flex-row items-center gap-2 border-b-2",
+      base: "flex-1 px-6 py-3 flex-row items-center justify-center gap-2 border-b-2",
       active: "border-primary",
       inactive: "border-transparent",
     },
@@ -126,7 +126,8 @@ export function Tabs({
                 : cn(variantStyles.tab.inactive, inactiveTabStyle)
             )}
           >
-            {tab.icon}
+          {tab.icon?.(isActive)}
+
             <Text
               className={cn(
                 variantStyles.text.base,

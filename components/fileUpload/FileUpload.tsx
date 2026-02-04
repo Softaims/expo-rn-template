@@ -82,7 +82,6 @@ export function FileUpload({
   uploadAreaDisabledIcon,
   uploadAreaTitleStyles,
   uploadAreaSubtitleStyles,
-  uploadAreaMetaStyles,
 
   progressContainerStyles,
   progressBarStyles,
@@ -133,7 +132,7 @@ export function FileUpload({
     <DocumentIcon width={24} height={24} color="#000000" />
   );
   const defaultFileItemRemoveIcon = (
-    <CloseIcon width={16} height={16} color="#000000" />
+    <CloseIcon width={14} height={14} color="#fff" />
   );
 
   return (
@@ -261,25 +260,22 @@ export function FileUpload({
                     )}
                     numberOfLines={1}
                   >
-                    {uploading ? "Uploading..." : file.name}
+                    {file.name}
                   </Text>
-                  {uploading && (
-                    <Text
-                      className={cn(
-                        "text- text-muted-foreground",
-                        fileItemSizeStyles,
-                      )}
-                      numberOfLines={1}
-                    >
-                      {file.name}
-                    </Text>
-                  )}
+                  <Text
+                    className={cn(
+                      "text-xs text-muted-foreground mt-1",
+                      fileItemSizeStyles,
+                    )}
+                  >
+                    {formatFileSize(file.size)}
+                  </Text>
                 </View>
 
                 {/* Cancel/Remove Button */}
                 <Pressable
                   onPress={() => onRemoveFile?.(file.id)}
-                  className={cn("ml-2 p-2", fileItemRemoveButtonStyles)}
+                  className={cn("ml-2 p-1 bg-primary rounded-full", fileItemRemoveButtonStyles)}
                 >
                   {fileItemRemoveIcon || defaultFileItemRemoveIcon}
                 </Pressable>
@@ -288,41 +284,19 @@ export function FileUpload({
               {/* Progress Bar (shown when uploading) */}
               {uploading && (
                 <View className={cn("mt-3", progressContainerStyles)}>
-                  <View className="flex-row justify-between items-center mb-1">
-                    <Text
-                      className={cn(
-                        "text-xs font-medium text-foreground",
-                        progressLabelStyles,
-                      )}
-                    >
-                      {uploadProgress}%
-                    </Text>
-                    <Text
-                      className={cn(
-                        "text-xs text-muted-foreground",
-                        fileItemSizeStyles,
-                      )}
-                    >
-                      {formatFileSize(file.size)}
-                    </Text>
-                  </View>
+                  <Text
+                    className={cn(
+                      "text-xs font-medium text-foreground mb-1",
+                      progressLabelStyles,
+                    )}
+                  >
+                    {uploadProgress}%
+                  </Text>
                   <BarFill
                     progress={uploadProgress}
                     containerStyles={progressBarStyles}
                   />
                 </View>
-              )}
-
-              {/* File Size (shown when NOT uploading) */}
-              {!uploading && (
-                <Text
-                  className={cn(
-                    "text-xs text-muted-foreground mt-1 ml-[60px]",
-                    fileItemSizeStyles,
-                  )}
-                >
-                  {formatFileSize(file.size)}
-                </Text>
               )}
             </View>
           ))}
