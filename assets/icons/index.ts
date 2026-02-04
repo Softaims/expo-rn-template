@@ -15,3 +15,6 @@ export * from "./MagnifierIcon";
 export * from "./CloseCircleIcon";
 export * from "./PlaneIcon";
 export * from "./PaperClipIcon";
+export * from "./UploadIcon";
+export * from "./DocumentIcon";
+export * from "./ImageIcon";

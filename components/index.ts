@@ -28,3 +28,7 @@ export type { RangeSliderProps } from "./rangeSlider";
 
 // Inputs
 export * from "./inputs";
+
+// File Upload
+export { FileUpload } from "./fileUpload";
+export type { FileUploadProps, FileItem } from "./fileUpload";

@@ -53,8 +53,8 @@ export function Stepper({
   const defaultActiveThumbStyle = "bg-primary border-primary";
   const defaultInactiveThumbStyle = "bg-muted border-muted";
   const defaultCurrentThumbStyle = "bg-white ";
-  const defaultProgressbarActiveStyle = "bg-primary";
-  const defaultProgressbarInactiveStyle = "bg-muted";
+  const defaultProgressbarActiveStyle = "bg-primary h-[1px]";
+  const defaultProgressbarInactiveStyle = "bg-muted h-[1px]";
 
   const renderStepperDots = () => {
     const dotsAndLines = [];
