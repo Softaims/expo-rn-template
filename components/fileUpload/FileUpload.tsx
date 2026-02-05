@@ -1,8 +1,7 @@
 import { View, Pressable } from "react-native";
 import { cn } from "@/lib/utils";
-import { Text } from "@/components";
+import { Text, BarFill } from "@/components";
 import { UploadIcon, DocumentIcon, CloseIcon } from "@/assets/icons";
-import { BarFill } from "@/components/progressbar/BarFill";
 
 export interface FileItem {
   id: string;

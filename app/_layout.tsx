@@ -2,6 +2,7 @@ import { Stack } from 'expo-router';
 import { useFonts } from '@/hooks/useFonts';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
+import { ClerkProvider } from '@clerk/clerk-expo';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -18,14 +19,18 @@ export default function RootLayout() {
         return null;
     }
 
+    const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!;
+
     return (
-        <Stack>
-            <Stack.Screen name="index" options={{ headerShown: false }} />
-            <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Protected guard={__DEV__}>
-                <Stack.Screen name="storybook" />
-            </Stack.Protected>
-        </Stack>
+        <ClerkProvider publishableKey={publishableKey}>
+            <Stack>
+                <Stack.Screen name="index" options={{ headerShown: false }} />
+                <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                <Stack.Protected guard={__DEV__}>
+                    <Stack.Screen name="storybook" />
+                </Stack.Protected>
+            </Stack>
+        </ClerkProvider>
     );
 }

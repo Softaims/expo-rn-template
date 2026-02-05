@@ -18,3 +18,7 @@ export * from "./PaperClipIcon";
 export * from "./UploadIcon";
 export * from "./DocumentIcon";
 export * from "./ImageIcon";
+export * from "./AppleIcon";
+export * from "./GoogleIcon";
+export * from "./FacebookIcon";
+export * from "./PocketCoachIcon";
