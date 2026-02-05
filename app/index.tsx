@@ -11,6 +11,7 @@ import {
   Button,
   Checkbox,
   Dropdown,
+  OTPInput,
   ProgressBar,
   RadioButton,
   Tabs,
@@ -19,7 +20,7 @@ import {
   Toggle,
 } from "@/components";
 import { Link } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ScrollView, View } from "react-native";
 import "../global.css";
 import { BottomSheet } from "@/components/bottomSheets/BottomSheet";
@@ -49,6 +50,11 @@ export default function Index() {
 
   const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
 
+  const [otp, setOtp] = useState("");
+
+  useEffect(() => {
+    console.log("otp", otp);
+  }, [otp]);
 
   return (
     <ScrollView
@@ -61,6 +67,8 @@ export default function Index() {
       <View style={{ marginTop: 100 }}>
         <Link href="/storybook">Open Storybook</Link>
       </View>
+
+      <OTPInput length={4} otp={otp} setOtp={setOtp} />
 
       <View className="flex-1 h-[500px]">
         <Button title="Open Bottom Sheet" onPress={() => { console.log('pressed'); setIsBottomSheetVisible(true); }} />

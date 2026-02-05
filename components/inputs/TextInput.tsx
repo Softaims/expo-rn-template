@@ -139,9 +139,9 @@ export function TextInput(props: InputProps) {
             <View className={cn(
                 "flex-row border-[1.2px] border-primary justify-between items-center px-[12px] rounded-[10px] gap-[5px] bg-input",
                 isFocused ? props.borderActiveColor || "border-primary" : props.borderInactiveColor || "border-border",
-                props.inputContainerStyles,
                 props.editable === false && "opacity-50",
-                (props.errorMessage || props.errorComponent) && "border-destructive"
+                (props.errorMessage || props.errorComponent) && "border-destructive",
+                props.inputContainerStyles,
             )}>
                 <View className="flex-row items-center gap-[5px] flex-1">
                     {leftIcon && leftIcon}
@@ -151,9 +151,9 @@ export function TextInput(props: InputProps) {
                         secureTextEntry={props.type === 'password' && !isPasswordVisible}
                         className={cn(
                             "flex-1 py-[12px]",
-                            props.inputStyles,
                             props.type === 'textarea' && "h-[140px]",
-                            (props.errorMessage || props.errorComponent) && "text-destructive"
+                            (props.errorMessage || props.errorComponent) && "text-destructive",
+                            props.inputStyles,
                         )}
                         {...props}
                         {...additionalProps}
