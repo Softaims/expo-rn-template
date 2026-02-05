@@ -1,7 +1,6 @@
 import { Meta, StoryObj } from "@storybook/react-native";
 import { View } from "react-native";
 import { TextInput } from "./TextInput";
-import { CountryCode } from "react-native-country-picker-modal";
 import { useState } from "react";
 
 const meta = {

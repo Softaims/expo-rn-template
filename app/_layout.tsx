@@ -2,6 +2,7 @@ import { Stack } from 'expo-router';
 import { useFonts } from '@/hooks/useFonts';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -19,13 +20,15 @@ export default function RootLayout() {
     }
 
     return (
-        <Stack>
-            <Stack.Screen name="index" options={{ headerShown: false }} />
-            <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Protected guard={__DEV__}>
-                <Stack.Screen name="storybook" />
-            </Stack.Protected>
-        </Stack>
+        <BottomSheetModalProvider>
+            <Stack>
+                <Stack.Screen name="index" options={{ headerShown: false }} />
+                <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                <Stack.Protected guard={__DEV__}>
+                    <Stack.Screen name="storybook" />
+                </Stack.Protected>
+            </Stack>
+        </BottomSheetModalProvider>
     );
 }
