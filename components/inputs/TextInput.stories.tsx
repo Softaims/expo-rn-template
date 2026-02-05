@@ -67,6 +67,15 @@ export const ChatField: Story = {
   },
 };
 
+export const TextareaField: Story = {
+  args: {
+    type: 'textarea',
+    label: 'Textarea Field',
+    placeholder: 'Enter your message',
+    // errorMessage: 'This is an error message',
+  },
+};
+
 export const PhoneField: Story = {
   args: {
     type: 'phone-basic',

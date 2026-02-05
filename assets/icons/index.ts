@@ -17,3 +17,4 @@ export * from "./PlaneIcon";
 export * from "./PaperClipIcon";
 export * from "./PhoneIcon";
 export * from "./AltArrowDownIcon";
+export * from "./InfoCircleIcon";

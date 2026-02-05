@@ -1,20 +1,20 @@
-import { AltArrowDownIcon, CloseCircleIcon, EnvelopeIcon, EyeCloseIcon, EyeOpenIcon, LockIcon, MagnifierIcon, PaperClipIcon, PhoneIcon, PlaneIcon } from "@/assets/icons";
+import { AltArrowDownIcon, CloseCircleIcon, EnvelopeIcon, EyeCloseIcon, EyeOpenIcon, InfoCircleIcon, LockIcon, MagnifierIcon, PaperClipIcon, PhoneIcon, PlaneIcon } from "@/assets/icons";
 import { cn } from "@/lib/utils";
 import { useCallback, useState } from "react";
-import { TextInput as RNTextInput, TextInputProps, View, Pressable, TextStyle, ViewStyle } from "react-native";
+import { TextInput as RNTextInput, TextInputProps, View, Pressable } from "react-native";
 import CountryPicker, { Country, CountryCode, Flag } from "react-native-country-picker-modal";
 import { Text } from "../text";
 
-type InputType = 'default' | 'email' | 'password' | 'number' | 'tel' | 'search' | 'textarea' | 'chat' | 'phone-basic' | 'phone-code' | 'phone-code-icon';
+type InputType = 'default' | 'email' | 'password' | 'number' | 'search' | 'textarea' | 'chat' | 'phone-basic' | 'phone-code' | 'phone-code-icon';
 
 export interface InputProps extends TextInputProps {
     type?: InputType;
 
     label?: string;
-    labelStyles?: string | TextStyle;
+    labelStyles?: string;
 
-    inputContainerStyles?: string | ViewStyle;
-    inputStyles?: string | TextStyle;
+    inputContainerStyles?: string;
+    inputStyles?: string;
 
     leftIcon?: React.ReactNode;
     rightIcon?: React.ReactNode;
@@ -30,6 +30,10 @@ export interface InputProps extends TextInputProps {
     setCallingCode?: (callingCode: string) => void;
 
     onRightIconPress?: () => void;
+
+    errorMessage?: string;
+    errorMessageStyles?: string;
+    errorComponent?: React.ReactNode;
 }
 
 export function TextInput(props: InputProps) {
@@ -109,6 +113,9 @@ export function TextInput(props: InputProps) {
             leftIcon = renderFlagButton();
             additionalProps.keyboardType = 'phone-pad';
             break;
+        case 'textarea':
+            additionalProps.multiline = true;
+            break;
         default:
             leftIcon = props.leftIcon || null;
             rightIcon = props.rightIcon || null;
@@ -125,17 +132,29 @@ export function TextInput(props: InputProps) {
         }
     }, [props.type, props.onChangeText, props.onRightIconPress]);
 
+
     return (
         <View>
             {props.label && <Text className={cn("text-[16px] mb-[12px] font-bold text-primary", props.labelStyles)}>{props.label}</Text>}
-            <View className={cn("flex-row border-[1.2px] border-primary justify-between items-center px-[12px] rounded-[10px] gap-[5px] bg-input", isFocused ? props.borderActiveColor || "border-primary" : props.borderInactiveColor || "border-border", props.inputContainerStyles)}>
+            <View className={cn(
+                "flex-row border-[1.2px] border-primary justify-between items-center px-[12px] rounded-[10px] gap-[5px] bg-input",
+                isFocused ? props.borderActiveColor || "border-primary" : props.borderInactiveColor || "border-border",
+                props.inputContainerStyles,
+                props.editable === false && "opacity-50",
+                (props.errorMessage || props.errorComponent) && "border-destructive"
+            )}>
                 <View className="flex-row items-center gap-[5px] flex-1">
                     {leftIcon && leftIcon}
                     <RNTextInput
                         onFocus={() => setIsFocused(true)}
                         onBlur={() => setIsFocused(false)}
                         secureTextEntry={props.type === 'password' && !isPasswordVisible}
-                        className={cn("flex-1 py-[12px]", props.inputStyles)}
+                        className={cn(
+                            "flex-1 py-[12px]",
+                            props.inputStyles,
+                            props.type === 'textarea' && "h-[140px]",
+                            (props.errorMessage || props.errorComponent) && "text-destructive"
+                        )}
                         {...props}
                         {...additionalProps}
                     />
@@ -150,6 +169,14 @@ export function TextInput(props: InputProps) {
                     </Pressable>
                 }
             </View>
+            {
+                props.errorMessage &&
+                <View className="flex-row items-center gap-[5px] mt-[10px]">
+                    <InfoCircleIcon />
+                    <Text variant="bodyText3" className={cn("text-destructive", props.errorMessageStyles)}>{props.errorMessage}</Text>
+                </View>
+            }
+            {props.errorComponent && props.errorComponent}
         </View>
     )
 }
