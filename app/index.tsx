@@ -1,50 +1,54 @@
-import { Link } from "expo-router";
-import { View, ScrollView } from "react-native";
 import {
-  Button,
-  Tabs,
-  Checkbox,
-  RadioButton,
-  Toggle,
-  Dropdown,
-  Text,
-  TextInput,
-  ProgressBar,
-} from "@/components";
-import {
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  CheckIcon,
   ChevronDownIcon,
   CloseIcon,
-  ArrowRightIcon,
-  ArrowLeftIcon,
-  SendIcon,
-  CheckIcon,
   MinusIcon,
+  SendIcon,
 } from "@/assets/icons";
+import {
+  Button,
+  Checkbox,
+  Dropdown,
+  ProgressBar,
+  RadioButton,
+  Tabs,
+  Text,
+  TextInput,
+  Toggle,
+} from "@/components";
+import { Link } from "expo-router";
 import { useState } from "react";
+import { ScrollView, View } from "react-native";
 import "../global.css";
+import { BottomSheet } from "@/components/bottomSheets/BottomSheet";
+
+const basicTabs = [
+  { label: "Details", value: "details" },
+  { label: "Products", value: "products" },
+  { label: "Orders", value: "orders" },
+];
+
+const dropdownOptions = [
+  { label: "Example 01", value: "1" },
+  { label: "Example 02", value: "2" },
+  { label: "Example 03", value: "3" },
+  { label: "Example 04", value: "4" },
+  { label: "Example 05", value: "5" },
+];
 
 export default function Index() {
   const [search, setSearch] = useState("");
-  const basicTabs = [
-    { label: "Details", value: "details" },
-    { label: "Products", value: "products" },
-    { label: "Orders", value: "orders" },
-  ];
-
-  const dropdownOptions = [
-    { label: "Example 01", value: "1" },
-    { label: "Example 02", value: "2" },
-    { label: "Example 03", value: "3" },
-    { label: "Example 04", value: "4" },
-    { label: "Example 05", value: "5" },
-  ];
-
   // Dropdown states
   const [dropdown1, setDropdown1] = useState<string | undefined>(undefined);
   const [dropdown2, setDropdown2] = useState<string>("");
   const [dropdown3, setDropdown3] = useState<string[]>([]);
   const [dropdown4, setDropdown4] = useState<string>("");
   const [dropdown5, setDropdown5] = useState<string[]>(["2", "4"]);
+
+  const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
+
 
   return (
     <ScrollView
@@ -57,6 +61,18 @@ export default function Index() {
       <View style={{ marginTop: 100 }}>
         <Link href="/storybook">Open Storybook</Link>
       </View>
+
+      <View className="flex-1 h-[500px]">
+        <Button title="Open Bottom Sheet" onPress={() => { console.log('pressed'); setIsBottomSheetVisible(true); }} />
+        <BottomSheet
+          isVisible={isBottomSheetVisible}
+          setIsVisible={setIsBottomSheetVisible}
+          title="Verification Success"
+          description="hey, we have verified your account. now you can access payback fitness."
+          
+        />
+      </View>
+
       {/* Section: Button Examples */}
       <View style={{ gap: 16 }}>
         <Text className="text-foreground text-xl font-bold">

@@ -31,3 +31,6 @@ export type { ProgressBarProps } from "./progressbar";
 
 // Inputs
 export * from "./inputs";
+
+// Bottom Sheets
+export * from "./bottomSheets";
