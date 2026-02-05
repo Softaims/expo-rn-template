@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { View } from "react-native";
 import { Dropdown, DropdownOption } from "./Dropdown";
-import { CloseIcon } from "@/assets/icons";
+import { CloseIcon, MagnifierIcon } from "@/assets/icons";
 
 export default {
   title: "Dropdown",
@@ -92,7 +92,7 @@ export const MultiSelectWithCheckbox = () => {
         onChange={(val) => setValues(val as string[])}
         multiSelect
         showCheckbox
-        selectedIcon={<CloseIcon width={12} height={12} color="#666" />}
+        selectedItemIcon={<CloseIcon width={20} height={20} color="#000" />}
       />
     </View>
   );
@@ -112,7 +112,7 @@ export const AfterMultiSelect = () => {
         value={values}
         onChange={(val) => setValues(val as string[])}
         multiSelect
-        selectedIcon={<CloseIcon width={12} height={12} color="#666" />}
+        selectedItemIcon={<CloseIcon width={12} height={12} color="#929292" />}
       />
     </View>
   );
@@ -131,6 +131,7 @@ export const SelectWithSearch = () => {
           value={value}
           onChange={(val) => setValue(val as string)}
           searchable
+          leftIcon={<MagnifierIcon width={16} height={16} color="#929292" />}
         />
       </View>
     </View>

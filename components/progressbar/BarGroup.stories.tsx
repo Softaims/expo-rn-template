@@ -27,6 +27,15 @@ export const Basic: Story = {
     progress: 50,
     currentStep: 4,
     totalSteps: 8,
+    variant: "dot",
   },
 };
 
+export const BarVariantMiddle: Story = {
+  args: {
+    progress: 62.5,
+    currentStep: 5,
+    totalSteps: 8,
+    variant: "bar",
+  },
+};

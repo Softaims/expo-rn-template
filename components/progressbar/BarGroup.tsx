@@ -36,6 +36,9 @@ export interface BarGroupProps {
 
   // Text inside bars style
   textInsideStyle?: string;
+
+  // Variant: "dot" (default) or "bar" (active becomes wider)
+  variant?: "dot" | "bar";
 }
 
 export function BarGroup({
@@ -48,6 +51,7 @@ export function BarGroup({
   inactiveThumbStyle,
   currentThumbStyle,
   textInsideStyle,
+  variant = "dot",
 }: BarGroupProps) {
   const effectiveProgress = Math.min(Math.max(progress, 0), 100);
 
@@ -61,9 +65,43 @@ export function BarGroup({
   const defaultInactiveThumbStyle = "bg-muted border-muted";
   const defaultCurrentThumbStyle = "bg-white border-primary border-[1px] ";
 
+  if (variant === "bar") {
+    // Bar variant: only current step is wider with primary color, all others are dots with inactive color
+    return (
+      <View className={cn("w-full", containerStyles)}>
+        <View className="flex-row items-center gap-3">
+          {barSteps.map((step, i) => {
+            const stepNumber = i + 1;
+            const isCurrent = stepNumber === current;
+
+            return (
+              <View
+                key={step.id}
+                className={cn(
+                  isCurrent ? "h-2 w-8 rounded-full" : "h-2 w-2 rounded-full",
+                  "items-center justify-center",
+                  isCurrent
+                    ? cn(defaultActiveThumbStyle, activeThumbStyle)
+                    : cn(defaultInactiveThumbStyle, inactiveThumbStyle),
+                )}
+              >
+                {step.textInside && (
+                  <Text className={cn("text-xs font-medium", textInsideStyle)}>
+                    {step.textInside}
+                  </Text>
+                )}
+              </View>
+            );
+          })}
+        </View>
+      </View>
+    );
+  }
+
+  // Default "dot" variant with progress-based filling
   return (
     <View className={cn("w-full", containerStyles)}>
-      <View className="flex-row items-center justify-between">
+      <View className="flex-row items-center gap-3">
         {barSteps.map((step, i) => {
           const stepNumber = i + 1;
           const filled = stepNumber / numSteps <= effectiveProgress / 100;

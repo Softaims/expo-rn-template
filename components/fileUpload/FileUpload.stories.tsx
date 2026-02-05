@@ -24,62 +24,41 @@ type Story = StoryObj<typeof meta>;
 // STATE 1: Empty - Upload Area Only
 export const Empty: Story = {
   args: {
-    maxFiles: 5,
     files: [],
+    uploadAreaTitle: "Tap to select file",
+    uploadAreaSubtitle: "Max file size 5MB allowed",
     onUploadAreaPress: () => console.log("Upload area pressed"),
   },
 };
 
+// STATE 2: File Uploading with Progress
 export const UploadingProgress: Story = {
   args: {
-    maxFiles: 5,
     files: [
       {
         id: "1",
-        name: "Large-Document.pdf",
-        size: 5024000,
+        name: "BS40-National insurance number-4001",
+        size: 122880, // 120 KB
         type: "document",
-      },
-      {
-        id: "2",
-        name: "Photo.jpg",
-        size: 3048000,
-        type: "image",
-        uri: "https://picsum.photos/200/200",
+        uploadProgress: 50, // This triggers uploading state
       },
     ],
-    uploading: true,
-    uploadProgress: 45,
+    onRemoveFile: (id) => console.log("Cancel upload:", id),
   },
 };
 
-
-export const MixedFileTypes: Story = {
+// STATE 4: File Uploaded (Complete)
+export const Uploaded: Story = {
   args: {
-    maxFiles: 10,
     files: [
       {
         id: "1",
-        name: "Contract.pdf",
-        size: 1234567,
+        name: "BS40-National insurance number-4001",
+        size: 122880,
         type: "document",
-      },
-      {
-        id: "2",
-        name: "Photo-1.jpg",
-        size: 2048000,
-        type: "image",
-        uri: "https://picsum.photos/200/201",
-      },
-      {
-        id: "3",
-        name: "Spreadsheet.xlsx",
-        size: 567890,
-        type: "document",
+        // No uploadProgress means it's completed
       },
     ],
-    onUploadAreaPress: () => console.log("Upload area pressed"),
     onRemoveFile: (id) => console.log("Remove file:", id),
-    onUploadPress: () => console.log("Upload pressed"),
   },
 };

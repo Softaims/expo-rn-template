@@ -23,6 +23,13 @@ type Story = StoryObj<typeof meta>;
 export const Basic: Story = {
   args: {
     progress: 60,
+    variant: "bar",
   },
 };
 
+export const SliderVariant: Story = {
+  args: {
+    progress: 60,
+    variant: "slider",
+  },
+};

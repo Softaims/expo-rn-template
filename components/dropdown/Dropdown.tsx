@@ -1,4 +1,4 @@
-import { View, StyleSheet, TextStyle, Text as RNText, TouchableOpacity, TextInput, ScrollView, Pressable } from "react-native";
+import { View, StyleSheet, TextStyle, Text as RNText, TouchableOpacity, TextInput, ScrollView } from "react-native";
 import { Dropdown as ElementDropdown, MultiSelect } from "react-native-element-dropdown";
 import { fontFamilies } from "@/hooks/useFonts";
 import { useState, useRef, useEffect } from "react";
@@ -23,12 +23,14 @@ export interface DropdownProps {
   multiSelect?: boolean;
   showCheckbox?: boolean;
   maxHeight?: number;
-  placeholderTextColor?: string;
+
+  // Icons
+  leftIcon?: React.ReactNode;
+  rightIcon?: React.ReactNode;
 
   // Selected pill/tag customization for multi-select
-  selectedPillTextStyle?: TextStyle;
-  selectedBg?: string;
-  selectedIcon?: React.ReactNode;
+  selectedItemTextStyle?: TextStyle;
+  selectedItemIcon?: React.ReactNode;
 
   // Checkbox customization
   checkboxCheckedColor?: string;
@@ -62,18 +64,23 @@ export function Dropdown({
   multiSelect = false,
   showCheckbox = false,
   maxHeight = 150,
-  placeholderTextColor,
-  selectedPillTextStyle,
-  selectedBg,
-  selectedIcon,
+
+  leftIcon,
+  rightIcon,
+  selectedItemTextStyle,
+  selectedItemIcon,
+
   checkboxCheckedColor = "#000",
   checkboxUncheckedColor = "#D1D1D6",
   checkboxSize = 15,
+  
   containerStyle,
   dropdownStyle,
+
   placeholderStyle,
   selectedTextStyle,
   inputSearchStyle,
+
   itemContainerStyle,
   itemTextStyle,
   selectedItemStyle,
@@ -83,7 +90,6 @@ export function Dropdown({
   const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef<TextInput>(null);
 
-  // Update input value when value prop changes
   useEffect(() => {
     if (autoComplete && value && typeof value === "string") {
       const selectedOption = options.find(opt => opt.value === value);
@@ -100,6 +106,17 @@ export function Dropdown({
     : options;
 
   const focusedBorderStyle = isFocused ? { borderColor: "#000000" } : {};
+
+  const handleFocus = () => {
+    setIsFocused(true);
+    onFocus?.();
+  };
+
+  const handleBlur = () => {
+    setIsFocused(false);
+    onBlur?.();
+  };
+
   const renderItem = (item: DropdownOption) => {
     const isSelected = multiSelect && Array.isArray(value)
       ? value.includes(item.value)
@@ -133,19 +150,17 @@ export function Dropdown({
   };
 
   const renderSelectedItem = (item: DropdownOption, unSelect?: (item: any) => void) => {
-    const pillBgStyle = selectedBg ? { backgroundColor: selectedBg } : {};
-
     return (
-      <View style={[styles.selectedStyle, pillBgStyle, selectedItemStyle]}>
-        <RNText style={[styles.selectedTextStylePill, selectedPillTextStyle]}>
+      <View style={[styles.selectedStyle, selectedItemStyle]}>
+        <RNText style={[styles.selectedTextStylePill, selectedItemTextStyle]}>
           {item.label}
         </RNText>
-        {selectedIcon && (
+        {selectedItemIcon && (
           <TouchableOpacity
             onPress={() => unSelect?.(item)}
             style={styles.iconContainer}
           >
-            {selectedIcon}
+            {selectedItemIcon}
           </TouchableOpacity>
         )}
       </View>
@@ -154,11 +169,13 @@ export function Dropdown({
 
   const mergedPlaceholderStyle = {
     ...styles.placeholderStyle,
-    ...(placeholderTextColor ? { color: placeholderTextColor } : {}),
-    ...(placeholderStyle || {}),
+    ...placeholderStyle,
   };
 
-  // Custom autocomplete mode with text input
+  const renderLeftIcon = leftIcon ? () => <View style={styles.iconWrapper}>{leftIcon}</View> : undefined;
+  const renderRightIcon = rightIcon ? () => <View style={styles.iconWrapper}>{rightIcon}</View> : undefined;
+
+  // Autocomplete mode
   if (autoComplete && !multiSelect) {
     return (
       <View style={[styles.container, containerStyle]}>
@@ -167,7 +184,7 @@ export function Dropdown({
             ref={inputRef}
             style={[styles.dropdown, styles.autocompleteInput, focusedBorderStyle, dropdownStyle]}
             placeholder={placeholder}
-            placeholderTextColor={placeholderTextColor || "#999999"}
+            placeholderTextColor={mergedPlaceholderStyle.color as string}
             value={inputValue}
             onChangeText={(text) => {
               setInputValue(text);
@@ -179,7 +196,6 @@ export function Dropdown({
               onFocus?.();
             }}
             onBlur={() => {
-              // Delay to allow selection
               setTimeout(() => {
                 setIsFocused(false);
                 setShowSuggestions(false);
@@ -191,10 +207,7 @@ export function Dropdown({
 
           {showSuggestions && filteredOptions.length > 0 && (
             <View style={[styles.suggestionsContainer, { maxHeight }]}>
-              <ScrollView
-                keyboardShouldPersistTaps="handled"
-                nestedScrollEnabled
-              >
+              <ScrollView keyboardShouldPersistTaps="handled" nestedScrollEnabled>
                 {filteredOptions.map((option) => (
                   <TouchableOpacity
                     key={option.value}
@@ -220,6 +233,7 @@ export function Dropdown({
     );
   }
 
+  // Multi-select mode
   if (multiSelect) {
     return (
       <View style={[styles.container, containerStyle]}>
@@ -231,14 +245,8 @@ export function Dropdown({
           searchPlaceholder={searchPlaceholder}
           value={Array.isArray(value) ? value : []}
           onChange={(items) => onChange?.(items)}
-          onFocus={() => {
-            setIsFocused(true);
-            onFocus?.();
-          }}
-          onBlur={() => {
-            setIsFocused(false);
-            onBlur?.();
-          }}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
           disable={disabled}
           search={searchable}
           maxHeight={maxHeight}
@@ -247,13 +255,17 @@ export function Dropdown({
           selectedTextStyle={[styles.selectedTextStyle, selectedTextStyle]}
           inputSearchStyle={[styles.inputSearchStyle, inputSearchStyle]}
           renderItem={renderItem}
+          renderInputSearch={()=><TextInput style={styles.inputSearchStyle} />}
           renderSelectedItem={renderSelectedItem}
+          renderLeftIcon={renderLeftIcon}
+          renderRightIcon={renderRightIcon}
           activeColor="#fff"
         />
       </View>
     );
   }
 
+  // Single-select mode
   return (
     <View style={[styles.container, containerStyle]}>
       <ElementDropdown
@@ -264,14 +276,8 @@ export function Dropdown({
         searchPlaceholder={searchPlaceholder}
         value={typeof value === "string" ? value : ""}
         onChange={(item) => onChange?.(item.value)}
-        onFocus={() => {
-          setIsFocused(true);
-          onFocus?.();
-        }}
-        onBlur={() => {
-          setIsFocused(false);
-          onBlur?.();
-        }}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
         disable={disabled}
         search={searchable}
         maxHeight={maxHeight}
@@ -280,6 +286,8 @@ export function Dropdown({
         selectedTextStyle={[styles.selectedTextStyle, selectedTextStyle]}
         inputSearchStyle={[styles.inputSearchStyle, inputSearchStyle]}
         renderItem={renderItem}
+        // renderLeftIcon={renderLeftIcon}
+        renderRightIcon={renderRightIcon}
         activeColor="#f0f0f0"
       />
     </View>
@@ -297,11 +305,11 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 16,
     paddingVertical: 12,
-    backgroundColor: "#ffffff",
+    backgroundColor: "#FAFAFA",
   },
   placeholderStyle: {
     fontSize: 14,
-    color: "#999999",
+    color: "#929292",
     fontFamily: fontFamilies.medium,
   },
   selectedTextStyle: {
@@ -312,7 +320,9 @@ const styles = StyleSheet.create({
   inputSearchStyle: {
     height: 40,
     fontSize: 14,
+    marginHorizontal: 14,
     borderRadius: 8,
+    backgroundColor:"#FAFAFA",
     fontFamily: fontFamilies.medium,
   },
   itemContainerStyle: {
@@ -338,7 +348,7 @@ const styles = StyleSheet.create({
   },
   selectedTextStylePill: {
     fontSize: 14,
-    color: "#000000",
+    color: "#929292",
     fontFamily: fontFamilies.medium,
     marginRight: 8,
   },
@@ -373,7 +383,7 @@ const styles = StyleSheet.create({
     top: "100%",
     left: 0,
     right: 0,
-    backgroundColor: "#ffffff",
+    backgroundColor: "#FAFAFA",
     borderWidth: 2,
     borderColor: "#e5e5e5",
     borderRadius: 8,
@@ -390,5 +400,8 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderBottomWidth: 1,
     borderBottomColor: "#f0f0f0",
+  },
+  iconWrapper: {
+    marginHorizontal: 8,
   },
 });
