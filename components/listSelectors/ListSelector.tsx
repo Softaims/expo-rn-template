@@ -1,4 +1,4 @@
-import { FlatList, Image, Pressable, View } from "react-native"
+import { FlatList, Image, Pressable, View, ViewStyle } from "react-native"
 import { TextInput } from "../inputs";
 import { cn } from "@/lib/utils";
 import { Text } from "../text";
@@ -26,14 +26,17 @@ export interface ListSelectorItem {
 }
 
 export interface ListSelectorProps {
+    variant: 'list' | 'list-wrapped';
     singleSelect: boolean;
     items: ListSelectorItem[];
     selectedItems: any[];
     setSelectedItems: (item: any) => void;
     containerStyles?: string;
+    listContainerStyles?: ViewStyle;
 
     searchEnabled?: boolean;
     searchPlaceholder?: string;
+    placeholderTextColor?: string;
     searchQuery?: string;
     searchQueryChange?: (query: string) => void;
     searchBarStyles?: string;
@@ -48,21 +51,32 @@ export interface ListSelectorProps {
 }
 
 export const ListSelector = (props: ListSelectorProps) => {
+    const filteredItems = props.searchQuery ? props.items.filter((item) => item.label.toLowerCase().includes(props.searchQuery?.toLowerCase() || '')) : props.items;
 
     const renderItem = ({ item }: { item: ListSelectorItem }) => {
+        const handleSelect = () => {
+            if (props.singleSelect) {
+                props.setSelectedItems?.(item.id);
+            } else {
+                const isItemPresent = props.selectedItems.includes(item.id);
+                if (isItemPresent) {
+                    props.setSelectedItems?.(props.selectedItems.filter((id: string) => id !== item.id));
+                } else {
+                    props.setSelectedItems?.([...props.selectedItems, item.id]);
+                }
+            }
+        }
         const isSelected = props.selectedItems.includes(item.id);
+
         return (
             <Pressable
                 className={cn(
                     listSelectorVariants.item.base,
+                    props.variant === 'list-wrapped' && "gap-[10px]",
                     isSelected ? listSelectorVariants.item.selected : listSelectorVariants.item.unselected,
                     isSelected ? props.selectedItemStyles : props.unselectedItemStyles,
                 )}
-                onPress={
-                    props.singleSelect ?
-                        () => props.setSelectedItems?.(item.id)
-                        : () => props.setSelectedItems?.(prev => [...prev.filter(id => id !== item.id), item.id]) //toggle item
-                }
+                onPress={handleSelect}
             >
                 <View className={cn(listSelectorVariants.item.textContainer)}>
                     {item.imageUrl && <Image source={{ uri: item.imageUrl }} className={cn(listSelectorVariants.item.image, props.itemImageStyles)} />}
@@ -72,12 +86,12 @@ export const ListSelector = (props: ListSelectorProps) => {
                     props.singleSelect ?
                         <RadioButton
                             selected={isSelected}
-                            onSelect={() => props.setSelectedItems?.(item.id)}
+                            onSelect={handleSelect}
                         />
                         :
                         <Checkbox
                             checked={isSelected}
-                            onCheckedChange={() => props.setSelectedItems?.(prev => [...prev.filter(id => id !== item.id), item.id])} //toggle item
+                        // onCheckedChange={handleSelect}
                         />
                 }
             </Pressable>
@@ -93,13 +107,21 @@ export const ListSelector = (props: ListSelectorProps) => {
                     value={props.searchQuery}
                     onChangeText={(text) => props.searchQueryChange?.(text)}
                     placeholder={props.searchPlaceholder}
+                    placeholderTextColor={props.placeholderTextColor}
                     inputContainerStyles={cn(listSelectorVariants.searchBar, props.searchBarStyles)}
                 />
             }
             <FlatList
-                data={props.items}
+                data={filteredItems}
                 renderItem={renderItem}
-                contentContainerStyle={{ gap: 12 }}
+                contentContainerStyle={[
+                    { gap: 12 },
+                    props.variant === 'list-wrapped' && {
+                        flexDirection: 'row',
+                        flexWrap: 'wrap',
+                    },
+                    props.listContainerStyles,
+                ]}
             />
         </View>
     )
