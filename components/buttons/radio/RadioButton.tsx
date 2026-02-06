@@ -30,11 +30,13 @@ export interface RadioButtonProps {
 
   // Styling props
   containerStyles?: string;
+
   selectedCircleStyle?: string;
   unselectedCircleStyle?: string;
   inactiveCircleStyle?: string;
   selectedDotStyle?: string;
   inactiveDotStyle?: string;
+  
   labelStyle?: string;
   inactiveLabelStyle?: string;
 

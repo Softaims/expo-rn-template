@@ -1,42 +1,7 @@
-import {
-  Pressable,
-  View,
-  ScrollView,
-  TextInput,
-} from "react-native";
-import { cn } from "@/lib/utils";
-import { Text, Checkbox } from "@/components";
-import { useState, useMemo } from "react";
-import { SelectedItem } from "./SelectedItem";
-
-const dropdownVariants = {
-  trigger: {
-    base: "flex-row items-center justify-between px-4 py-3 rounded-lg border-2 border-border bg-background min-h-[48px]",
-    hover: "border-primary bg-muted/30",
-    disabled: "opacity-50 bg-muted border-muted-foreground",
-    open: "border-primary bg-primary/5",
-  },
-  placeholder: "text-base text-muted-foreground",
-  selectedText: "text-base text-foreground",
-  dropdown: {
-    base: "absolute top-full left-0 right-0 mt-2 bg-background border border-border rounded-lg shadow-lg z-50",
-  },
-  searchInput: {
-    base: "px-4 py-3 border-b border-border text-base text-foreground bg-background",
-  },
-  optionsList: "py-2",
-  option: {
-    base: "px-4 py-3 flex-row items-center",
-    hover: "bg-muted",
-    selected: "bg-muted",
-  },
-  optionText: {
-    base: "text-base text-foreground",
-    disabled: "text-muted-foreground opacity-50",
-  },
-  selectedItemsWrapper: "flex-row flex-wrap gap-2 mt-2",
-  multiSelectTriggerContent: "flex-row flex-wrap gap-2 flex-1",
-} as const;
+import { View, StyleSheet, TextStyle, Text as RNText, TouchableOpacity, TextInput, ScrollView } from "react-native";
+import { Dropdown as ElementDropdown, MultiSelect } from "react-native-element-dropdown";
+import { fontFamilies } from "@/hooks/useFonts";
+import { useState, useRef, useEffect } from "react";
 
 export interface DropdownOption {
   label: string;
@@ -50,37 +15,40 @@ export interface DropdownProps {
   options: DropdownOption[];
   value?: string | string[];
   onChange?: (value: string | string[]) => void;
-  onOpen?: () => void;
-  onClose?: () => void;
+  onFocus?: () => void;
+  onBlur?: () => void;
   disabled?: boolean;
   searchable?: boolean;
-  autoSuggest?: boolean;
+  autoComplete?: boolean;
   multiSelect?: boolean;
-  closeOnSelect?: boolean;
+  showCheckbox?: boolean;
   maxHeight?: number;
-  emptyMessage?: string;
-  chevronIcon?: React.ReactNode;
-  placeholderTextColor?: string;
 
-  // Simple Tailwind class styling for 12 sub-elements
-  containerStyles?: string;
-  triggerStyles?: string;
-  placeholderStyles?: string;
-  selectedTextStyles?: string;
-  chevronStyles?: string;
-  dropdownStyles?: string;
-  searchInputStyles?: string;
-  optionsListStyles?: string;
-  optionStyles?: string;
-  optionTextStyles?: string;
-  selectedItemsWrapperStyles?: string;
+  // Icons
+  leftIcon?: React.ReactNode;
+  rightIcon?: React.ReactNode;
 
-  // Flatten SelectedItem customization
-  selectedItemContainerStyles?: string;
-  selectedItemLabelStyles?: string;
-  selectedItemCloseIcon?: React.ReactNode;
-  selectedItemCloseButtonStyles?: string;
+  // Selected pill/tag customization for multi-select
+  selectedItemTextStyle?: TextStyle;
+  selectedItemIcon?: React.ReactNode;
+
+  // Checkbox customization
+  checkboxCheckedColor?: string;
+  checkboxUncheckedColor?: string;
+  checkboxSize?: number;
+
+  // Style overrides
+  containerStyle?: object;
+  dropdownStyle?: object;
+  placeholderStyle?: object;
+  selectedTextStyle?: object;
+  inputSearchStyle?: object;
+  itemContainerStyle?: object;
+  itemTextStyle?: object;
+  selectedItemStyle?: object;
 }
+
+
 
 export function Dropdown({
   placeholder = "Select",
@@ -88,229 +56,352 @@ export function Dropdown({
   options,
   value,
   onChange,
-  onOpen,
-  onClose,
+  onFocus,
+  onBlur,
   disabled = false,
   searchable = false,
-  autoSuggest = false,
+  autoComplete = false,
   multiSelect = false,
-  closeOnSelect = true,
-  maxHeight = 300,
-  emptyMessage = "No options found",
-  chevronIcon,
-  placeholderTextColor,
-  containerStyles,
-  triggerStyles,
-  placeholderStyles,
-  selectedTextStyles,
-  chevronStyles,
-  dropdownStyles,
-  searchInputStyles,
-  optionsListStyles,
-  optionStyles,
-  optionTextStyles,
-  selectedItemsWrapperStyles,
-  selectedItemContainerStyles,
-  selectedItemLabelStyles,
-  selectedItemCloseIcon,
-  selectedItemCloseButtonStyles,
+  showCheckbox = false,
+  maxHeight = 150,
+
+  leftIcon,
+  rightIcon,
+  selectedItemTextStyle,
+  selectedItemIcon,
+
+  checkboxCheckedColor = "#000",
+  checkboxUncheckedColor = "#D1D1D6",
+  checkboxSize = 15,
+  
+  containerStyle,
+  dropdownStyle,
+
+  placeholderStyle,
+  selectedTextStyle,
+  inputSearchStyle,
+
+  itemContainerStyle,
+  itemTextStyle,
+  selectedItemStyle,
 }: DropdownProps) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [hoveredOption, setHoveredOption] = useState<string | null>(null);
-  const [isHovered, setIsHovered] = useState(false);
+  const [inputValue, setInputValue] = useState("");
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
+  const inputRef = useRef<TextInput>(null);
 
-  const selectedValues = useMemo(() => {
-    if (multiSelect && Array.isArray(value)) {
-      return value;
-    }
-    if (!multiSelect && typeof value === "string") {
-      return [value];
-    }
-    return [];
-  }, [value, multiSelect]);
-
-  const filteredOptions = useMemo(() => {
-    if (!searchQuery) return options;
-    return options.filter((option) =>
-      option.label.toLowerCase().includes(searchQuery.toLowerCase()),
-    );
-  }, [options, searchQuery]);
-
-  const selectedLabels = useMemo(() => {
-    return selectedValues
-      .map((val) => options.find((opt) => opt.value === val)?.label)
-      .filter(Boolean) as string[];
-  }, [selectedValues, options]);
-
-  const handleToggle = () => {
-    if (disabled) return;
-    const newOpenState = !isOpen;
-    setIsOpen(newOpenState);
-
-    if (newOpenState) {
-      onOpen?.();
-    } else {
-      onClose?.();
-      setSearchQuery("");
-    }
-  };
-
-  const handleSelect = (optionValue: string) => {
-    if (multiSelect) {
-      const currentValues = Array.isArray(value) ? value : [];
-      const newValues = currentValues.includes(optionValue)
-        ? currentValues.filter((v) => v !== optionValue)
-        : [...currentValues, optionValue];
-      onChange?.(newValues);
-    } else {
-      onChange?.(optionValue);
-      if (closeOnSelect) {
-        setIsOpen(false);
-        onClose?.();
-        setSearchQuery("");
+  useEffect(() => {
+    if (autoComplete && value && typeof value === "string") {
+      const selectedOption = options.find(opt => opt.value === value);
+      if (selectedOption) {
+        setInputValue(selectedOption.label);
       }
     }
+  }, [value, options, autoComplete]);
+
+  const filteredOptions = autoComplete && inputValue
+    ? options.filter(option =>
+        option.label.toLowerCase().includes(inputValue.toLowerCase())
+      )
+    : options;
+
+  const focusedBorderStyle = isFocused ? { borderColor: "#000000" } : {};
+
+  const handleFocus = () => {
+    setIsFocused(true);
+    onFocus?.();
   };
 
-  const handleRemoveSelectedItem = (valueToRemove: string) => {
-    if (multiSelect && Array.isArray(value)) {
-      const newValues = value.filter((v) => v !== valueToRemove);
-      onChange?.(newValues);
-    }
+  const handleBlur = () => {
+    setIsFocused(false);
+    onBlur?.();
   };
 
-  const getTriggerStyle = () => {
-    if (disabled) return dropdownVariants.trigger.disabled;
-    if (isOpen) return dropdownVariants.trigger.open;
-    if (isHovered) return dropdownVariants.trigger.hover;
-    return "";
-  };
+  const renderItem = (item: DropdownOption) => {
+    const isSelected = multiSelect && Array.isArray(value)
+      ? value.includes(item.value)
+      : value === item.value;
 
-  return (
-    <View className={cn(containerStyles)}>
-      {multiSelect && selectedValues.length > 0 && (
-        <View className={cn(dropdownVariants.selectedItemsWrapper, selectedItemsWrapperStyles)}>
-          {selectedValues.map((optionValue) => {
-            const option = options.find((opt) => opt.value === optionValue);
-            if (!option?.label) return null;
-            return (
-              <SelectedItem
-                key={optionValue}
-                label={option.label}
-                onRemove={() => handleRemoveSelectedItem(optionValue)}
-                closeIcon={selectedItemCloseIcon}
-                containerStyles={selectedItemContainerStyles}
-                labelStyles={selectedItemLabelStyles}
-                closeButtonStyles={selectedItemCloseButtonStyles}
-              />
-            );
-          })}
-        </View>
-      )}
-
-      <Pressable
-        onPress={handleToggle}
-        onPressIn={() => setIsHovered(true)}
-        onPressOut={() => setIsHovered(false)}
-        disabled={disabled}
-        className={cn(dropdownVariants.trigger.base, getTriggerStyle(), triggerStyles)}
-      >
-        <View className="flex-1">
-          {selectedValues.length > 0 && !multiSelect ? (
-            <Text className={cn(dropdownVariants.selectedText, selectedTextStyles)}>
-              {selectedLabels[0]}
-            </Text>
-          ) : autoSuggest && isOpen ? (
-            <TextInput
-              value={searchQuery}
-              onChangeText={setSearchQuery}
-              placeholder={placeholder}
-              placeholderTextColor={placeholderTextColor}
-              className={cn("text-base text-foreground", searchInputStyles)}
-              autoFocus
-            />
-          ) : (
-            <Text className={cn(dropdownVariants.placeholder, placeholderStyles)}>
-              {placeholder}
-            </Text>
-          )}
-        </View>
-        {chevronIcon && (
-          <View
-            className={cn("ml-2", chevronStyles)}
-            style={isOpen ? { transform: [{ rotate: "180deg" }] } : undefined}
-          >
-            {chevronIcon}
+    return (
+      <View style={[styles.itemContainerStyle, itemContainerStyle]}>
+        {showCheckbox && multiSelect && (
+          <View style={styles.checkboxContainer}>
+            <View
+              style={[
+                styles.checkbox,
+                {
+                  width: checkboxSize,
+                  height: checkboxSize,
+                  borderRadius: checkboxSize * 0.2,
+                  borderColor: isSelected ? checkboxCheckedColor : checkboxUncheckedColor,
+                  backgroundColor: isSelected ? checkboxCheckedColor : "transparent",
+                },
+              ]}
+            >
+              {isSelected && (
+                <RNText style={[styles.checkmark, { fontSize: checkboxSize * 0.7 }]}>✓</RNText>
+              )}
+            </View>
           </View>
         )}
-      </Pressable>
+        <RNText style={[styles.itemTextStyle, itemTextStyle]}>{item.label}</RNText>
+      </View>
+    );
+  };
 
-      {isOpen && (
-        <View
-          className={cn(dropdownVariants.dropdown.base, dropdownStyles)}
-          style={{ maxHeight }}
-        >
-          {searchable && !autoSuggest && (
-            <TextInput
-              value={searchQuery}
-              onChangeText={setSearchQuery}
-              placeholder={searchPlaceholder}
-              placeholderTextColor={placeholderTextColor}
-              className={cn(dropdownVariants.searchInput.base, searchInputStyles)}
-            />
-          )}
-          <ScrollView className={cn(dropdownVariants.optionsList, optionsListStyles)}>
-            {filteredOptions.length === 0 ? (
-              <View className="px-4 py-3">
-                <Text className="text-muted-foreground text-center">
-                  {emptyMessage}
-                </Text>
-              </View>
-            ) : (
-              filteredOptions.map((option) => {
-              const isSelected = selectedValues.includes(option.value);
-              const isHoveredItem = hoveredOption === option.value;
+  const renderSelectedItem = (item: DropdownOption, unSelect?: (item: any) => void) => {
+    return (
+      <View style={[styles.selectedStyle, selectedItemStyle]}>
+        <RNText style={[styles.selectedTextStylePill, selectedItemTextStyle]}>
+          {item.label}
+        </RNText>
+        {selectedItemIcon && (
+          <TouchableOpacity
+            onPress={() => unSelect?.(item)}
+            style={styles.iconContainer}
+          >
+            {selectedItemIcon}
+          </TouchableOpacity>
+        )}
+      </View>
+    );
+  };
 
-              return (
-                <Pressable
-                  key={option.value}
-                  onPress={() => !option.disabled && handleSelect(option.value)}
-                  onPressIn={() => setHoveredOption(option.value)}
-                  onPressOut={() => setHoveredOption(null)}
-                  disabled={option.disabled}
-                  className={cn(
-                    dropdownVariants.option.base,
-                    (isSelected || isHoveredItem) && dropdownVariants.option.hover,
-                    optionStyles
-                  )}
-                >
-                  {multiSelect ? (
-                    <Checkbox
-                      label={option.label}
-                      checked={isSelected}
-                      disabled={option.disabled}
-                      onCheckedChange={() =>
-                        !option.disabled && handleSelect(option.value)
-                      }
-                    />
-                  ) : (
-                    <Text
-                      className={cn(
-                        dropdownVariants.optionText.base,
-                        option.disabled && dropdownVariants.optionText.disabled,
-                        optionTextStyles
-                      )}
-                    >
+  const mergedPlaceholderStyle = {
+    ...styles.placeholderStyle,
+    ...placeholderStyle,
+  };
+
+  const renderLeftIcon = leftIcon ? () => <View style={styles.iconWrapper}>{leftIcon}</View> : undefined;
+  const renderRightIcon = rightIcon ? () => <View style={styles.iconWrapper}>{rightIcon}</View> : undefined;
+
+  // Autocomplete mode
+  if (autoComplete && !multiSelect) {
+    return (
+      <View style={[styles.container, containerStyle]}>
+        <View style={styles.autocompleteWrapper}>
+          <TextInput
+            ref={inputRef}
+            style={[styles.dropdown, styles.autocompleteInput, focusedBorderStyle, dropdownStyle]}
+            placeholder={placeholder}
+            placeholderTextColor={mergedPlaceholderStyle.color as string}
+            value={inputValue}
+            onChangeText={(text) => {
+              setInputValue(text);
+              setShowSuggestions(true);
+            }}
+            onFocus={() => {
+              setIsFocused(true);
+              setShowSuggestions(true);
+              onFocus?.();
+            }}
+            onBlur={() => {
+              setTimeout(() => {
+                setIsFocused(false);
+                setShowSuggestions(false);
+                onBlur?.();
+              }, 200);
+            }}
+            editable={!disabled}
+          />
+
+          {showSuggestions && filteredOptions.length > 0 && (
+            <View style={[styles.suggestionsContainer, { maxHeight }]}>
+              <ScrollView keyboardShouldPersistTaps="handled" nestedScrollEnabled>
+                {filteredOptions.map((option) => (
+                  <TouchableOpacity
+                    key={option.value}
+                    style={[styles.suggestionItem, itemContainerStyle]}
+                    onPress={() => {
+                      setInputValue(option.label);
+                      onChange?.(option.value);
+                      setShowSuggestions(false);
+                      inputRef.current?.blur();
+                    }}
+                    disabled={option.disabled}
+                  >
+                    <RNText style={[styles.itemTextStyle, itemTextStyle]}>
                       {option.label}
-                    </Text>
-                  )}
-                </Pressable>
-              );
-            }))}
-          </ScrollView>
+                    </RNText>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+            </View>
+          )}
         </View>
-      )}
+      </View>
+    );
+  }
+
+  // Multi-select mode
+  if (multiSelect) {
+    return (
+      <View style={[styles.container, containerStyle]}>
+        <MultiSelect
+          data={options}
+          labelField="label"
+          valueField="value"
+          placeholder={placeholder}
+          searchPlaceholder={searchPlaceholder}
+          value={Array.isArray(value) ? value : []}
+          onChange={(items) => onChange?.(items)}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          disable={disabled}
+          search={searchable}
+          maxHeight={maxHeight}
+          style={[styles.dropdown, focusedBorderStyle, dropdownStyle]}
+          placeholderStyle={mergedPlaceholderStyle}
+          selectedTextStyle={[styles.selectedTextStyle, selectedTextStyle]}
+          inputSearchStyle={[styles.inputSearchStyle, inputSearchStyle]}
+          renderItem={renderItem}
+          renderInputSearch={()=><TextInput style={styles.inputSearchStyle} />}
+          renderSelectedItem={renderSelectedItem}
+          renderLeftIcon={renderLeftIcon}
+          renderRightIcon={renderRightIcon}
+          activeColor="#fff"
+        />
+      </View>
+    );
+  }
+
+  // Single-select mode
+  return (
+    <View style={[styles.container, containerStyle]}>
+      <ElementDropdown
+        data={options}
+        labelField="label"
+        valueField="value"
+        placeholder={placeholder}
+        searchPlaceholder={searchPlaceholder}
+        value={typeof value === "string" ? value : ""}
+        onChange={(item) => onChange?.(item.value)}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+        disable={disabled}
+        search={searchable}
+        maxHeight={maxHeight}
+        style={[styles.dropdown, focusedBorderStyle, dropdownStyle]}
+        placeholderStyle={mergedPlaceholderStyle}
+        selectedTextStyle={[styles.selectedTextStyle, selectedTextStyle]}
+        inputSearchStyle={[styles.inputSearchStyle, inputSearchStyle]}
+        renderItem={renderItem}
+        // renderLeftIcon={renderLeftIcon}
+        renderRightIcon={renderRightIcon}
+        activeColor="#f0f0f0"
+      />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    marginBottom: 8,
+  },
+  dropdown: {
+    minHeight: 48,
+    borderWidth: 2,
+    borderColor: "#e5e5e5",
+    borderRadius: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: "#FAFAFA",
+  },
+  placeholderStyle: {
+    fontSize: 14,
+    color: "#929292",
+    fontFamily: fontFamilies.medium,
+  },
+  selectedTextStyle: {
+    fontSize: 14,
+    color: "#000000",
+    fontFamily: fontFamilies.medium,
+  },
+  inputSearchStyle: {
+    height: 40,
+    fontSize: 14,
+    marginHorizontal: 14,
+    borderRadius: 8,
+    backgroundColor:"#FAFAFA",
+    fontFamily: fontFamilies.medium,
+  },
+  itemContainerStyle: {
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  itemTextStyle: {
+    fontSize: 14,
+    color: "#000000",
+    fontFamily: fontFamilies.medium,
+  },
+  selectedStyle: {
+    borderRadius: 6,
+    backgroundColor: "#f0f0f0",
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    marginRight: 8,
+    marginTop: 8,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  selectedTextStylePill: {
+    fontSize: 14,
+    color: "#929292",
+    fontFamily: fontFamilies.medium,
+    marginRight: 8,
+  },
+  iconContainer: {
+    padding: 4,
+  },
+  checkboxContainer: {
+    marginRight: 12,
+    width: 24,
+  },
+  checkbox: {
+    borderWidth: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  checkmark: {
+    color: "#FFFFFF",
+    fontWeight: "bold",
+  },
+  // Autocomplete styles
+  autocompleteWrapper: {
+    position: "relative",
+    zIndex: 1000,
+  },
+  autocompleteInput: {
+    fontSize: 14,
+    color: "#000000",
+    fontFamily: fontFamilies.medium,
+  },
+  suggestionsContainer: {
+    position: "absolute",
+    top: "100%",
+    left: 0,
+    right: 0,
+    backgroundColor: "#FAFAFA",
+    borderWidth: 2,
+    borderColor: "#e5e5e5",
+    borderRadius: 8,
+    marginTop: 4,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+    zIndex: 1001,
+  },
+  suggestionItem: {
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: "#f0f0f0",
+  },
+  iconWrapper: {
+    marginHorizontal: 8,
+  },
+});

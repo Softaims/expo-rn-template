@@ -1,18 +1,10 @@
-// Buttons
-export { Button } from "./buttons";
-export type { ButtonProps } from "./buttons";
-
-// Checkbox
-export { Checkbox } from "./checkbox";
-export type { CheckboxProps } from "./checkbox";
-
-// Radio
-export { RadioButton } from "./radio";
-export type { RadioButtonProps } from "./radio";
+// Buttons (includes Checkbox and RadioButton)
+export { Button, Checkbox, RadioButton } from "./buttons";
+export type { ButtonProps, CheckboxProps, RadioButtonProps } from "./buttons";
 
 // Tabs
 export { Tabs } from "./tabs";
-export type { TabsProps, TabItem } from "./tabs";
+export type { TabItem, TabsProps } from "./tabs";
 
 // Text
 export { Text } from "./text";
@@ -24,13 +16,22 @@ export type { ToggleProps } from "./toggle";
 
 // Dropdown
 export { Dropdown, SelectedItem } from "./dropdown";
-export type { DropdownProps, DropdownOption, SelectedItemProps } from "./dropdown";
+export type { DropdownOption, DropdownProps, SelectedItemProps } from "./dropdown";
 
-export { ProgressBar } from "./progressbar";
-export type { ProgressBarProps } from "./progressbar";
+// Progress Components
+export { BarFill, BarGroup, Stepper } from "./progressbar";
+export type { BarFillProps, BarGroupProps, BarStep, Step, StepperProps } from "./progressbar";
+
+// Range Slider
+export { RangeSlider } from "./rangeSlider";
+export type { RangeSliderProps } from "./rangeSlider";
 
 // Inputs
 export * from "./inputs";
+
+// File Upload
+export { FileUpload } from "./fileUpload";
+export type { FileItem, FileUploadProps } from "./fileUpload";
 
 // Bottom Sheets
 export * from "./bottomSheets";

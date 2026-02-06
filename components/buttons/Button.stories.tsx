@@ -1,7 +1,12 @@
 import { View } from "react-native";
 import { Meta, StoryObj } from "@storybook/react-native";
 import { Button } from "./Button";
-import { SendIcon, ArrowRightIcon, ArrowLeftIcon, CheckIcon } from "@/assets/icons";
+import {
+  SendIcon,
+  ArrowRightIcon,
+  ArrowLeftIcon,
+  CheckIcon,
+} from "@/assets/icons";
 
 const meta = {
   component: Button,
@@ -80,7 +85,26 @@ export const SecondaryMedium: Story = {
   },
 };
 
-export const Disabled: Story = {
+export const SecondarySmall: Story = {
+  args: {
+    title: "Button",
+    variant: "secondary",
+    size: "sm",
+    onPress: () => console.log("Pressed"),
+  },
+};
+
+export const DisabledLarge: Story = {
+  args: {
+    title: "Button",
+    variant: "primary",
+    size: "lg",
+    disabled: true,
+    onPress: () => console.log("Pressed"),
+  },
+};
+
+export const DisabledMedium: Story = {
   args: {
     title: "Button",
     variant: "primary",
@@ -90,7 +114,26 @@ export const Disabled: Story = {
   },
 };
 
-export const Actioned: Story = {
+export const DisabledSmall: Story = {
+  args: {
+    title: "Button",
+    variant: "primary",
+    size: "sm",
+    disabled: true,
+    onPress: () => console.log("Pressed"),
+  },
+};
+
+export const ActionedLarge: Story = {
+  args: {
+    title: "Button",
+    variant: "actioned",
+    size: "lg",
+    onPress: () => console.log("Pressed"),
+  },
+};
+
+export const ActionedMedium: Story = {
   args: {
     title: "Button",
     variant: "actioned",
@@ -99,11 +142,38 @@ export const Actioned: Story = {
   },
 };
 
-export const TextVariant: Story = {
+export const ActionedSmall: Story = {
+  args: {
+    title: "Button",
+    variant: "actioned",
+    size: "sm",
+    onPress: () => console.log("Pressed"),
+  },
+};
+
+export const TextLarge: Story = {
+  args: {
+    title: "Button",
+    variant: "text",
+    size: "lg",
+    onPress: () => console.log("Pressed"),
+  },
+};
+
+export const TextMedium: Story = {
   args: {
     title: "Button",
     variant: "text",
     size: "md",
+    onPress: () => console.log("Pressed"),
+  },
+};
+
+export const TextSmall: Story = {
+  args: {
+    title: "Button",
+    variant: "text",
+    size: "sm",
     onPress: () => console.log("Pressed"),
   },
 };
@@ -123,21 +193,23 @@ export const PrimaryWithLeftIcon: Story = {
       {...args}
       leftIcon={<SendIcon width={20} height={20} color="#ffffff" />}
       onPress={() => console.log("Pressed")}
+      innerWrapperStyles="gap-2 items-center justify-center"
     />
   ),
 };
 
-export const SecondaryWithLeftIcon: Story = {
+export const MediumWithLeftIcon: Story = {
   args: {
-    title: "Go Back",
-    variant: "secondary",
+    title: "Next",
+    variant: "primary",
     size: "md",
   },
   render: (args) => (
     <Button
       {...args}
-      leftIcon={<ArrowLeftIcon width={18} height={18} color="#3b82f6" />}
+      leftIcon={<ArrowRightIcon width={18} height={18} color="#ffffff" />}
       onPress={() => console.log("Pressed")}
+      innerWrapperStyles="gap-2 items-center justify-center"
     />
   ),
 };
@@ -151,130 +223,9 @@ export const SmallWithLeftIcon: Story = {
   render: (args) => (
     <Button
       {...args}
-      leftIcon={<CheckIcon width={16} height={16} color="#ffffff" />}
+      leftIcon={<CheckIcon width={18} height={18} color="#ffffff" />}
       onPress={() => console.log("Pressed")}
-    />
-  ),
-};
-
-// -------------------
-// With Right Icons
-// -------------------
-
-export const PrimaryWithRightIcon: Story = {
-  args: {
-    title: "Continue",
-    variant: "primary",
-    size: "lg",
-  },
-  render: (args) => (
-    <Button
-      {...args}
-      rightIcon={<ArrowRightIcon width={20} height={20} color="#ffffff" />}
-      onPress={() => console.log("Pressed")}
-    />
-  ),
-};
-
-export const SecondaryWithRightIcon: Story = {
-  args: {
-    title: "Next Step",
-    variant: "secondary",
-    size: "md",
-  },
-  render: (args) => (
-    <Button
-      {...args}
-      rightIcon={<ArrowRightIcon width={18} height={18} color="#3b82f6" />}
-      onPress={() => console.log("Pressed")}
-    />
-  ),
-};
-
-export const TextWithRightIcon: Story = {
-  args: {
-    title: "Learn More",
-    variant: "text",
-    size: "md",
-  },
-  render: (args) => (
-    <Button
-      {...args}
-      rightIcon={<ArrowRightIcon width={16} height={16} color="#3b82f6" />}
-      onPress={() => console.log("Pressed")}
-    />
-  ),
-};
-
-// -------------------
-// With Both Icons
-// -------------------
-
-export const WithBothIcons: Story = {
-  args: {
-    title: "Transfer",
-    variant: "primary",
-    size: "md",
-  },
-  render: (args) => (
-    <Button
-      {...args}
-      leftIcon={<ArrowLeftIcon width={18} height={18} color="#ffffff" />}
-      rightIcon={<ArrowRightIcon width={18} height={18} color="#ffffff" />}
-      onPress={() => console.log("Pressed")}
-    />
-  ),
-};
-
-// -------------------
-// Custom Styling
-// -------------------
-
-export const RoundedButton: Story = {
-  args: {
-    title: "Continue",
-    variant: "secondary",
-    containerStyles: "rounded-full",
-    innerWrapperStyles: "gap-3",
-  },
-  render: (args) => (
-    <Button
-      {...args}
-      rightIcon={<ArrowRightIcon width={18} height={18} color="#3b82f6" />}
-      onPress={() => console.log("Pressed")}
-    />
-  ),
-};
-
-export const CustomIconWrapper: Story = {
-  args: {
-    title: "Check Status",
-    variant: "primary",
-  },
-  render: (args) => (
-    <Button
-      {...args}
-      leftIcon={
-        <View className="bg-white/20 rounded-full p-1">
-          <CheckIcon width={18} height={18} color="#ffffff" />
-        </View>
-      }
-      onPress={() => console.log("Pressed")}
-    />
-  ),
-};
-
-export const DisabledWithIcon: Story = {
-  args: {
-    title: "Disabled",
-    variant: "primary",
-    disabled: true,
-  },
-  render: (args) => (
-    <Button
-      {...args}
-      rightIcon={<SendIcon width={18} height={18} color="#9ca3af" />}
-      onPress={() => console.log("Pressed")}
+      innerWrapperStyles="gap-1 items-center justify-center"
     />
   ),
 };
