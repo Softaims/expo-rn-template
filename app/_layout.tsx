@@ -1,7 +1,7 @@
-import { Stack, Slot } from 'expo-router';
 import { useFonts } from '@/hooks/useFonts';
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { ClerkProvider } from '@clerk/clerk-expo';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -18,12 +18,15 @@ export default function RootLayout() {
     // const publishableKey =!;
 
     return (
-        <ClerkProvider publishableKey={ process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY}>
-            <Stack
-              screenOptions={{
-                headerShown: false,
-              }}
-            />
-        </ClerkProvider>
+        <BottomSheetModalProvider>
+            <Stack>
+                <Stack.Screen name="index" options={{ headerShown: false }} />
+                <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                <Stack.Protected guard={__DEV__}>
+                    <Stack.Screen name="storybook" />
+                </Stack.Protected>
+            </Stack>
+        </BottomSheetModalProvider>
     );
 }
