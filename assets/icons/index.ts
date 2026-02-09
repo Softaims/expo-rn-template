@@ -22,3 +22,6 @@ export * from "./AppleIcon";
 export * from "./GoogleIcon";
 export * from "./FacebookIcon";
 export * from "./PocketCoachIcon";
+export * from "./ErrorIcon";
+export * from "./LockForgotIcon";
+export * from "./ResetPasswordIcon";

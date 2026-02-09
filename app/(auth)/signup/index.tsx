@@ -7,18 +7,18 @@ import {
   AuthForm,
   SocialAuthButtons,
   AuthFooter,
-} from "@/app/(auth)/components";
-import { useAuthClerk } from "@/app/(auth)/hooks";
-import { SignupFormData } from "@/app/(auth)/schemas";
+} from "@/app/(auth)/_components";
+import { useClerkAuth } from "@/app/(auth)/_hooks/useClerkAuth";
+import { signupSchema, SignupFormData } from "@/app/(auth)/_schemas";
+import { signupFields } from "@/app/(auth)/_config";
 
 export default function SignupScreen() {
   const router = useRouter();
-  const { signUpWithEmail, isLoading } = useAuthClerk();
+  const { signUpWithEmail } = useClerkAuth();
 
   const handleSubmit = async (data: SignupFormData) => {
     try {
       await signUpWithEmail(data.email, data.password);
-      // TODO: Navigate to main app or verification screen after successful signup
       console.log("Signup successful");
     } catch (error: any) {
       Alert.alert("Signup Failed", error?.message || "Please try again");
@@ -40,18 +40,21 @@ export default function SignupScreen() {
         <AuthHeader />
         <View className="flex-1 pt-7">
           <View className="flex-1">
-            <AuthContent
-              title="Register Yourself"
-              description="For Registration please enter the required account registration details."
-            />
+            <View className="mb-6">
+              <AuthContent
+                title="Register Yourself"
+                description="For Registration please enter the required account registration details."
+              />
+            </View>
 
             <AuthForm
-              type="signup"
+              fields={signupFields}
+              schema={signupSchema}
+              buttonText="Sign Up"
               onSubmit={handleSubmit}
-              isLoading={isLoading}
             />
 
-            <SocialAuthButtons type="signup" />
+            <SocialAuthButtons />
           </View>
 
           <AuthFooter

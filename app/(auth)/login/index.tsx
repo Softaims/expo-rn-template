@@ -7,19 +7,18 @@ import {
   AuthForm,
   SocialAuthButtons,
   AuthFooter,
-} from "@/app/(auth)/components";
-import { useAuthClerk } from "@/app/(auth)/hooks";
-import { LoginFormData } from "@/app/(auth)/schemas";
+} from "@/app/(auth)/_components";
+import { useClerkAuth } from "@/app/(auth)/_hooks/useClerkAuth";
+import { loginSchema, LoginFormData } from "@/app/(auth)/_schemas";
+import { loginFields } from "@/app/(auth)/_config";
 
 export default function LoginScreen() {
   const router = useRouter();
-  const { signInWithEmail, isLoading } = useAuthClerk();
+  const { signInWithEmail } = useClerkAuth();
 
   const handleSubmit = async (data: LoginFormData) => {
     try {
       await signInWithEmail(data.email, data.password);
-      // TODO: Navigate to main app after successful login
-      console.log("Login successful");
     } catch (error: any) {
       Alert.alert("Login Failed", error?.message || "Please try again");
     }
@@ -27,6 +26,10 @@ export default function LoginScreen() {
 
   const handleNavigateToSignup = () => {
     router.push("/(auth)/signup");
+  };
+
+  const handleForgotPassword = () => {
+    router.push("/(auth)/forgot-password");
   };
 
   return (
@@ -39,22 +42,24 @@ export default function LoginScreen() {
       >
         <AuthHeader />
         <View className="flex-1 pt-7">
-
           <View className="flex-1 ">
-            <AuthContent
-              title="Welcome Back"
-              description="To access your account please enter your account details."
-            />
+            <View className="mb-6">
+              <AuthContent
+                title="Welcome Back"
+                description="To access your account please enter your account details."
+              />
+            </View>
 
             <AuthForm
-              type="login"
+              fields={loginFields}
+              schema={loginSchema}
+              buttonText="Login"
+              showForgotPassword={true}
+              onForgotPasswordPress={handleForgotPassword}
               onSubmit={handleSubmit}
-              isLoading={isLoading}
             />
 
-            <View >
-              <SocialAuthButtons type="login" />
-            </View>
+            <SocialAuthButtons />
           </View>
 
           <AuthFooter

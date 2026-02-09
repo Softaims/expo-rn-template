@@ -1,10 +1,18 @@
-import { Tabs } from 'expo-router';
-
+import { Redirect, Tabs } from "expo-router";
+import { useClerk } from "@clerk/clerk-expo";
 export default function HomeLayout() {
-    return (
-        <Tabs>
-            <Tabs.Screen name="index" options={{ headerShown: false }} />
-            <Tabs.Screen name="messages" options={{ headerShown: false }} />
-        </Tabs>
-    );
+
+  const { isSignedIn } = useClerk();
+  console.log(isSignedIn)
+  if (!isSignedIn) {
+    console.log("assdsda")
+    return <Redirect href="/(auth)/splash" />;
+  }
+
+  return (
+    <Tabs>
+      <Tabs.Screen name="index" options={{ headerShown: false }} />
+      <Tabs.Screen name="messages" options={{ headerShown: false }} />
+    </Tabs>
+  );
 }
