@@ -42,47 +42,44 @@ export default function SplashScreenContainer() {
       className="flex-1"
       style={{ backgroundColor: currentScreen.backgroundColor }}
     >
-      <View className="flex-1">
+      <View className="flex-1 justify-between">
         {/* Skip Button - using Button component directly */}
-        {currentScreen.showSkipButton && (
-          <View className="absolute top-1 right-4 z-10">
-            <Button
-              variant="text"
-              size="sm"
-              title="Skip"
-              onPress={handleSkip}
-              containerStyles="bg-transparent"
-              textStyles="font-medium"
-            />
-          </View>
-        )}
+        {currentScreen.showSkipButton? (
+          <Button
+            variant="text"
+            size="sm"
+            title="Skip"
+            onPress={handleSkip}
+            containerStyles="bg-transparent self-end"
+            textStyles="font-medium"
+          />)
+          : <View/>
+        }
 
-        <View className="flex-1 justify-center"></View>
-
-        <View className="mb-8">
+        <View>
           <BarGroup
-            containerStyles="items-center"
+            containerStyles="items-center mb-8"
             totalSteps={TOTAL_STEPS}
             currentStep={currentStep}
             progress={(currentStep / TOTAL_STEPS) * 100}
             variant="bar"
           />
-        </View>
 
-        {/* Content Area */}
-        <View className="mb-12">
-          <SplashContent
-            title={currentScreen.title}
-            description={currentScreen.description}
-          />
-        </View>
+          {/* Content Area */}
+          <View className="mb-12">
+            <SplashContent
+              title={currentScreen.title}
+              description={currentScreen.description}
+            />
+          </View>
 
-        <View className="pb-8">
-          <SplashButtons
-            buttonConfig={currentScreen.buttonConfig}
-            onPrimaryPress={handlePrimaryPress}
-            onSecondaryPress={handleSecondaryPress}
-          />
+          <View className="pb-8">
+            <SplashButtons
+              buttonConfig={currentScreen.buttonConfig}
+              onPrimaryPress={handlePrimaryPress}
+              onSecondaryPress={handleSecondaryPress}
+            />
+          </View>
         </View>
       </View>
     </SafeAreaView>

@@ -20,17 +20,29 @@ const checkboxVariants = {
 } as const;
 
 export interface CheckboxProps {
+  // move states here
+  value: boolean;
+  onChnangeValue: (isChecked: boolean) => void; 
+  
   label?: string;
   checked?: boolean;
-  indeterminate?: boolean;
+
+  // variant?: 'check' | 'minus';
+  indeterminate?: boolean; //replace with variant type
+
   disabled?: boolean;
+
   onCheckedChange?: (checked: boolean) => void;
 
   // Styling props
   containerStyles?: string;
+
+  // --------- 
   checkedBoxStyle?: string;
   uncheckedBoxStyle?: string;
-  indeterminateBoxStyle?: string;
+  indeterminateBoxStyle?: string; //remove
+  // ---------
+
   disabledBoxStyle?: string;
   labelStyle?: string;
   disabledLabelStyle?: string;
@@ -55,26 +67,26 @@ export function Checkbox({
   disabledLabelStyle,
   checkIcon,
   indeterminateIcon,
+  value,
+  onChnangeValue,
 }: CheckboxProps) {
-  const [isChecked, setIsChecked] = useState(checked);
-
   const handlePress = () => {
     if (disabled) return;
-    const newValue = !isChecked;
-    setIsChecked(newValue);
+    const newValue = !value;
+    onChnangeValue(newValue);
     onCheckedChange?.(newValue);
   };
 
   const getBoxStyle = () => {
     // Create a state key for switch statement
     let state = "normal";
-    if (disabled && (isChecked || indeterminate)) {
+    if (disabled && (value || indeterminate)) {
       state = "disabled-checked";
     } else if (disabled) {
       state = "disabled";
     } else if (indeterminate) {
       state = "indeterminate";
-    } else if (isChecked) {
+    } else if (value) {
       state = "checked";
     }
 
@@ -98,7 +110,7 @@ export function Checkbox({
     let iconState = "none";
     if (indeterminate && indeterminateIcon) {
       iconState = "indeterminate";
-    } else if (isChecked && checkIcon) {
+    } else if (value && checkIcon) {
       iconState = "checked";
     }
 

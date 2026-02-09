@@ -15,10 +15,10 @@ export default function RootLayout() {
     if (loaded || error) {
         SplashScreen.hideAsync();
     }
-    const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!;
+    // const publishableKey =!;
 
     return (
-        <ClerkProvider publishableKey={publishableKey}>
+        <ClerkProvider publishableKey={ process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY}>
             <Stack
               screenOptions={{
                 headerShown: false,

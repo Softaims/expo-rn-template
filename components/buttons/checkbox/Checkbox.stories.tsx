@@ -51,8 +51,8 @@ export const Checked: Story = {
     label: "Checked",
     checked: true,
 
-    containerStyles: "gap-4",
-    checkedBoxStyle: "bg-primary border-primary h-6",
+    // containerStyles: "gap-4 border-[1px]",
+    // checkedBoxStyle: "bg-red-500 border-primary h-6",
     // uncheckedBoxStyle: "border-gray-300 w-6 h-6",
   },
 
@@ -69,6 +69,7 @@ export const Indeterminate: Story = {
   args: {
     label: "Indeterminate",
     indeterminate: true,
+    checkedBoxStyle: "bg-red-500 border-primary h-6",
   },
   render: (args) => (
     <Checkbox
