@@ -20,7 +20,7 @@ type Story = StoryObj<typeof meta>;
 
 export const DefaultBottomSheet: Story = {
     args: {
-        isVisible: false,
+        isVisible: true,
         setIsVisible: () => { },
         title: 'Bottom Sheet Title',
         description: 'Bottom Sheet Description',

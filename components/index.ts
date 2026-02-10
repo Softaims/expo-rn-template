@@ -38,3 +38,7 @@ export * from "./bottomSheets";
 
 // List Selectors
 export * from "./listSelectors";
+
+// Scales
+export { Scale, FeetInchesScale } from "./scales";
+export type { ScaleProps, FeetInchesScaleProps } from "./scales";

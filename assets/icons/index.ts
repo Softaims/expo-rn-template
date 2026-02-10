@@ -21,3 +21,5 @@ export * from "./PlaneIcon";
 export { PostsIcon } from "./PostsIcon";
 export { SendIcon } from "./SendIcon";
 export * from "./UploadIcon";
+export * from "./CameraIcon";
+export * from "./MicrophoneIcon";
