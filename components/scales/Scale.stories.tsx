@@ -1,6 +1,8 @@
 import { Meta, StoryObj } from "@storybook/react-native";
 import { View } from "react-native";
 import { Scale } from "./Scale";
+import { useState } from "storybook/internal/preview-api";
+import { useEffect } from "react";
 
 const meta = {
     component: Scale,
@@ -25,8 +27,17 @@ export const AgePicker: Story = {
         max: 100,
         step: 1,
         fractionDigits: 0,
-        
+        onValueChange: () => { },
     },
+    render: (args) => {
+        const [value, setValue] = useState('');
+        useEffect(() => {
+            console.log(value);
+        }, [value]);
+        return (
+            <Scale {...args} onValueChange={(number) => setValue(number)} />
+        )
+    }
 };
 
 // export const HorizontalSelector: Story = {

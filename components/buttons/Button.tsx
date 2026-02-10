@@ -1,6 +1,6 @@
 import { Pressable, PressableProps, View } from "react-native";
 import { cn } from "@/lib/utils";
-import { Text } from "@/components";
+import { Text } from "@/components/text";
 
 const buttonVariants = {
   base: "rounded-lg flex-row items-center justify-center",
