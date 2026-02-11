@@ -1,5 +1,1 @@
-import { SplashScreenContainer } from "./_components/index";
-
-export default function SplashScreen() {
-  return <SplashScreenContainer />;
-}
+export { default } from "@/modules/splash/screens/SplashScreen";
