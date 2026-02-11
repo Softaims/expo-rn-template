@@ -2,7 +2,7 @@ import { View, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { ArrowLeftIcon } from "@/assets/icons";
-import { ResetPasswordContent } from "./_components";
+import { ResetPasswordContent } from "./_components/index";
 
 export default function ResetPasswordScreen() {
   const router = useRouter();

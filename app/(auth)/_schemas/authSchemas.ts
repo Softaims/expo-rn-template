@@ -59,3 +59,5 @@ export const resetPasswordSchema = z.object({
 });
 
 export type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>;
+
+export default null;

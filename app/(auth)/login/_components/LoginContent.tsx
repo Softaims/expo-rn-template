@@ -1,15 +1,15 @@
 import { View, ScrollView, Alert } from "react-native";
 import { useRouter } from "expo-router";
-import { BottomSheet } from "@/components";
+import { BottomSheet } from "@/components/bottomSheets";
 import {
   AuthContent,
   AuthForm,
   SocialAuthButtons,
   AuthFooter,
-} from "@/app/(auth)/_components";
+} from "@/app/(auth)/_components/index";
 import { loginSchema, LoginFormData } from "@/app/(auth)/_schemas";
 import { loginFields } from "@/app/(auth)/_config";
-import { useLogin } from "@/app/(auth)/_hooks/useClerkAuth";
+import { useLogin } from "@/app/(auth)/_hooks";
 
 type LoginVariant = "default" | "bottom-sheet";
 

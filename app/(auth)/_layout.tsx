@@ -7,13 +7,12 @@ export default function AuthLayout() {
     return <Redirect href="/(tabs)" />;
   }
   return (
-    <Stack screenOptions={{ animation: 'none' }}>
-      <Stack.Screen name="splash/index" options={{ headerShown: false }} />
-      <Stack.Screen name="login/index" options={{ headerShown: false }} />
-      <Stack.Screen name="signup/index" options={{ headerShown: false }} />
-      <Stack.Screen name="forgot-password/index" options={{ headerShown: false }} />
-      <Stack.Screen name="otp-verification/index" options={{ headerShown: false }} />
-      <Stack.Screen name="reset-password/index" options={{ headerShown: false }} />
+    <Stack screenOptions={{ animation: "none", headerShown: false }}>
+      <Stack.Screen name="login" />
+      <Stack.Screen name="signup" />
+      <Stack.Screen name="forgot-password" />
+      <Stack.Screen name="otp-verification" />
+      <Stack.Screen name="reset-password" />
     </Stack>
   );
 }

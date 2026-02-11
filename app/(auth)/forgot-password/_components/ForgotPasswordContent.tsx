@@ -1,13 +1,13 @@
 import { View, Alert } from "react-native";
 import { useRouter } from "expo-router";
 import { LockForgotIcon } from "@/assets/icons";
-import { AuthContent, AuthForm } from "@/app/(auth)/_components";
+import { AuthContent, AuthForm } from "@/app/(auth)/_components/index";
 import {
   forgotPasswordSchema,
   ForgotPasswordFormData,
 } from "@/app/(auth)/_schemas";
 import { forgotPasswordFields } from "@/app/(auth)/_config";
-import { useForgotPassword } from "@/app/(auth)/_hooks/useClerkAuth";
+import { useForgotPassword } from "@/app/(auth)/_hooks";
 
 type ForgotPasswordVariant = "default" | "with-icon";
 

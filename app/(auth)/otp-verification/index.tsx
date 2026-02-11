@@ -2,9 +2,9 @@ import { View, Alert, Pressable } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import { ArrowLeftIcon } from "@/assets/icons";
-import { OTPVerificationContent } from "./_components";
+import { OTPVerificationContent } from "./_components/index";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useVerifyEmail, useRegister, useForgotPassword } from "@/app/(auth)/_hooks/useClerkAuth";
+import { useVerifyEmail, useRegister, useForgotPassword } from "@/app/(auth)/_hooks";
 
 export default function OTPVerificationScreen() {
   const router = useRouter();

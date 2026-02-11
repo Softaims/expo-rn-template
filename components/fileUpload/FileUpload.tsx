@@ -1,6 +1,7 @@
 import { View, Pressable } from "react-native";
 import { cn } from "@/lib/utils";
-import { Text, BarFill } from "@/components";
+import { BarFill } from "../progressbar";
+import { Text } from "../text";
 import { UploadIcon, DocumentIcon, CloseIcon } from "@/assets/icons";
 
 export interface FileItem {
@@ -84,9 +85,7 @@ export function FileUpload({
   const defaultDocumentIcon = (
     <DocumentIcon width={24} height={24} color="#000" />
   );
-  const defaultRemoveIcon = (
-    <CloseIcon width={11} height={11} color="#fff" />
-  );
+  const defaultRemoveIcon = <CloseIcon width={11} height={11} color="#fff" />;
 
   return (
     <View className={cn("w-full", containerStyles)}>

@@ -5,7 +5,6 @@ export default function HomeLayout() {
   const { isSignedIn } = useClerk();
   console.log(isSignedIn)
   if (!isSignedIn) {
-    console.log("assdsda")
     return <Redirect href="/(auth)/splash" />;
   }
 

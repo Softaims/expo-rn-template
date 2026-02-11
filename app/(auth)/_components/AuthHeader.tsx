@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import { Text } from '@/components';
+import { Text } from '@/components/text';
 import { PocketCoachIcon } from '@/assets/icons';
 
 export default function AuthHeader() {

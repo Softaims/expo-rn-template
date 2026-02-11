@@ -2,8 +2,8 @@ import { View, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useState, useCallback } from "react";
 import { useFocusEffect } from "expo-router";
-import { AuthHeader } from "@/app/(auth)/_components";
-import { SignupContent } from "./_components";
+import { AuthHeader } from "@/app/(auth)/_components/index";
+import { SignupContent } from "./_components/index";
 
 export default function SignupScreen() {
   const variant = "bottom-sheet";

@@ -2,7 +2,7 @@ import { FlatList, Image, Pressable, View, ViewStyle } from "react-native"
 import { TextInput } from "../inputs";
 import { cn } from "@/lib/utils";
 import { Text } from "../text";
-import { Checkbox, RadioButton } from "..";
+import { Checkbox,RadioButton } from "../buttons"
 
 const listSelectorVariants = {
     listContainer: "",

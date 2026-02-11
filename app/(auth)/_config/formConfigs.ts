@@ -59,3 +59,5 @@ export const resetPasswordFields: FieldConfig[] = [
     placeholder: '********',
   },
 ];
+
+export default null;

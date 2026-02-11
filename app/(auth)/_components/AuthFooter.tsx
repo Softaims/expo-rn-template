@@ -1,5 +1,5 @@
 import { View, Pressable } from 'react-native';
-import { Text } from '@/components';
+import { Text } from '@/components/text';
 
 interface AuthFooterProps {
   text: string;

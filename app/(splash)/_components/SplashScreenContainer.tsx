@@ -2,9 +2,11 @@ import { useState } from "react";
 import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
-import { Button, BarGroup } from "@/components";
+import { Button } from "@/components/buttons";
+import { BarGroup } from "@/components/progressbar";
 import { SPLASH_SCREENS, TOTAL_STEPS } from "../_config";
-import { SplashContent, SplashButtons } from "./";
+import SplashContent from "./SplashContent";
+import SplashButtons from "./SplashButtons";
 
 export default function SplashScreenContainer() {
   const router = useRouter();

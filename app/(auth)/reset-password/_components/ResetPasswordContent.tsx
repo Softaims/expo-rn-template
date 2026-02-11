@@ -1,13 +1,13 @@
 import { View, Alert } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { ResetPasswordIcon } from "@/assets/icons";
-import { AuthContent, AuthForm } from "@/app/(auth)/_components";
+import { AuthContent, AuthForm } from "@/app/(auth)/_components/index";
 import {
   resetPasswordSchema,
   ResetPasswordFormData,
 } from "@/app/(auth)/_schemas";
 import { resetPasswordFields } from "@/app/(auth)/_config";
-import { useResetPassword } from "@/app/(auth)/_hooks/useClerkAuth";
+import { useResetPassword } from "@/app/(auth)/_hooks";
 
 type ResetPasswordVariant = "default" | "with-icon";
 

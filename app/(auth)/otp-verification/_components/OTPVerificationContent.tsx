@@ -1,8 +1,9 @@
 import { View, Pressable } from "react-native";
 import { EmailVerificationIcon } from "@/assets/icons";
-import { AuthContent } from "@/app/(auth)/_components";
+import { AuthContent } from "@/app/(auth)/_components/index";
 import { OTPInput } from "@/components/inputs/OTPInput";
-import { Button, Text } from "@/components";
+import { Button } from "@/components/buttons";
+import { Text } from "@/components/text";
 
 type OTPVerificationVariant = "default" | "with-icon";
 type OTPVerificationFlow = "signup" | "reset-password";

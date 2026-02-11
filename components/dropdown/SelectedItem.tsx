@@ -1,6 +1,6 @@
 import { Pressable, View } from "react-native";
 import { cn } from "@/lib/utils";
-import { Text } from "@/components";
+import { Text } from "../text";
 
 const selectedItemVariants = {
   container: {

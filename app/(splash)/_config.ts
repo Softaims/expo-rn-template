@@ -61,3 +61,5 @@ export const SPLASH_SCREENS: SplashScreenData[] = [
 ];
 
 export const TOTAL_STEPS = SPLASH_SCREENS.length;
+
+export default null;

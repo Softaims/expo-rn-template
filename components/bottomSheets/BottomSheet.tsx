@@ -7,7 +7,7 @@ import {
     BottomSheetBackdropProps,
 } from '@gorhom/bottom-sheet';
 import { Text } from '../text';
-import { Button } from '..';
+import { Button } from '../buttons';
 import { cn } from '@/lib/utils';
 
 const IMAGES = {

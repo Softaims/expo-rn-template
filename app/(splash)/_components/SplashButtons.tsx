@@ -1,5 +1,5 @@
 import { View } from "react-native";
-import { Button } from "@/components";
+import { Button } from "@/components/buttons";
 import type { ButtonConfig } from "../_config";
 
 interface SplashButtonsProps {

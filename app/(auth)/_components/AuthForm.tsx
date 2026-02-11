@@ -1,7 +1,11 @@
 import { View, Pressable } from "react-native";
 import { useForm, Controller, FieldError } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Text, TextInput } from "@/components";
+
+import { TextInput } from "@/components/inputs";
+import { Button } from "@/components/buttons";
+import { Text } from "@/components/text";
+
 import { ErrorIcon } from "@/assets/icons";
 import { cn } from "@/lib/utils";
 import type { ZodType } from "zod";
