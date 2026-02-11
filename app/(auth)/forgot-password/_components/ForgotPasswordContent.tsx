@@ -1,4 +1,5 @@
-import { View } from "react-native";
+import { View, Alert } from "react-native";
+import { useRouter } from "expo-router";
 import { LockForgotIcon } from "@/assets/icons";
 import { AuthContent, AuthForm } from "@/app/(auth)/_components";
 import {
@@ -6,18 +7,46 @@ import {
   ForgotPasswordFormData,
 } from "@/app/(auth)/_schemas";
 import { forgotPasswordFields } from "@/app/(auth)/_config";
+import { useForgotPassword } from "@/app/(auth)/_hooks/useClerkAuth";
 
 type ForgotPasswordVariant = "default" | "with-icon";
 
 interface ForgotPasswordContentProps {
-  variant: ForgotPasswordVariant;
-  onSubmit: (data: ForgotPasswordFormData) => void;
+  variant?: ForgotPasswordVariant;
 }
 
-export default function ForgotPasswordContent({
-  variant,
-  onSubmit,
-}: ForgotPasswordContentProps) {
+export default function ForgotPasswordContent({ variant = "default" }: ForgotPasswordContentProps) {
+  const router = useRouter();
+  const { sendResetCode } = useForgotPassword();
+
+  const handleSubmit = async (data: ForgotPasswordFormData) => {
+    try {
+      await sendResetCode(data.email);
+      Alert.alert(
+        "Verification Code Sent",
+        `A verification code has been sent to ${data.email}`,
+        [
+          {
+            text: "OK",
+            onPress: () => {
+              router.push({
+                pathname: "/(auth)/otp-verification",
+                params: {
+                  email: data.email,
+                  flow: "reset-password"
+                },
+              });
+            },
+          },
+        ],
+      );
+    } catch (error: any) {
+      console.error("Forgot password error:", error);
+      const errorMessage = error?.errors?.[0]?.longMessage || error?.errors?.[0]?.message || error?.message || "Failed to send verification code";
+      Alert.alert("Error", errorMessage);
+    }
+  };
+
   return (
     <View className="flex-1">
       <View>
@@ -42,7 +71,7 @@ export default function ForgotPasswordContent({
           fields={forgotPasswordFields}
           schema={forgotPasswordSchema}
           buttonText="Send Verification Code"
-          onSubmit={onSubmit}
+          onSubmit={handleSubmit}
           className="flex-1 justify-between mb-3"
         />
       </View>

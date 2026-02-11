@@ -8,6 +8,7 @@ export { ChevronDownIcon } from "./ChevronDownIcon";
 export * from "./CloseCircleIcon";
 export { CloseIcon } from "./CloseIcon";
 export * from "./DocumentIcon";
+export * from "./EmailVerificationIcon";
 export * from "./EnvelopeIcon";
 export * from "./ErrorIcon";
 export * from "./EyeCloseIcon";

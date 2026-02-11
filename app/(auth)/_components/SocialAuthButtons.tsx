@@ -2,11 +2,12 @@ import { useState } from 'react';
 import { View, Pressable, ActivityIndicator, Platform } from 'react-native';
 import { Text } from '@/components';
 import { GoogleIcon, AppleIcon } from '@/assets/icons';
-import { useClerkAuth } from '@/app/(auth)/_hooks/useClerkAuth';
+import { useGoogleOAuth, useAppleOAuth } from '@/app/(auth)/_hooks/useClerkAuth';
 import { cn } from '@/lib/utils';
 
 export default function SocialAuthButtons() {
-  const { signInWithGoogle, signInWithApple } = useClerkAuth();
+  const { signInWithGoogle } = useGoogleOAuth();
+  const { signInWithApple } = useAppleOAuth();
   const [loadingProvider, setLoadingProvider] = useState<'google' | 'apple' | null>(null);
 
   const handleOAuth = async (provider: 'google' | 'apple', authFn: () => Promise<void>) => {

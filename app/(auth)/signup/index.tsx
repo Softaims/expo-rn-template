@@ -1,33 +1,21 @@
-import { View, ScrollView, Alert } from "react-native";
+import { View, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useRouter } from "expo-router";
-import {
-  AuthHeader,
-  AuthContent,
-  AuthForm,
-  SocialAuthButtons,
-  AuthFooter,
-} from "@/app/(auth)/_components";
-import { useClerkAuth } from "@/app/(auth)/_hooks/useClerkAuth";
-import { signupSchema, SignupFormData } from "@/app/(auth)/_schemas";
-import { signupFields } from "@/app/(auth)/_config";
+import { useState, useCallback } from "react";
+import { useFocusEffect } from "expo-router";
+import { AuthHeader } from "@/app/(auth)/_components";
+import { SignupContent } from "./_components";
 
 export default function SignupScreen() {
-  const router = useRouter();
-  const { signUpWithEmail } = useClerkAuth();
+  const variant = "bottom-sheet";
+  const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(true);
+  const enableBackdropDismiss = false;
 
-  const handleSubmit = async (data: SignupFormData) => {
-    try {
-      await signUpWithEmail(data.email, data.password);
-      console.log("Signup successful");
-    } catch (error: any) {
-      Alert.alert("Signup Failed", error?.message || "Please try again");
-    }
-  };
-
-  const handleNavigateToLogin = () => {
-    router.push("/(auth)/login");
-  };
+  // Reset bottom sheet visibility when screen comes back into focus
+  useFocusEffect(
+    useCallback(() => {
+      setIsBottomSheetVisible(true);
+    }, [])
+  );
 
   return (
     <SafeAreaView className="flex-1 bg-background">
@@ -37,30 +25,13 @@ export default function SignupScreen() {
         showsVerticalScrollIndicator={false}
         style={{ paddingHorizontal: 16 }}
       >
-        <AuthHeader />
+        {variant !== "bottom-sheet" && <AuthHeader />}
         <View className="flex-1 pt-7">
-          <View className="flex-1">
-            <View className="mb-6">
-              <AuthContent
-                title="Register Yourself"
-                description="For Registration please enter the required account registration details."
-              />
-            </View>
-
-            <AuthForm
-              fields={signupFields}
-              schema={signupSchema}
-              buttonText="Sign Up"
-              onSubmit={handleSubmit}
-            />
-
-            <SocialAuthButtons />
-          </View>
-
-          <AuthFooter
-            text="Already have an account?"
-            linkText="Login"
-            onNavigate={handleNavigateToLogin}
+          <SignupContent
+            variant={variant}
+            isVisible={isBottomSheetVisible}
+            setIsVisible={setIsBottomSheetVisible}
+            enableBackdropDismiss={enableBackdropDismiss}
           />
         </View>
       </ScrollView>

@@ -1,4 +1,5 @@
-import { View } from "react-native";
+import { View, Alert } from "react-native";
+import { useRouter, useLocalSearchParams } from "expo-router";
 import { ResetPasswordIcon } from "@/assets/icons";
 import { AuthContent, AuthForm } from "@/app/(auth)/_components";
 import {
@@ -6,18 +7,47 @@ import {
   ResetPasswordFormData,
 } from "@/app/(auth)/_schemas";
 import { resetPasswordFields } from "@/app/(auth)/_config";
+import { useResetPassword } from "@/app/(auth)/_hooks/useClerkAuth";
 
 type ResetPasswordVariant = "default" | "with-icon";
 
 interface ResetPasswordContentProps {
-  variant: ResetPasswordVariant;
-  onSubmit: (data: ResetPasswordFormData) => void;
+  variant?: ResetPasswordVariant;
 }
 
-export default function ResetPasswordContent({
-  variant,
-  onSubmit,
-}: ResetPasswordContentProps) {
+export default function ResetPasswordContent({ variant = "with-icon" }: ResetPasswordContentProps) {
+  const router = useRouter();
+  const { code } = useLocalSearchParams<{ code: string }>();
+  const { resetPassword } = useResetPassword();
+
+  const handleSubmit = async (data: ResetPasswordFormData) => {
+    if (!code) {
+      Alert.alert("Error", "Verification code is missing. Please try again.");
+      router.replace("/(auth)/forgot-password");
+      return;
+    }
+
+    try {
+      await resetPassword(code, data.newPassword);
+      Alert.alert(
+        "Password Reset Successful",
+        "Your password has been reset successfully",
+        [
+          {
+            text: "OK",
+            onPress: () => {
+              router.replace("/(auth)/login");
+            },
+          },
+        ],
+      );
+    } catch (error: any) {
+      console.error("Reset password error:", error);
+      const errorMessage = error?.errors?.[0]?.longMessage || error?.errors?.[0]?.message || error?.message || "Failed to reset password. Please check your verification code.";
+      Alert.alert("Error", errorMessage);
+    }
+  };
+
   return (
     <View className="flex-1">
       <View>
@@ -42,7 +72,7 @@ export default function ResetPasswordContent({
           fields={resetPasswordFields}
           schema={resetPasswordSchema}
           buttonText="Continue"
-          onSubmit={onSubmit}
+          onSubmit={handleSubmit}
           className="flex-1 justify-between mb-3"
         />
       </View>

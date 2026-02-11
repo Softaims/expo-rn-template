@@ -1,63 +1,152 @@
-import { useSignIn, useSignUp, useOAuth } from '@clerk/clerk-expo';
-import { useEffect } from 'react';
+import { useUser, useSignIn, useSignUp, useAuth as useClerkAuth, useOAuth } from '@clerk/clerk-expo';
+import { useCallback, useEffect } from 'react';
 import * as WebBrowser from 'expo-web-browser';
 import * as Linking from 'expo-linking';
 
 WebBrowser.maybeCompleteAuthSession();
 
-export function useClerkAuth() {
-  const { signIn, setActive: setSignInActive } = useSignIn();
-  const { signUp, setActive: setSignUpActive } = useSignUp();
-
-  const { startOAuthFlow: googleFlow } = useOAuth({ strategy: 'oauth_google' });
-  const { startOAuthFlow: appleFlow } = useOAuth({ strategy: 'oauth_apple' });
-
+export function useWarmUpBrowser() {
   useEffect(() => {
     void WebBrowser.warmUpAsync();
-    return () => void WebBrowser.coolDownAsync();
+    return () => {
+      void WebBrowser.coolDownAsync();
+    };
   }, []);
+}
 
-  const signInWithEmail = async (email: string, password: string) => {
-    const result = await signIn!.create({ identifier: email, password });
-    if (result.createdSessionId) {
+export function useAuth() {
+  const { user, isSignedIn, isLoaded } = useUser();
+  const { signOut, getToken } = useClerkAuth();
 
-      await setSignInActive!({ session: result.createdSessionId });
+  return {
+    user,
+    isSignedIn,
+    isLoaded,
+    signOut,
+    getToken,
+  };
+}
+
+export function useLogin() {
+  const { signIn, setActive, isLoaded } = useSignIn();
+
+  const handleSignIn = async (params: { identifier: string; password: string }) => {
+    if (!signIn || !isLoaded) {
+      throw new Error('Sign in is not ready');
+    }
+
+    try {
+      // First, create the sign-in attempt
+      const signInAttempt = await signIn.create({
+        identifier: params.identifier,
+        password: params.password,
+      });
+
+      // If the sign-in is complete, set the active session
+      if (signInAttempt.status === 'complete') {
+        if (setActive) {
+          await setActive({ session: signInAttempt.createdSessionId });
+        }
+        return signInAttempt;
+      }
+
+      throw new Error(`Authentication incomplete: ${signInAttempt.status}`);
+    } catch (error: any) {
+      if (error.errors && error.errors.length > 0) {
+        throw error;
+      }
+      throw error;
     }
   };
 
-  const signUpWithEmail = async (email: string, password: string) => {
-    const result = await signUp!.create({ emailAddress: email, password });
-    if (result.createdSessionId) {
-      await setSignUpActive!({ session: result.createdSessionId });
+  return {
+    signIn: handleSignIn,
+    isLoading: !isLoaded,
+    isLoaded,
+  };
+}
+
+export function useRegister() {
+  const { signUp, setActive, isLoaded } = useSignUp();
+
+  const handleSignUp = async (params: {
+    emailAddress: string;
+    password: string;
+    firstName?: string;
+    lastName?: string;
+  }) => {
+    const result = await signUp!.create(params);
+
+    // If email verification is required
+    if (result.status === 'missing_requirements') {
+      // Prepare email verification
+      await signUp!.prepareEmailAddressVerification({ strategy: 'email_code' });
+      return result;
     }
+
+    // If sign up is complete
+    if (result.status === 'complete' && setActive !== undefined) {
+      await setActive({ session: result.createdSessionId });
+      return result;
+    }
+
+    return result;
   };
 
-  const signInWithGoogle = async () => {
-    const { createdSessionId, setActive } = await googleFlow({
-      redirectUrl: Linking.createURL('/(auth)/login'),
-    });
-
-    if (createdSessionId && setActive) {
-      await setActive({ session: createdSessionId });
-    }
+  const resendCode = async () => {
+    await signUp!.prepareEmailAddressVerification({ strategy: 'email_code' });
   };
 
-  const signInWithApple = async () => {
-    const { createdSessionId, setActive } = await appleFlow({
-      redirectUrl: Linking.createURL('/'),
-    });
+  return {
+    signUp: handleSignUp,
+    resendCode,
+    isLoading: !isLoaded,
+    isLoaded,
+  };
+}
 
-    if (createdSessionId && setActive) {
-      await setActive({ session: createdSessionId });
+export function useVerifyEmail() {
+  const { signUp, setActive, isLoaded } = useSignUp();
+
+  const verifyEmail = async (code: string) => {
+    const result = await signUp!.attemptEmailAddressVerification({ code });
+
+    if (result.status === 'complete' && setActive !== undefined) {
+      await setActive({ session: result.createdSessionId });
+      return result;
     }
+
+    throw new Error('Verification incomplete');
   };
 
-  const sendPasswordResetEmail = async (email: string) => {
-    await signIn!.create({
+  return {
+    verifyEmail,
+    isLoading: !isLoaded,
+    isLoaded,
+  };
+}
+
+export function useForgotPassword() {
+  const { signIn, isLoaded } = useSignIn();
+
+  const sendResetCode = async (emailAddress: string) => {
+    const result = await signIn!.create({
       strategy: 'reset_password_email_code',
-      identifier: email,
+      identifier: emailAddress,
     });
+
+    return result;
   };
+
+  return {
+    sendResetCode,
+    isLoading: !isLoaded,
+    isLoaded,
+  };
+}
+
+export function useResetPassword() {
+  const { signIn, setActive, isLoaded } = useSignIn();
 
   const resetPassword = async (code: string, newPassword: string) => {
     const result = await signIn!.attemptFirstFactor({
@@ -66,17 +155,61 @@ export function useClerkAuth() {
       password: newPassword,
     });
 
-    if (result.createdSessionId) {
-      await setSignInActive!({ session: result.createdSessionId });
+    if (result.status === 'complete' && setActive !== undefined) {
+      await setActive({ session: result.createdSessionId });
+      return result;
     }
+
+    throw new Error('Reset incomplete');
   };
 
   return {
-    signInWithEmail,
-    signUpWithEmail,
-    signInWithGoogle,
-    signInWithApple,
-    sendPasswordResetEmail,
     resetPassword,
+    isLoading: !isLoaded,
+    isLoaded,
+  };
+}
+
+export function useGoogleOAuth() {
+  useWarmUpBrowser();
+  const { startOAuthFlow } = useOAuth({ strategy: 'oauth_google' });
+
+  const signInWithGoogle = useCallback(async () => {
+    const { createdSessionId, setActive } = await startOAuthFlow({
+      redirectUrl: Linking.createURL('/(auth)/login'),
+    });
+
+    if (createdSessionId && setActive !== undefined) {
+      await setActive({ session: createdSessionId });
+    }
+  }, [startOAuthFlow]);
+
+  return {
+    signInWithGoogle,
+  };
+}
+
+export function useAppleOAuth() {
+  useWarmUpBrowser();
+  const { startOAuthFlow } = useOAuth({ strategy: 'oauth_apple' });
+
+  const signInWithApple = useCallback(async () => {
+    try {
+      const { createdSessionId, setActive } = await startOAuthFlow({
+        redirectUrl: Linking.createURL('/(auth)/login'),
+      });
+
+      if (createdSessionId && setActive !== undefined) {
+        await setActive({ session: createdSessionId });
+      }
+    } catch (error) {
+      // Handle user cancellation gracefully
+      console.log('Apple sign-in cancelled or failed:', error);
+      throw error;
+    }
+  }, [startOAuthFlow]);
+
+  return {
+    signInWithApple,
   };
 }

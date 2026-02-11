@@ -45,7 +45,6 @@ export const forgotPasswordFields: FieldConfig[] = [
   },
 ];
 
-// Example for future use:
 export const resetPasswordFields: FieldConfig[] = [
   {
     name: 'newPassword',

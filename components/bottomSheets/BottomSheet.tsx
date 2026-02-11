@@ -41,9 +41,11 @@ interface BottomSheetProps {
     onCancel?: () => void;
     onBackdropPress?: () => void;
     backDropStyles?: StyleProp<ViewStyle>;
+    enableBackdropDismiss?: boolean;
+    enablePanDownToClose?: boolean;
 }
 
-export const BottomSheet = ({ children, isVisible, image = 'check', customImage, imageStyles, title, titleStyles, description, descriptionStyles, buttonTitle, buttonTitleStyles, buttonStyles, sheetContainerStyles, sheetContentContainerStyles, setIsVisible, onOpen, onClose, onConfirm, onCancel, onBackdropPress, backDropStyles }
+export const BottomSheet = ({ children, isVisible, image = 'check', customImage, imageStyles, title, titleStyles, description, descriptionStyles, buttonTitle, buttonTitleStyles, buttonStyles, sheetContainerStyles, sheetContentContainerStyles, setIsVisible, onOpen, onClose, onConfirm, onCancel, onBackdropPress, backDropStyles, enableBackdropDismiss = true, enablePanDownToClose = false }
     : BottomSheetProps) => {
     const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
@@ -83,12 +85,12 @@ export const BottomSheet = ({ children, isVisible, image = 'check', customImage,
                 {...props}
                 appearsOnIndex={0}
                 disappearsOnIndex={-1}
-                pressBehavior="close"
+                pressBehavior={enableBackdropDismiss ? "close" : "none"}
                 onPress={onBackdropPress}
                 style={backDropStyles}
             />
         )
-    }, [onBackdropPress, backDropStyles]);
+    }, [onBackdropPress, backDropStyles, enableBackdropDismiss]);
 
     return (
         <BottomSheetModal
@@ -96,6 +98,7 @@ export const BottomSheet = ({ children, isVisible, image = 'check', customImage,
             onChange={handleSheetChanges}
             style={[sheetContainerStyles]}
             backdropComponent={renderBackdrop}
+            enablePanDownToClose={enablePanDownToClose}
         >
             <BottomSheetView>
                 <View className={cn("p-[16px] pb-[32px]", sheetContentContainerStyles)} >
