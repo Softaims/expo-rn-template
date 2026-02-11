@@ -23,3 +23,5 @@ export { SendIcon } from "./SendIcon";
 export * from "./UploadIcon";
 export * from "./CameraIcon";
 export * from "./MicrophoneIcon";
+export * from "./AltArrowLeftIcon";
+export * from "./MenuDotsVerticalIcon";
