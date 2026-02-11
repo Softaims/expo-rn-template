@@ -15,17 +15,20 @@ import { signupFields } from "@/modules/auth/config";
 import { useRegister } from "@/modules/auth/hooks";
 import type { SignupScreenProps } from "@/modules/auth/types";
 
-export default function SignupScreen({ variant = "bottom-sheet" }: SignupScreenProps) {
+export default function SignupScreen({
+  variant = "bottom-sheet",
+}: SignupScreenProps) {
+  const enableBackdropDismiss = false;
+
   const router = useRouter();
   const { signUp } = useRegister();
   const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(true);
-  const enableBackdropDismiss = false;
 
   // Reset bottom sheet visibility when screen comes back into focus
   useFocusEffect(
     useCallback(() => {
       setIsBottomSheetVisible(true);
-    }, [])
+    }, []),
   );
 
   const handleSubmit = async (data: SignupFormData) => {
@@ -36,26 +39,17 @@ export default function SignupScreen({ variant = "bottom-sheet" }: SignupScreenP
       });
 
       // Check if email verification is required
-      if (result.status === 'missing_requirements') {
-        // Dismiss bottom sheet before navigation
-        if (setIsBottomSheetVisible) {
-          setIsBottomSheetVisible(false);
-        }
-        // Small delay to allow bottom sheet animation to complete
-        setTimeout(() => {
-          router.push({
-            pathname: "/(auth)/otp-verification",
-            params: { email: data.email, flow: "signup" },
-          });
-        }, 300);
-      } else if (result.status === 'complete') {
-        // User signed up and logged in successfully (no verification needed)
+      if (result.status === "missing_requirements") {
+        setIsBottomSheetVisible(false);
+        router.push({
+          pathname: "/(auth)/otp-verification",
+          params: { email: data.email, flow: "signup" },
+        });
+      } else if (result.status === "complete") {
         Alert.alert("Success", "Account created successfully!");
       }
     } catch (error: any) {
       console.error("Signup error:", error);
-      const errorMessage = error?.errors?.[0]?.longMessage || error?.errors?.[0]?.message || error?.message || "Please try again";
-      Alert.alert("Signup Failed", errorMessage);
     }
   };
 
@@ -94,25 +88,16 @@ export default function SignupScreen({ variant = "bottom-sheet" }: SignupScreenP
   if (variant === "bottom-sheet") {
     return (
       <SafeAreaView className="flex-1 bg-background">
-        <ScrollView
-          className="flex-1"
-          contentContainerStyle={{ flexGrow: 1 }}
-          showsVerticalScrollIndicator={false}
-          style={{ paddingHorizontal: 16 }}
+        <BottomSheet
+          isVisible={isBottomSheetVisible}
+          setIsVisible={setIsBottomSheetVisible}
+          enableBackdropDismiss={enableBackdropDismiss}
+          sheetContentContainerStyles="px-0 pb-0"
         >
-          <View className="flex-1 pt-7">
-            <BottomSheet
-              isVisible={isBottomSheetVisible}
-              setIsVisible={setIsBottomSheetVisible}
-              enableBackdropDismiss={enableBackdropDismiss}
-              sheetContentContainerStyles="px-0 pb-0"
-            >
-              <ScrollView className="px-4" style={{ minHeight: 550 }}>
-                {content}
-              </ScrollView>
-            </BottomSheet>
-          </View>
-        </ScrollView>
+          <ScrollView className="px-4" style={{ minHeight: 550 }}>
+            {content}
+          </ScrollView>
+        </BottomSheet>
       </SafeAreaView>
     );
   }
@@ -126,9 +111,7 @@ export default function SignupScreen({ variant = "bottom-sheet" }: SignupScreenP
         style={{ paddingHorizontal: 16 }}
       >
         <AuthHeader />
-        <View className="flex-1 pt-7">
-          {content}
-        </View>
+        <View className="flex-1 pt-7">{content}</View>
       </ScrollView>
     </SafeAreaView>
   );

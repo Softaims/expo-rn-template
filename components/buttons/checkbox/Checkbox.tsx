@@ -1,7 +1,7 @@
 import { Pressable, View } from "react-native";
 import { cn } from "@/lib/utils";
 import { Text } from "@/components/text";
-import { useState } from "react";
+import { CheckIcon, MinusIcon } from "@/assets/icons";
 
 const checkboxVariants = {
   container: "flex-row items-center gap-3",
@@ -20,109 +20,70 @@ const checkboxVariants = {
 } as const;
 
 export interface CheckboxProps {
-  // move states here
   value: boolean;
-  onChnangeValue: (isChecked: boolean) => void; 
-  
+  onValueChange: (value: boolean) => void;
   label?: string;
-  checked?: boolean;
-
-  // variant?: 'check' | 'minus';
-  indeterminate?: boolean; //replace with variant type
-
+  indeterminate?: boolean;
   disabled?: boolean;
-
-  onCheckedChange?: (checked: boolean) => void;
-
-  // Styling props
   containerStyles?: string;
-
-  // --------- 
   checkedBoxStyle?: string;
   uncheckedBoxStyle?: string;
-  indeterminateBoxStyle?: string; //remove
-  // ---------
-
   disabledBoxStyle?: string;
   labelStyle?: string;
   disabledLabelStyle?: string;
-
-  // Custom icons (JSX elements)
   checkIcon?: React.ReactNode;
   indeterminateIcon?: React.ReactNode;
 }
 
 export function Checkbox({
   label,
-  checked = false,
+  value = false,
   indeterminate = false,
   disabled = false,
-  onCheckedChange,
+  onValueChange,
   containerStyles,
   checkedBoxStyle,
   uncheckedBoxStyle,
-  indeterminateBoxStyle,
   disabledBoxStyle,
   labelStyle,
   disabledLabelStyle,
   checkIcon,
   indeterminateIcon,
-  value,
-  onChnangeValue,
 }: CheckboxProps) {
   const handlePress = () => {
     if (disabled) return;
-    const newValue = !value;
-    onChnangeValue(newValue);
-    onCheckedChange?.(newValue);
+    onValueChange(!value);
   };
 
-  const getBoxStyle = () => {
-    // Create a state key for switch statement
-    let state = "normal";
-    if (disabled && (value || indeterminate)) {
-      state = "disabled-checked";
-    } else if (disabled) {
-      state = "disabled";
-    } else if (indeterminate) {
-      state = "indeterminate";
-    } else if (value) {
-      state = "checked";
-    }
+  const isChecked = value || indeterminate;
 
-    switch (state) {
-      case "disabled-checked":
+  const getBoxStyle = () => {
+    switch (true) {
+      case disabled && isChecked:
         return cn(checkboxVariants.box.disabledChecked, disabledBoxStyle);
-      case "disabled":
+      case disabled:
         return cn(checkboxVariants.box.disabled, disabledBoxStyle);
-      case "indeterminate":
-        return cn(checkboxVariants.box.checked, indeterminateBoxStyle);
-      case "checked":
+      case isChecked:
         return cn(checkboxVariants.box.checked, checkedBoxStyle);
-      case "normal":
       default:
         return cn(checkboxVariants.box.normal, uncheckedBoxStyle);
     }
   };
 
-  const renderIcon = () => {
-    // Create a state key for switch statement
-    let iconState = "none";
-    if (indeterminate && indeterminateIcon) {
-      iconState = "indeterminate";
-    } else if (value && checkIcon) {
-      iconState = "checked";
-    }
+  const boxStyle = getBoxStyle();
 
-    switch (iconState) {
-      case "indeterminate":
-        return indeterminateIcon;
-      case "checked":
-        return checkIcon;
-      case "none":
-      default:
-        return null;
+  const renderIcon = () => {
+    if (indeterminate) {
+      return (
+        indeterminateIcon || (
+          <MinusIcon width={12} height={12} color="#ffffff" />
+        )
+      );
     }
+    if (value) {
+      return checkIcon || <CheckIcon width={12} height={12} color="#ffffff" />;
+    }
+    return null;
   };
 
   return (
@@ -131,21 +92,16 @@ export function Checkbox({
       disabled={disabled}
       className={cn(checkboxVariants.container, containerStyles)}
     >
-      <View className={cn(checkboxVariants.box.base, getBoxStyle())}>
+      <View className={cn(checkboxVariants.box.base, boxStyle)}>
         {renderIcon()}
       </View>
       {label && (
         <Text
           className={cn(
             checkboxVariants.label.base,
-            (() => {
-              switch (true) {
-                case disabled:
-                  return cn(checkboxVariants.label.disabled, disabledLabelStyle);
-                default:
-                  return cn(checkboxVariants.label.normal, labelStyle);
-              }
-            })()
+            disabled
+              ? cn(checkboxVariants.label.disabled, disabledLabelStyle)
+              : cn(checkboxVariants.label.normal, labelStyle),
           )}
         >
           {label}

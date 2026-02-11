@@ -30,13 +30,11 @@ export interface RadioButtonProps {
 
   // Styling props
   containerStyles?: string;
-
   selectedCircleStyle?: string;
   unselectedCircleStyle?: string;
   inactiveCircleStyle?: string;
   selectedDotStyle?: string;
   inactiveDotStyle?: string;
-  
   labelStyle?: string;
   inactiveLabelStyle?: string;
 
@@ -65,23 +63,17 @@ export function RadioButton({
   };
 
   const getCircleStyle = () => {
-    let state = "unselected";
-    if (inactive) {
-      state = "inactive";
-    } else if (selected) {
-      state = "selected";
-    }
-
-    switch (state) {
-      case "inactive":
+    switch (true) {
+      case inactive:
         return cn(radioVariants.circle.inactive, inactiveCircleStyle);
-      case "selected":
+      case selected:
         return cn(radioVariants.circle.selected, selectedCircleStyle);
-      case "unselected":
       default:
         return cn(radioVariants.circle.unselected, unselectedCircleStyle);
     }
   };
+
+  const circleStyle = getCircleStyle();
 
   const getDotStyle = () => {
     switch (true) {
@@ -92,16 +84,12 @@ export function RadioButton({
     }
   };
 
+  const dotStyle = getDotStyle();
+
   const renderContent = () => {
-    if (selected && selectedIcon) {
-      return selectedIcon;
-    }
-
-    if (selected) {
-      return <View className={cn(radioVariants.dot.base, getDotStyle())} />;
-    }
-
-    return null;
+    if (!selected) return null;
+    if (selectedIcon) return selectedIcon;
+    return <View className={cn(radioVariants.dot.base, dotStyle)} />;
   };
 
   return (
@@ -110,7 +98,7 @@ export function RadioButton({
       disabled={inactive}
       className={cn(radioVariants.container, containerStyles)}
     >
-      <View className={cn(radioVariants.circle.base, getCircleStyle())}>
+      <View className={cn(radioVariants.circle.base, circleStyle)}>
         {renderContent()}
       </View>
       {label && (
@@ -119,7 +107,7 @@ export function RadioButton({
             radioVariants.label.base,
             inactive
               ? cn(radioVariants.label.inactive, inactiveLabelStyle)
-              : cn(radioVariants.label.normal, labelStyle)
+              : cn(radioVariants.label.normal, labelStyle),
           )}
         >
           {label}

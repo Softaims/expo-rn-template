@@ -118,18 +118,29 @@ export default function SplashScreen() {
       style={{ backgroundColor: currentScreen.backgroundColor }}
     >
       <View className="flex-1 justify-between">
-        {/* Skip Button - using Button component directly */}
-        {currentScreen.showSkipButton? (
-          <Button
-            variant="text"
-            size="sm"
-            title="Skip"
-            onPress={handleSkip}
-            containerStyles="bg-transparent self-end"
-            textStyles="font-medium"
-          />)
-          : <View/>
-        }
+        {/* Skip and Storybook Buttons */}
+        {currentScreen.showSkipButton ? (
+          <View className="flex-row justify-between items-center px-4">
+            <Button
+              variant="text"
+              size="sm"
+              title="Storybook"
+              onPress={() => router.push("/storybook")}
+              containerStyles="bg-transparent"
+              textStyles="font-medium"
+            />
+            <Button
+              variant="text"
+              size="sm"
+              title="Skip"
+              onPress={handleSkip}
+              containerStyles="bg-transparent"
+              textStyles="font-medium"
+            />
+          </View>
+        ) : (
+          <View />
+        )}
 
         <View>
           <GestureDetector gesture={panGesture}>

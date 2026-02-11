@@ -15,7 +15,9 @@ import { loginFields } from "@/modules/auth/config";
 import { useLogin } from "@/modules/auth/hooks";
 import type { LoginScreenProps } from "@/modules/auth/types";
 
-export default function LoginScreen({ variant = "bottom-sheet" }: LoginScreenProps) {
+export default function LoginScreen({
+  variant = "bottom-sheet",
+}: LoginScreenProps) {
   const router = useRouter();
   const { signIn } = useLogin();
   const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(true);
@@ -25,7 +27,7 @@ export default function LoginScreen({ variant = "bottom-sheet" }: LoginScreenPro
   useFocusEffect(
     useCallback(() => {
       setIsBottomSheetVisible(true);
-    }, [])
+    }, []),
   );
 
   const handleSubmit = async (data: LoginFormData) => {
@@ -37,52 +39,44 @@ export default function LoginScreen({ variant = "bottom-sheet" }: LoginScreenPro
       // Login successful - Clerk will handle navigation
     } catch (error: any) {
       console.error("Login error:", error);
-      const errorMessage = error?.errors?.[0]?.longMessage || error?.errors?.[0]?.message || error?.message || "Please try again";
+      const errorMessage =
+        error?.errors?.[0]?.longMessage ||
+        error?.errors?.[0]?.message ||
+        error?.message ||
+        "Please try again";
       Alert.alert("Login Failed", errorMessage);
     }
   };
 
   const handleNavigateToSignup = () => {
-    // Dismiss bottom sheet before navigation
-    if (setIsBottomSheetVisible) {
-      setIsBottomSheetVisible(false);
-    }
-    setTimeout(() => {
-      router.push("/(auth)/signup");
-    }, 300);
+    setIsBottomSheetVisible(false);
+    router.push("/(auth)/signup");
   };
 
   const handleForgotPassword = () => {
-    // Dismiss bottom sheet before navigation
-    if (setIsBottomSheetVisible) {
-      setIsBottomSheetVisible(false);
-    }
-    setTimeout(() => {
-      router.push("/(auth)/forgot-password");
-    }, 300);
+    setIsBottomSheetVisible(false);
+    router.push("/(auth)/forgot-password");
   };
 
   const content = (
     <View className="flex-1">
-      <View className="flex-1">
-        <View className="mb-6">
-          <AuthContent
-            title="Welcome Back"
-            description="To access your account please enter your account details."
-          />
-        </View>
-
-        <AuthForm
-          fields={loginFields}
-          schema={loginSchema}
-          buttonText="Login Account"
-          showForgotPassword={true}
-          onForgotPasswordPress={handleForgotPassword}
-          onSubmit={handleSubmit}
+      <View className="mb-6">
+        <AuthContent
+          title="Welcome Back"
+          description="To access your account please enter your account details."
         />
-
-        <SocialAuthButtons />
       </View>
+
+      <AuthForm
+        fields={loginFields}
+        schema={loginSchema}
+        buttonText="Login Account"
+        showForgotPassword={true}
+        onForgotPasswordPress={handleForgotPassword}
+        onSubmit={handleSubmit}
+      />
+
+      <SocialAuthButtons />
 
       <AuthFooter
         text="Don't have an account?"
@@ -95,23 +89,14 @@ export default function LoginScreen({ variant = "bottom-sheet" }: LoginScreenPro
   if (variant === "bottom-sheet") {
     return (
       <SafeAreaView className="flex-1 bg-background">
-        <ScrollView
-          className="flex-1"
-          contentContainerStyle={{ flexGrow: 1 }}
-          showsVerticalScrollIndicator={false}
-          style={{ paddingHorizontal: 16 }}
+        <BottomSheet
+          isVisible={isBottomSheetVisible}
+          setIsVisible={setIsBottomSheetVisible}
+          enableBackdropDismiss={enableBackdropDismiss}
+          sheetContentContainerStyles="px-0 pb-0"
         >
-          <View className="flex-1 pt-7">
-            <BottomSheet
-              isVisible={isBottomSheetVisible}
-              setIsVisible={setIsBottomSheetVisible}
-              enableBackdropDismiss={enableBackdropDismiss}
-              sheetContentContainerStyles="px-0 pb-0"
-            >
-              <ScrollView className="px-4">{content}</ScrollView>
-            </BottomSheet>
-          </View>
-        </ScrollView>
+          <ScrollView className="px-4">{content}</ScrollView>
+        </BottomSheet>
       </SafeAreaView>
     );
   }
@@ -125,9 +110,7 @@ export default function LoginScreen({ variant = "bottom-sheet" }: LoginScreenPro
         style={{ paddingHorizontal: 16 }}
       >
         <AuthHeader />
-        <View className="flex-1 pt-7">
-          {content}
-        </View>
+        <View className="flex-1 pt-7">{content}</View>
       </ScrollView>
     </SafeAreaView>
   );

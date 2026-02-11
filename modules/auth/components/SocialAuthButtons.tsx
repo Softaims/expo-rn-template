@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { View, Pressable, ActivityIndicator, Platform } from 'react-native';
-import { Text } from '@/components';
+import { Text } from '@/components/text';
 import { GoogleIcon, AppleIcon } from '@/assets/icons';
 import { useGoogleOAuth, useAppleOAuth } from '@/modules/auth/hooks';
 import { cn } from '@/lib/utils';
