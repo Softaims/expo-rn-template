@@ -24,10 +24,8 @@ export const AgePicker: Story = {
     args: {
         variant: 'age',
         label: 'Years',
-        min: 13,
+        min: 1,
         max: 100,
-        step: 1,
-        fractionDigits: 0,
         onValueChange: () => { },
     },
     render: (args) => {
@@ -40,51 +38,3 @@ export const AgePicker: Story = {
         )
     }
 };
-
-// export const HorizontalSelector: Story = {
-//     args: {
-//         value: 0,
-//         onChange: () => { },
-//         min: 0,
-//         max: 100,
-//         step: 1,
-//         orientation: 'horizontal',
-//         label: 'Years',
-//         showSideValues: true,
-//         showTickLabels: true,
-//     },
-//     render: (args) => {
-//         const [value, setValue] = useState(0);
-//         return (
-//             <Scale
-//                 {...args}
-//                 value={value}
-//                 onChange={setValue}
-//             />
-//         )
-//     }
-// };
-
-// export const VerticalSelector: Story = {
-//     args: {
-//         value: 0,
-//         onChange: () => { },
-//         min: 0,
-//         max: 100,
-//         step: 1,
-//         orientation: 'vertical',
-//         label: 'Height',
-//         showSideValues: true,
-//         showTickLabels: true,
-//     },
-//     render: (args) => {
-//         const [value, setValue] = useState(0);
-//         return (
-//             <Scale
-//                 {...args}
-//                 value={value}
-//                 onChange={setValue}
-//             />
-//         )
-//     }
-// };

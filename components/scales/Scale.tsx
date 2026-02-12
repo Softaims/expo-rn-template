@@ -36,7 +36,7 @@ export function Scale(props: ScaleProps) {
                     fractionDigits={props.fractionDigits || 0}
                     initialValue={props.initialValue || 0}
                     onValueChange={props.onValueChange}
-                    unit="cm"
+                    unit={''}
                     gapBetweenSteps={props.gapBetweenSteps || 8}
                     shortStepHeight={props.shortStepHeight || 24}
                     longStepHeight={props.longStepHeight || 34}

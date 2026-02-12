@@ -12,7 +12,6 @@ import type { NativeSyntheticEvent, NativeScrollEvent } from 'react-native';
 
 import {
   AnimatedFlashList,
-  FlashList,
   ListRenderItem,
 } from '@shopify/flash-list';
 
@@ -145,7 +144,8 @@ export const RulerPicker = ({
 }: RulerPickerProps) => {
   const itemAmount = (max - min) / step;
   const arrData = Array.from({ length: itemAmount + 1 }, (_, index) => index);
-  const listRef = useRef<FlashList<typeof arrData>>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const listRef = useRef<any>(null);
 
   const stepTextRef = useRef<TextInput>(null);
   const prevValue = useRef<string>(initialValue.toFixed(fractionDigits));
@@ -277,14 +277,12 @@ export const RulerPicker = ({
         ListFooterComponent={renderSeparator}
         onScroll={scrollHandler}
         onMomentumScrollEnd={onMomentumScrollEnd}
-        estimatedItemSize={stepWidth + gapBetweenSteps}
         snapToOffsets={arrData.map(
           (_, index) => index * (stepWidth + gapBetweenSteps)
         )}
         onContentSizeChange={onContentSizeChange}
         snapToAlignment="start"
         decelerationRate={decelerationRate}
-        estimatedFirstItemOffset={0}
         scrollEventThrottle={16}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
@@ -325,10 +323,14 @@ export const RulerPicker = ({
           <TextInput
             ref={stepTextRef}
             defaultValue={initialValue.toFixed(fractionDigits)}
+            editable={false}
+            pointerEvents="none"
             style={[
               {
                 lineHeight:
                   valueTextStyle?.fontSize ?? styles.valueText.fontSize,
+                minWidth: 80,
+                textAlign: 'center',
               },
               styles.valueText,
               valueTextStyle,
