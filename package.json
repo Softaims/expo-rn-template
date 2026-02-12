@@ -21,6 +21,7 @@
     "@react-navigation/bottom-tabs": "^7.4.0",
     "@react-navigation/elements": "^2.6.3",
     "@react-navigation/native": "^7.1.8",
+    "@sentry/react-native": "7.12.1",
     "@shopify/flash-list": "2.0.2",
     "@storybook/addon-ondevice-actions": "^10.1.11",
     "@storybook/addon-ondevice-controls": "^10.1.11",
