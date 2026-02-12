@@ -1,8 +1,9 @@
-import { View, Alert, Pressable } from "react-native";
+import { View, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { ArrowLeftIcon, ResetPasswordIcon } from "@/assets/icons";
 import { AuthContent, AuthForm } from "@/modules/auth/components";
+import { showSuccessAlert, showErrorAlert } from "@/components/alerts";
 import {
   resetPasswordSchema,
   ResetPasswordFormData,
@@ -22,29 +23,33 @@ export default function ResetPasswordScreen({ variant = "with-icon" }: ResetPass
 
   const handleSubmit = async (data: ResetPasswordFormData) => {
     if (!code) {
-      Alert.alert("Error", "Verification code is missing. Please try again.");
-      router.replace("/(auth)/forgot-password");
+      showErrorAlert({
+        title: "Error",
+        message: "Verification code is missing. Please try again.",
+        onPress: () => {
+          router.replace("/(auth)/forgot-password");
+        },
+      });
       return;
     }
 
     try {
       await resetPassword(code, data.newPassword);
-      Alert.alert(
-        "Password Reset Successful",
-        "Your password has been reset successfully",
-        [
-          {
-            text: "OK",
-            onPress: () => {
-              router.replace("/(auth)/login");
-            },
-          },
-        ],
-      );
+      showSuccessAlert({
+        title: "Password Updated!",
+        message: "You have updated your password now you can login to your account",
+        buttonText: "Login Now",
+        onPress: () => {
+          router.replace("/(auth)/login");
+        },
+      });
     } catch (error: any) {
       console.error("Reset password error:", error);
       const errorMessage = error?.errors?.[0]?.longMessage || error?.errors?.[0]?.message || error?.message || "Failed to reset password. Please check your verification code.";
-      Alert.alert("Error", errorMessage);
+      showErrorAlert({
+        title: "Error",
+        message: errorMessage,
+      });
     }
   };
 

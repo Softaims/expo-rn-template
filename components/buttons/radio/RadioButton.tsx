@@ -5,13 +5,13 @@ import { Text } from "@/components/text";
 const radioVariants = {
   container: "flex-row items-center gap-3",
   circle: {
-    base: "w-5 h-5 rounded-full border-2 items-center justify-center",
+    base: "w-[20px] h-[20px] rounded-full border-[1.5px] items-center justify-center",
     selected: "border-foreground",
     unselected: "border-foreground",
     inactive: "border-muted-foreground opacity-50",
   },
   dot: {
-    base: "w-2.5 h-2.5 rounded-full",
+    base: "w-4 h-4 rounded-full",
     selected: "bg-foreground",
     inactive: "bg-muted-foreground",
   },

@@ -14,7 +14,7 @@ import { loginSchema, LoginFormData } from "@/modules/auth/schemas";
 import { loginFields } from "@/modules/auth/config";
 import { useLogin } from "@/modules/auth/hooks";
 import type { LoginScreenProps } from "@/modules/auth/types";
-import { Alert } from "@/components/alerts";
+import { showErrorAlert } from "@/components/alerts";
 
 export default function LoginScreen({
   variant = 'default',
@@ -45,7 +45,10 @@ export default function LoginScreen({
         error?.errors?.[0]?.message ||
         error?.message ||
         "Please try again";
-      Alert.alert("Login Failed", errorMessage);
+      showErrorAlert({
+        title: "Login Failed",
+        message: errorMessage,
+      });
     }
   };
 

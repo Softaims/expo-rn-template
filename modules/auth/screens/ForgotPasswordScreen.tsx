@@ -1,8 +1,9 @@
-import { View, Pressable, Alert } from "react-native";
+import { View, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { ArrowLeftIcon, LockForgotIcon } from "@/assets/icons";
 import { AuthContent, AuthForm } from "@/modules/auth/components";
+import { showSuccessAlert, showErrorAlert } from "@/components/alerts";
 import {
   forgotPasswordSchema,
   ForgotPasswordFormData,
@@ -22,28 +23,27 @@ export default function ForgotPasswordScreen({ variant = 'with-icon' }: ForgotPa
   const handleSubmit = async (data: ForgotPasswordFormData) => {
     try {
       await sendResetCode(data.email);
-      Alert.alert(
-        "Verification Code Sent",
-        `A verification code has been sent to ${data.email}`,
-        [
-          {
-            text: "OK",
-            onPress: () => {
-              router.push({
-                pathname: "/(auth)/otp-verification",
-                params: {
-                  email: data.email,
-                  flow: "reset-password"
-                },
-              });
+      showSuccessAlert({
+        title: "Code Sent!",
+        message: `A verification code has been sent to ${data.email}`,
+        buttonText: "Continue",
+        onPress: () => {
+          router.push({
+            pathname: "/(auth)/otp-verification",
+            params: {
+              email: data.email,
+              flow: "reset-password"
             },
-          },
-        ],
-      );
+          });
+        },
+      });
     } catch (error: any) {
       console.error("Forgot password error:", error);
       const errorMessage = error?.errors?.[0]?.longMessage || error?.errors?.[0]?.message || error?.message || "Failed to send verification code";
-      Alert.alert("Error", errorMessage);
+      showErrorAlert({
+        title: "Error",
+        message: errorMessage,
+      });
     }
   };
 

@@ -1,10 +1,11 @@
-import { View, Alert, Pressable } from "react-native";
+import { View, Pressable } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ArrowLeftIcon, EmailVerificationIcon } from "@/assets/icons";
 import { AuthContent } from "@/modules/auth/components";
 import { OTPInput, Button, Text } from "@/components";
+import { showSuccessAlert, showErrorAlert } from "@/components/alerts";
 import { useVerifyEmail, useRegister, useForgotPassword } from "@/modules/auth/hooks";
 import type { OTPVerificationScreenProps } from "@/modules/auth/types";
 
@@ -23,7 +24,10 @@ export default function OTPVerificationScreen({ variant = "default" }: OTPVerifi
 
   const handleVerify = async () => {
     if (otp.length !== 6) {
-      Alert.alert("Error", "Please enter a valid 6-digit code");
+      showErrorAlert({
+        title: "Error",
+        message: "Please enter a valid 6-digit code",
+      });
       return;
     }
 
@@ -33,14 +37,14 @@ export default function OTPVerificationScreen({ variant = "default" }: OTPVerifi
         // Verify email for signup
         await verifyEmail(otp);
 
-        Alert.alert("Success", "Email verified successfully", [
-          {
-            text: "OK",
-            onPress: () => {
-              router.replace("/(auth)/login");
-            },
+        showSuccessAlert({
+          title: "Email Verified!",
+          message: "Your email has been verified successfully. You can now login to your account",
+          buttonText: "Login Now",
+          onPress: () => {
+            router.replace("/(auth)/login");
           },
-        ]);
+        });
       } else if (flow === "reset-password") {
         // For password reset, just pass the code to reset-password screen
         router.replace({
@@ -50,6 +54,11 @@ export default function OTPVerificationScreen({ variant = "default" }: OTPVerifi
       }
     } catch (error: any) {
       console.error("OTP verification error:", error);
+      const errorMessage = error?.errors?.[0]?.longMessage || error?.errors?.[0]?.message || error?.message || "Incorrect verification code. Please try again.";
+      showErrorAlert({
+        title: "Verification Failed",
+        message: errorMessage,
+      });
     } finally {
       setIsLoading(false);
     }
@@ -62,10 +71,19 @@ export default function OTPVerificationScreen({ variant = "default" }: OTPVerifi
       } else if (flow === "reset-password") {
         await sendResetCode(email);
       }
-      Alert.alert("Success", "Verification code has been resent to your email");
+      showSuccessAlert({
+        title: "Code Resent!",
+        message: "Verification code has been resent to your email",
+        buttonText: "OK",
+      });
       setOtp("");
     } catch (error: any) {
       console.error("Resend code error:", error);
+      const errorMessage = error?.errors?.[0]?.longMessage || error?.errors?.[0]?.message || error?.message || "Failed to resend code. Please try again.";
+      showErrorAlert({
+        title: "Resend Failed",
+        message: errorMessage,
+      });
     }
   };
 

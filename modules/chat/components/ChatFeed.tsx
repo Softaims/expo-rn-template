@@ -4,7 +4,8 @@ import { fontFamilies } from "@/hooks/useFonts";
 import { cn } from "@/lib/utils";
 import * as Clipboard from 'expo-clipboard';
 import { useCallback, useState } from 'react';
-import { Alert, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
+import { showSuccessAlert } from "@/components/alerts";
 import { Bubble, BubbleProps, DayProps, GiftedChat, IMessage, InputToolbarProps, ReplyMessage } from 'react-native-gifted-chat';
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ChatFeedProps } from "../types";
@@ -72,7 +73,11 @@ export function ChatFeed({
         }
         if (message.text) {
             await Clipboard.setStringAsync(message.text);
-            Alert.alert('Copied', 'Message copied to clipboard');
+            showSuccessAlert({
+                title: 'Copied!',
+                message: 'Message copied to clipboard',
+                buttonText: 'OK',
+            });
         }
     }, [customOnLongPressMessage]);
 
