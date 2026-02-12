@@ -4,6 +4,7 @@ import { ListSelector, ListSelectorItem } from "./ListSelector";
 import { useState } from "storybook/internal/preview-api";
 
 const meta = {
+    title: "ListSelectors/ListSelector",
     component: ListSelector,
     decorators: [
         (Story) => (

@@ -3,6 +3,7 @@ import { Meta, StoryObj } from "@storybook/react-native";
 import { Toggle } from "./Toggle";
 
 const meta = {
+  title: "Toggles/Toggle",
   component: Toggle,
   argTypes: {
     value: {

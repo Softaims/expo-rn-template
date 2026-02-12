@@ -9,3 +9,13 @@ export * from "./rangeSlider";
 export * from "./tabs";
 export * from "./text";
 export * from "./toggle";
+
+// Scales
+export { FeetInchesScale, Scale } from "./scales";
+export type { FeetInchesScaleProps, ScaleProps } from "./scales";
+
+// Floating Menu
+export * from "./floatingMenu";
+
+// Gestures
+export * from "./gestures";

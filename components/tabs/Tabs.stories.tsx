@@ -4,6 +4,7 @@ import { View } from "react-native";
 import { Tabs } from "./Tabs";
 
 const meta = {
+  title: "Tabs/Tabs",
   component: Tabs,
   argTypes: {
     variant: {

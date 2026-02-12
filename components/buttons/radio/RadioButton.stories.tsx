@@ -4,6 +4,7 @@ import { Meta, StoryObj } from "@storybook/react-native";
 import { RadioButton } from "./RadioButton";
 
 const meta = {
+  title: "Buttons/RadioButton",
   component: RadioButton,
   argTypes: {
     selected: {

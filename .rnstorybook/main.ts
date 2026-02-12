@@ -6,6 +6,7 @@ const main: StorybookConfig = {
     "./stories/**/*.stories.?(ts|tsx|js|jsx)",
     // the paths are relative to the main.ts file itself
     "../components/**/*.stories.?(ts|tsx|js|jsx)", // <--- Add this
+    "../modules/**/*.stories.?(ts|tsx|js|jsx)",
   ],
   addons: [
     "@storybook/addon-ondevice-controls",

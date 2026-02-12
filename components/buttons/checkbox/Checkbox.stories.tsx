@@ -1,9 +1,10 @@
+import { Meta, StoryObj } from "@storybook/react-native";
 import { useState } from "react";
 import { View } from "react-native";
-import { Meta, StoryObj } from "@storybook/react-native";
 import { Checkbox } from "./Checkbox";
 
 const meta = {
+  title: "Buttons/Checkbox",
   component: Checkbox,
   argTypes: {
     value: {

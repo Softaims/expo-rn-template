@@ -1,7 +1,7 @@
-import { Pressable, View } from "react-native";
-import { cn } from "@/lib/utils";
-import { Text } from "@/components/text";
 import { CheckIcon, MinusIcon } from "@/assets/icons";
+import { Text } from "@/components/text";
+import { cn } from "@/lib/utils";
+import { Pressable, View } from "react-native";
 
 const checkboxVariants = {
   container: "flex-row items-center gap-3",

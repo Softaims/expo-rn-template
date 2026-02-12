@@ -3,6 +3,7 @@ import { Meta, StoryObj } from "@storybook/react-native";
 import { FileUpload } from "./FileUpload";
 
 const meta = {
+  title: "FileUpload/FileUpload",
   component: FileUpload,
   decorators: [
     (Story) => (

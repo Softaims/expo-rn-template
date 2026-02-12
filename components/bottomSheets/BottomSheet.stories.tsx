@@ -4,6 +4,7 @@ import { BottomSheet } from "./BottomSheet";
 import { useState } from "react";
 
 const meta = {
+    title: "BottomSheets/BottomSheet",
     component: BottomSheet,
     decorators: [
         (Story) => (
@@ -20,7 +21,7 @@ type Story = StoryObj<typeof meta>;
 
 export const DefaultBottomSheet: Story = {
     args: {
-        isVisible: false,
+        isVisible: true,
         setIsVisible: () => { },
         title: 'Bottom Sheet Title',
         description: 'Bottom Sheet Description',
