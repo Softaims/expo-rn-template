@@ -90,8 +90,8 @@ export const ListSelector = (props: ListSelectorProps) => {
                         />
                         :
                         <Checkbox
-                            checked={isSelected}
-                        // onCheckedChange={handleSelect}
+                            value={isSelected}
+                            onValueChange={() => handleSelect()}
                         />
                 }
             </Pressable>

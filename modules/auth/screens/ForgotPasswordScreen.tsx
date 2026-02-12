@@ -11,7 +11,7 @@ import { forgotPasswordFields } from "@/modules/auth/config";
 import { useForgotPassword } from "@/modules/auth/hooks";
 import type { ForgotPasswordScreenProps } from "@/modules/auth/types";
 
-export default function ForgotPasswordScreen({ variant = "default" }: ForgotPasswordScreenProps) {
+export default function ForgotPasswordScreen({ variant = 'with-icon' }: ForgotPasswordScreenProps) {
   const router = useRouter();
   const { sendResetCode } = useForgotPassword();
 

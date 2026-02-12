@@ -1,3 +1,4 @@
+import { AlertProvider } from '@/components/alerts';
 import { useFonts } from '@/hooks/useFonts';
 import { ClerkProvider } from '@clerk/clerk-expo';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
@@ -39,11 +40,17 @@ export default Sentry.wrap(function RootLayout() {
     }
     const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!;
 
+    // try {
+    //     throw new Error('Test handled error');
+    //   } catch (e) {
+    //     Sentry.captureException(e);
+    //   }
+
     return (
-        <AlertProvider>
-            <GestureHandlerRootView style={{ flex: 1 }}>
-                <ClerkProvider publishableKey={publishableKey}>
-                    <BottomSheetModalProvider>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+            <ClerkProvider publishableKey={publishableKey}>
+                <BottomSheetModalProvider>
+                    <AlertProvider>
                         <Stack>
                             <Stack.Screen name="(splash)" options={{ headerShown: false }} />
                             <Stack.Screen name="(auth)" options={{ headerShown: false }} />
@@ -52,10 +59,10 @@ export default Sentry.wrap(function RootLayout() {
                                 <Stack.Screen name="storybook" />
                             </Stack.Protected>
                         </Stack>
-                    </BottomSheetModalProvider>
-                </ClerkProvider>
-            </GestureHandlerRootView>
-        </AlertProvider>
+                    </AlertProvider>
+                </BottomSheetModalProvider>
+            </ClerkProvider>
+        </GestureHandlerRootView>
 
     );
 });

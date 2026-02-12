@@ -1,4 +1,4 @@
-import { View, ScrollView, Alert } from "react-native";
+import { View, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useState, useCallback } from "react";
 import { useFocusEffect, useRouter } from "expo-router";
@@ -14,9 +14,10 @@ import { loginSchema, LoginFormData } from "@/modules/auth/schemas";
 import { loginFields } from "@/modules/auth/config";
 import { useLogin } from "@/modules/auth/hooks";
 import type { LoginScreenProps } from "@/modules/auth/types";
+import { Alert } from "@/components/alerts";
 
 export default function LoginScreen({
-  variant = "bottom-sheet",
+  variant = 'default',
 }: LoginScreenProps) {
   const router = useRouter();
   const { signIn } = useLogin();
