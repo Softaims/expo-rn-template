@@ -1,11 +1,16 @@
 import { Stack, Redirect } from "expo-router";
 import { useAuth } from "@clerk/clerk-expo";
 export default function AuthLayout() {
-  const { isSignedIn } = useAuth();
-  if (isSignedIn) {
-    console.log("assdsda sadasdas");
-    return <Redirect href="/(tabs)" />;
+  const { isSignedIn, isLoaded } = useAuth();
+
+  if (!isLoaded) {
+    return null;
   }
+
+  if (isSignedIn) {
+    return <Redirect href="/(tabs)/(chat)/RecentMessagesScreen" />;
+  }
+
   return (
     <Stack screenOptions={{ animation: "none", headerShown: false }}>
       <Stack.Screen name="login/index" />
