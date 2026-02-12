@@ -21,15 +21,19 @@ const varientUnitTags = {
 
 export function Scale(props: ScaleProps) {
     const [selectedUnit, setSelectedUnit] = useState(varientUnitTags[props.variant][0]);
-    const [feet, setFeet] = useState(0);
-    const [inches, setInches] = useState(0);
+    const [feet, setFeet] = useState(4);
+    const [inches, setInches] = useState(6);
 
     useEffect(() => {
         props.onUnitChange(selectedUnit);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    // memoize the data
+    useEffect(() => {
+        if (selectedUnit === 'FT') {
+            props.onValueChangeEnd((feet + (inches / 12)).toFixed(2).toString());
+        }
+    }, [selectedUnit, feet, inches]);
+
     const FEET_DATA = useMemo(() => {
         return [...Array(10).keys()].map((index) => ({
             value: index + 1, // exclude 0
@@ -78,6 +82,14 @@ export function Scale(props: ScaleProps) {
         )
     }
 
+    const renderOverlay = () => {
+        return (
+            <View style={[styles.overlayContainer]} pointerEvents={'none'}>
+                <View style={[styles.selection, { height: 48 }]} />
+            </View>
+        )
+    }
+
     return (
         <View>
             {renderHeader()}
@@ -111,6 +123,7 @@ export function Scale(props: ScaleProps) {
                                     overlayItemStyle={styles.overlayItemStyle}
                                     itemTextStyle={styles.itemTextStyle}
                                     visibleItemCount={7}
+                                    renderOverlay={renderOverlay}
                                 />
                             </View>
                             <View className='flex-row items-center justify-center gap-[32px]'>
@@ -122,6 +135,7 @@ export function Scale(props: ScaleProps) {
                                     overlayItemStyle={styles.overlayItemStyle}
                                     itemTextStyle={styles.itemTextStyle}
                                     visibleItemCount={7}
+                                    renderOverlay={renderOverlay}
                                 />
                                 <Text variant='heading2'>IN</Text>
                             </View>
@@ -134,14 +148,20 @@ export function Scale(props: ScaleProps) {
 
 const styles = StyleSheet.create({
     overlayItemStyle: {
-        // padding: 0,
-        // alignItems: 'center',
-        // justifyContent: 'center',
-        borderWidth: 1,
+        borderWidth: 10,
         borderColor: 'red',
-        // width:100,
     },
     itemTextStyle: {
         fontSize: 24,
-    }
+    },
+    overlayContainer: {
+        ...StyleSheet.absoluteFillObject,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    selection: {
+        alignSelf: 'stretch',
+        borderTopWidth: 1.5,
+        borderBottomWidth: 1.5,
+    },
 })

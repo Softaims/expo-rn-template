@@ -3,6 +3,7 @@ import { View } from "react-native";
 import { Scale } from "./Scale";
 import { useState } from "storybook/internal/preview-api";
 import React, { useEffect } from "react";
+import { FeetInchesScale } from "./FeetInchesScale";
 
 const meta = {
     title: "Scales/Scale",
@@ -25,7 +26,7 @@ export const AgePicker: Story = {
         variant: 'age',
         label: 'Years',
         min: 1,
-        max: 100,
+        max: 101,
         onValueChangeEnd: () => { },
         onUnitChange: () => { },
     },
@@ -52,7 +53,7 @@ export const WeightPicker: Story = {
         variant: 'weight',
         label: 'Weight',
         min: 1,
-        max: 100,
+        max: 101,
         onValueChangeEnd: () => { },
         onUnitChange: () => { },
     },
@@ -78,7 +79,7 @@ export const HeightPicker: Story = {
         variant: 'height',
         label: 'Height',
         min: 1,
-        max: 100,
+        max: 101,
         onValueChangeEnd: () => { },
         onUnitChange: () => { },
     },
