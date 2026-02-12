@@ -1,29 +1,7 @@
 import { Image, Pressable, View } from "react-native";
-import { Text } from "../text";
+import { Text } from "@/components/text";
 import { formatDistanceToNow } from "date-fns";
-
-export interface ActionButton {
-    title: string;
-    onPress: () => void;
-    icon?: React.ReactNode;
-}
-
-export interface Notification {
-    title: string;
-    description?: string;
-    avatar?: string;
-    onAvatarPress?: () => void;
-    postPreviewUrl?: string;
-    onPostPreviewPress?: () => void;
-    actionButtons?: ActionButton[];
-    createdAt: Date;
-}
-
-export interface NotificationCardProps {
-    variant: 'primary' | 'secondary';
-    notification: Notification;
-    onNotificationPress?: () => void;
-}
+import { NotificationCardProps } from "../types";
 
 export const NotificationCard = (props: NotificationCardProps) => {
 
@@ -50,7 +28,7 @@ export const NotificationCard = (props: NotificationCardProps) => {
                 <Text variant="bodyText2" className="text-primary">
                     <Text variant="bodyText2" className="text-primary">{props?.notification?.title}</Text>
                     {props?.notification?.description && <Text variant="bodyText2" className="text-secondary font-medium"> {props?.notification?.description}</Text>}
-                    {props?.notification?.createdAt && <Text variant="bodyText2" className="text-secondary"> {formatDistanceToNow(props?.notification?.createdAt)}</Text>}
+                    {props?.notification?.createdAt && <Text variant="bodyText2" className="text-secondary font-normal"> {formatDistanceToNow(props?.notification?.createdAt)}</Text>}
                 </Text>
                 {renderActionButtons()}
             </View>
@@ -58,7 +36,7 @@ export const NotificationCard = (props: NotificationCardProps) => {
     }
 
     const renderPostPreview = () => {
-        if (!props?.notification?.postPreviewUrl) return null;
+        if (!props?.notification?.postPreviewUrl || props.variant === 'primary') return null;
         return (
             <Pressable onPress={props?.notification?.onPostPreviewPress}>
                 <Image source={{ uri: props?.notification?.postPreviewUrl }} className="w-[40px] h-[40px] rounded-[10px]" />
@@ -80,7 +58,7 @@ export const NotificationCard = (props: NotificationCardProps) => {
     }
 
     return (
-        <Pressable onPress={props?.onNotificationPress} className="flex-row px-[16px]">
+        <Pressable onPress={props?.notification?.onNotificationPress} className="flex-row px-[16px] py-[12px]">
             <View className="flex-row gap-[8px] flex-1">
                 {renderAvatar()}
                 {renderCenterContent()}

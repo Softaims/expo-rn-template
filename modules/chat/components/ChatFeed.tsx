@@ -3,26 +3,11 @@ import { Text } from "@/components/text";
 import { fontFamilies } from "@/hooks/useFonts";
 import { cn } from "@/lib/utils";
 import * as Clipboard from 'expo-clipboard';
-import React, { useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Alert, StyleSheet, View } from "react-native";
 import { Bubble, BubbleProps, DayProps, GiftedChat, IMessage, InputToolbarProps, ReplyMessage } from 'react-native-gifted-chat';
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-
-export interface ChatFeedProps {
-    messages: IMessage[];
-    onMessagesChange: (messages: IMessage[]) => void;
-    userId: number;
-    userAvatar?: string;
-    userName?: string;
-    placeholder?: string;
-    onLongPressMessage?: (context: unknown, message: IMessage) => void;
-    renderCustomBubble?: (props: BubbleProps<IMessage>) => React.ReactNode;
-    renderCustomDay?: (props: DayProps) => React.ReactNode;
-    renderCustomInputToolbar?: (props: InputToolbarProps<IMessage>) => React.ReactNode;
-    showAvatar?: boolean;
-    enableSwipeToReply?: boolean;
-    swipeDirection?: 'left' | 'right';
-}
+import { ChatFeedProps } from "../types";
 
 export function ChatFeed({
     messages,

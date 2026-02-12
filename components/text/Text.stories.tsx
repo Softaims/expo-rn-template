@@ -3,6 +3,7 @@ import { Meta, StoryObj } from "@storybook/react-native";
 import { Text } from "./Text";
 
 const meta = {
+  title: "Text/Text",
   component: Text,
   argTypes: {
     variant: {

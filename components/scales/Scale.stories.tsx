@@ -5,6 +5,7 @@ import { useState } from "storybook/internal/preview-api";
 import { useEffect } from "react";
 
 const meta = {
+    title: "Scales/Scale",
     component: Scale,
     decorators: [
         (Story) => (

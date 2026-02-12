@@ -3,6 +3,7 @@ import { Meta, StoryObj } from "@storybook/react-native";
 import { Stepper } from "./Stepper";
 
 const meta = {
+  title: "ProgressBars/Stepper",
   component: Stepper,
   argTypes: {
     currentStep: { control: { type: "number", min: 1 } },

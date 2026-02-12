@@ -1,21 +1,6 @@
-import { Link } from "expo-router";
-import { StyleSheet, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import "../global.css";
+import { Link, Redirect } from "expo-router";
 
 export default function Index() {
-  const insets = useSafeAreaInsets();
-  
-  return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
-      <Link href="/storybook">Open Storybook</Link>
-    </View>
-  );
+  // return <Redirect href="/(tabs)/(chat)/RecentMessagesScreen" />;
+  return <Link href="/storybook">Storybook</Link>;
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#FFFFFF',
-  },
-});

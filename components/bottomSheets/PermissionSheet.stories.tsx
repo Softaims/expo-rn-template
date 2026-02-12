@@ -4,6 +4,7 @@ import { PermissionSheet } from "./PermissionSheet";
 import { useState } from "react";
 
 const meta = {
+    title: "BottomSheets/PermissionSheet",
     component: PermissionSheet,
     decorators: [
         (Story) => (

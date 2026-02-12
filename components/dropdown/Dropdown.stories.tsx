@@ -4,7 +4,7 @@ import { Dropdown, DropdownOption } from "./Dropdown";
 import { CloseIcon, MagnifierIcon } from "@/assets/icons";
 
 export default {
-  title: "Dropdown",
+  title: "Dropdowns/Dropdown",
   component: Dropdown,
 };
 

@@ -4,12 +4,10 @@ import { Checkbox } from "./Checkbox";
 import {
   CheckIcon,
   MinusIcon,
-  ArrowRightIcon,
-  CloseIcon,
-  SendIcon,
 } from "@/assets/icons";
 
 const meta = {
+  title: "Buttons/Checkbox",
   component: Checkbox,
   argTypes: {
     checked: {

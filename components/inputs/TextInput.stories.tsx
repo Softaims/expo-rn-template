@@ -4,6 +4,7 @@ import { TextInput } from "./TextInput";
 import { useState } from "react";
 
 const meta = {
+  title: "Inputs/TextInput",
   component: TextInput,
   decorators: [
     (Story) => (

@@ -9,6 +9,7 @@ import {
 } from "@/assets/icons";
 
 const meta = {
+  title: "Buttons/Button",
   component: Button,
   argTypes: {
     variant: {

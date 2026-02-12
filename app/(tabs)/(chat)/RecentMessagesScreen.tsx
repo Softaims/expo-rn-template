@@ -1,0 +1,1 @@
+export { RecentMessagesScreen as default } from "@/modules/chat/screens/RecentMessagesScreen"

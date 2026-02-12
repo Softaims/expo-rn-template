@@ -6,6 +6,7 @@ import { RangeSlider } from "./RangeSlider";
 const THUMB_RADIUS = 12;
 
 const meta = {
+  title: "RangeSliders/RangeSlider",
   component: RangeSlider,
   decorators: [
     (Story) => (

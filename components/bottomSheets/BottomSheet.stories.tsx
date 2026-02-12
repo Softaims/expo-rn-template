@@ -4,6 +4,7 @@ import { BottomSheet } from "./BottomSheet";
 import { useState } from "react";
 
 const meta = {
+    title: "BottomSheets/BottomSheet",
     component: BottomSheet,
     decorators: [
         (Story) => (

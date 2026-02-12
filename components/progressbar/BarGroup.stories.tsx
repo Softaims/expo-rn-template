@@ -3,6 +3,7 @@ import { Meta, StoryObj } from "@storybook/react-native";
 import { BarGroup } from "./BarGroup";
 
 const meta = {
+  title: "ProgressBars/BarGroup",
   component: BarGroup,
   argTypes: {
     progress: { control: { type: "number", min: 0, max: 100, step: 1 } },

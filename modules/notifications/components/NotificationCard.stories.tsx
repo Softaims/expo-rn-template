@@ -1,10 +1,11 @@
 import { Meta, StoryObj } from "@storybook/react-native";
 import { View } from "react-native";
-import { Notification, NotificationCard } from "./NotificationCard";
+import { NotificationCard } from "./NotificationCard";
+import { Notification } from "../types";
 import { HeartIcon } from "@/assets/icons";
 
 const meta = {
-    title: "Cards/NotificationCard",
+    title: "Notifications/NotificationCard",
     component: NotificationCard,
     decorators: [
         (Story) => (
@@ -20,17 +21,18 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 const primaryNotification: Notification = {
+    id: "1",
     title: "John Doe liked your post.",
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     avatar: "https://www.cnet.com/a/img/resize/0e9874cc9d6b18489f832793796d285141496106/hub/2021/10/16/11804578-0dbc-42af-bcd1-3bc7b1394962/the-batman-2022-teaser-poster-batman-01-promo.jpg?auto=webp&fit=bounds&height=900&precrop=1881,1411,x423,y0&width=1200",
     createdAt: new Date(),
+    onNotificationPress: () => { },
 }
 
 export const PrimaryNotificationCard: Story = {
     args: {
         variant: "primary",
         notification: primaryNotification,
-        onNotificationPress: () => { },
     },
     render: (args) => {
         return (
@@ -40,6 +42,7 @@ export const PrimaryNotificationCard: Story = {
 };
 
 const secondaryNotification: Notification = {
+    id: "2",
     title: "John Doe liked your post.",
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     avatar: "https://www.cnet.com/a/img/resize/0e9874cc9d6b18489f832793796d285141496106/hub/2021/10/16/11804578-0dbc-42af-bcd1-3bc7b1394962/the-batman-2022-teaser-poster-batman-01-promo.jpg?auto=webp&fit=bounds&height=900&precrop=1881,1411,x423,y0&width=1200",
@@ -51,13 +54,13 @@ const secondaryNotification: Notification = {
         { title: "Reply", onPress: () => { } },
     ],
     createdAt: new Date(),
+    onNotificationPress: () => { },
 }
 
 export const SecondaryNotificationCard: Story = {
     args: {
         variant: "secondary",
         notification: secondaryNotification,
-        onNotificationPress: () => { },
     },
     render: (args) => {
         return (
@@ -67,6 +70,7 @@ export const SecondaryNotificationCard: Story = {
 };
 
 const secondaryNotificationWithActionButtonsIconss: Notification = {
+    id: "3",
     title: "John Doe liked your post.",
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     avatar: "https://www.cnet.com/a/img/resize/0e9874cc9d6b18489f832793796d285141496106/hub/2021/10/16/11804578-0dbc-42af-bcd1-3bc7b1394962/the-batman-2022-teaser-poster-batman-01-promo.jpg?auto=webp&fit=bounds&height=900&precrop=1881,1411,x423,y0&width=1200",
@@ -75,13 +79,13 @@ const secondaryNotificationWithActionButtonsIconss: Notification = {
     onPostPreviewPress: () => { },
     actionButtons: [],
     createdAt: new Date(),
+    onNotificationPress: () => { },
 }
 
 export const secondaryNotificationWithActionButtonsIcons: Story = {
     args: {
         variant: "secondary",
         notification: secondaryNotificationWithActionButtonsIconss,
-        onNotificationPress: () => { },
     },
     render: (args) => {
         return (

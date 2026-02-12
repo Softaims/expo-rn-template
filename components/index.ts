@@ -43,8 +43,8 @@ export * from "./listSelectors";
 export { Scale, FeetInchesScale } from "./scales";
 export type { ScaleProps, FeetInchesScaleProps } from "./scales";
 
-// Chat
-export * from "./chat";
-
 // Floating Menu
 export * from "./floatingMenu";
+
+// Gestures
+export * from "./gestures";

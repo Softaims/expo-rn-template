@@ -2,13 +2,9 @@ import React from "react";
 import { View } from "react-native";
 import { Meta, StoryObj } from "@storybook/react-native";
 import { RadioButton } from "./RadioButton";
-import {
-  CheckIcon,
-  SendIcon,
-  ArrowRightIcon,
-} from "@/assets/icons";
 
 const meta = {
+  title: "Buttons/RadioButton",
   component: RadioButton,
   argTypes: {
     selected: {

@@ -3,17 +3,7 @@ import { FloatingActionMenu, MenuOption } from "@/components/floatingMenu";
 import { Text } from "@/components/text";
 import { useState } from "react";
 import { Image, Pressable, View } from "react-native";
-
-export interface ChatFeedHeaderProps {
-    name: string;
-    userName: string;
-    avatar: string;
-    onPressBack?: () => void;
-    onPressProfile?: () => void;
-    onBlockUser?: () => void;
-    onReportUser?: () => void;
-    onClearChat?: () => void;
-}
+import { ChatFeedHeaderProps } from "../types";
 
 export const ChatFeedHeader = (props: ChatFeedHeaderProps) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);

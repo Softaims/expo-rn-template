@@ -26,3 +26,4 @@ export * from "./MicrophoneIcon";
 export * from "./AltArrowLeftIcon";
 export * from "./MenuDotsVerticalIcon";
 export * from "./HeartIcon";
+export * from "./ChatIcon";
