@@ -20,7 +20,7 @@ type PickerVariant = "bottomSheet" | "floatingMenu";
 
 export function EditProfileScreen() {
   const router = useRouter();
-  const [variant, setVariant] = useState<PickerVariant>("floatingMenu");
+  const [variant, setVariant] = useState<PickerVariant>("bottomSheet");
   const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
   const [isFloatingMenuVisible, setIsFloatingMenuVisible] = useState(false);
 

@@ -77,7 +77,6 @@ export default function AuthForm({
 
   return (
     <View className={cn("", className)}>
-
       <View className="gap-4">
         {fields.map((field) => renderField(field))}
 

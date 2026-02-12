@@ -74,7 +74,7 @@ export function SettingsScreen({
               rightIcon={
                 <ChevronRightIcon width={24} height={24} stroke="#000" />
               }
-              onPress={() => console.log("Change Password")}
+              onPress={() => router.push("/change-password")}
             />
 
             <SettingsItem

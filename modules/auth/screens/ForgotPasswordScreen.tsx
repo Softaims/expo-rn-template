@@ -80,7 +80,7 @@ export default function ForgotPasswordScreen({ variant = 'with-icon' }: ForgotPa
             schema={forgotPasswordSchema}
             buttonText="Send Verification Code"
             onSubmit={handleSubmit}
-            className="flex-1 justify-between mb-3"
+            className="flex-1 justify-between"
           />
         </View>
       </View>

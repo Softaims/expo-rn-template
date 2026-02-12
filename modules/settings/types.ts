@@ -33,3 +33,11 @@ export interface SettingsScreenProps {
   settingsItemVariants?: "container" | "default";
   settingsHeaderVariant?: "centered" | "default";
 }
+
+
+export interface FieldConfig {
+  name: string;
+  label: string;
+  type: "text" | "email" | "password";
+  placeholder?: string;
+};

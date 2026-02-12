@@ -43,8 +43,6 @@ export const forgotPasswordSchema = z.object({
 });
 
 export type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
-
-// Reset Password Schema
 export const resetPasswordSchema = z.object({
   newPassword: z
     .string()
@@ -58,4 +56,6 @@ export const resetPasswordSchema = z.object({
   path: ['confirmPassword'],
 });
 
+
+  
 export type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>;
