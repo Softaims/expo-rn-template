@@ -1,47 +1,147 @@
-import { View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { Text } from '../text';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { RulerPicker, RulerPickerProps } from './components/RulerPicker';
+import WheelPicker from '@quidone/react-native-wheel-picker';
 
 export interface ScaleProps extends RulerPickerProps {
     variant: 'age' | 'height' | 'weight';
     label?: string;
     orientation?: 'horizontal' | 'vertical';
-    onValueChange: (number: string) => void;
+    onValueChangeEnd: (number: string) => void;
+    onUnitChange: (unit: string) => void;
+}
+
+const varientUnitTags = {
+    age: ['Years'],
+    height: ['CM', 'FT'],
+    weight: ['KG', 'LB'],
 }
 
 export function Scale(props: ScaleProps) {
+    const [selectedUnit, setSelectedUnit] = useState(varientUnitTags[props.variant][0]);
+    const [feet, setFeet] = useState(0);
+    const [inches, setInches] = useState(0);
 
-    const renderHeader = useMemo(() => {
+    useEffect(() => {
+        props.onUnitChange(selectedUnit);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    // memoize the data
+    const FEET_DATA = useMemo(() => {
+        return [...Array(10).keys()].map((index) => ({
+            value: index + 1, // exclude 0
+            label: (index + 1).toString(),
+        }))
+    }, [])
+
+    const INCHES_DATA = useMemo(() => {
+        return [...Array(12).keys()].map((index) => ({
+            value: index,
+            label: index.toString(),
+        }))
+    }, [])
+
+    const renderHeader = () => {
         if (!props.label) return null;
 
         return (
-            <View>
-                <Text variant='subheading3'>{props.label}</Text>
+            <View className='flex-row border-[1px] border-border rounded-[8px] overflow-hidden'>
+                {
+                    varientUnitTags[props.variant].map((unit) => (
+                        <Pressable
+                            key={unit}
+                            onPress={() => {
+                                setSelectedUnit(unit);
+                                props.onValueChangeEnd(props.initialValue?.toString() || '0');
+                                props.onUnitChange(unit);
+                            }}
+                            className={cn(
+                                'flex-1 p-2',
+                                selectedUnit === unit ? 'bg-border' : 'bg-input'
+                            )}>
+                            <Text
+                                variant='subheading4'
+                                className={cn(
+                                    'text-center',
+                                    selectedUnit === unit ? 'text-primary' : 'text-muted-foreground'
+                                )}
+                            >
+                                {unit}
+                            </Text>
+                        </Pressable>
+                    ))
+                }
             </View>
         )
-    }, [props.label]);
+    }
 
     return (
         <View>
-            {renderHeader}
+            {renderHeader()}
             <View className={cn("overflow-hidden")}>
-                <RulerPicker
-                    {...props}
-                    height={props.height || 260}
-                    min={props.min || 0}
-                    max={props.max || 240}
-                    step={props.step || 1}
-                    fractionDigits={props.fractionDigits || 0}
-                    initialValue={props.initialValue || 0}
-                    onValueChange={props.onValueChange}
-                    unit={''}
-                    gapBetweenSteps={props.gapBetweenSteps || 8}
-                    shortStepHeight={props.shortStepHeight || 24}
-                    longStepHeight={props.longStepHeight || 34}
-                />
+                {
+                    selectedUnit !== 'FT' ?
+                        <RulerPicker
+                            key={selectedUnit}
+                            {...props}
+                            height={props.height || 260}
+                            min={props.min || 0}
+                            max={props.max || 240}
+                            step={props.step || 1}
+                            fractionDigits={props.fractionDigits || 0}
+                            initialValue={props.initialValue || 0}
+                            onValueChange={props.onValueChange}
+                            unit={''}
+                            gapBetweenSteps={props.gapBetweenSteps || 8}
+                            shortStepHeight={props.shortStepHeight || 24}
+                            longStepHeight={props.longStepHeight || 34}
+                        />
+                        :
+                        <View className='flex-row gap-[50px] items-center justify-center mt-[32px]'>
+                            <View className='flex-row items-center justify-center gap-[32px]'>
+                                <Text variant='heading2'>FT</Text>
+                                <WheelPicker
+                                    data={FEET_DATA}
+                                    value={feet}
+                                    onValueChanged={({ item: { value } }) => setFeet(value)}
+                                    enableScrollByTapOnItem={true}
+                                    overlayItemStyle={styles.overlayItemStyle}
+                                    itemTextStyle={styles.itemTextStyle}
+                                    visibleItemCount={7}
+                                />
+                            </View>
+                            <View className='flex-row items-center justify-center gap-[32px]'>
+                                <WheelPicker
+                                    data={INCHES_DATA}
+                                    value={inches}
+                                    onValueChanged={({ item: { value } }) => setInches(value)}
+                                    enableScrollByTapOnItem={true}
+                                    overlayItemStyle={styles.overlayItemStyle}
+                                    itemTextStyle={styles.itemTextStyle}
+                                    visibleItemCount={7}
+                                />
+                                <Text variant='heading2'>IN</Text>
+                            </View>
+                        </View>
+                }
             </View>
         </View>
     )
 }
+
+const styles = StyleSheet.create({
+    overlayItemStyle: {
+        // padding: 0,
+        // alignItems: 'center',
+        // justifyContent: 'center',
+        borderWidth: 1,
+        borderColor: 'red',
+        // width:100,
+    },
+    itemTextStyle: {
+        fontSize: 24,
+    }
+})
