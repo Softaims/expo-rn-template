@@ -15,7 +15,7 @@ name: Production CI
 on:
   push:
     branches:
-      - productionn
+      - productionnn
 
   pull_request:
     types: [closed]
