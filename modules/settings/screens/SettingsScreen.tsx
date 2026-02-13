@@ -26,6 +26,7 @@ import { useState } from "react";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { SettingsScreenProps } from "../types";
+import { useAuth } from "@clerk/clerk-expo";
 
 export function SettingsScreen({
   settingsHeaderVariant = "centered",
@@ -33,7 +34,7 @@ export function SettingsScreen({
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [darkModeEnabled, setDarkModeEnabled] = useState(false);
   const router = useRouter();
-
+  const { signOut } = useAuth();
   return (
     <SafeAreaView className="flex-1 bg-background">
       {/* Custom Header */}
@@ -183,6 +184,8 @@ export function SettingsScreen({
               () => {
                 // TODO: Implement logout
                 console.log("Logged out");
+                // perform logout
+                signOut();
               },
               () => {
                 console.log("Logout cancelled");
