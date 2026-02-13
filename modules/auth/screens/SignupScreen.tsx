@@ -1,4 +1,4 @@
-import { View, ScrollView, Alert } from "react-native";
+import { View, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useState, useCallback } from "react";
 import { useFocusEffect, useRouter } from "expo-router";
@@ -14,6 +14,7 @@ import { signupSchema, SignupFormData } from "@/modules/auth/schemas";
 import { signupFields } from "@/modules/auth/config";
 import { useRegister } from "@/modules/auth/hooks";
 import type { SignupScreenProps } from "@/modules/auth/types";
+import { showSuccessAlert, showErrorAlert } from "@/components/alerts";
 
 export default function SignupScreen({
   variant = "bottom-sheet",
@@ -46,10 +47,19 @@ export default function SignupScreen({
           params: { email: data.email, flow: "signup" },
         });
       } else if (result.status === "complete") {
-        Alert.alert("Success", "Account created successfully!");
+        showSuccessAlert({
+          title: "Account Created!",
+          message: "Your account has been created successfully. You can now login to your account",
+          buttonText: "Login Now",
+        });
       }
     } catch (error: any) {
       console.error("Signup error:", error);
+      const errorMessage = error?.errors?.[0]?.longMessage || error?.errors?.[0]?.message || error?.message || "Failed to create account. Please try again.";
+      showErrorAlert({
+        title: "Signup Failed",
+        message: errorMessage,
+      });
     }
   };
 

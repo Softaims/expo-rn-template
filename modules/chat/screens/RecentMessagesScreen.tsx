@@ -53,7 +53,7 @@ export const RecentMessagesScreen = () => {
     }, [navigation])
 
     const renderItem = ({ item }: { item: UserMessageCardProps }) => {
-        return <UserMessageCard {...item} onPress={() => router.push(`/(tabs)/(chat)/ChatFeedScreen`)} />
+        return <UserMessageCard {...item} onPress={() => { }} />
     }
 
     return (

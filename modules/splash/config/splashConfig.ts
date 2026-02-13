@@ -4,7 +4,7 @@ export const SPLASH_SCREENS: SplashScreenData[] = [
   {
     id: 1,
     title: "Connect With People Who Share Your World",
-    description: "Discover new friends, follow creators, and build meaningful connections through chats, comments, and shared interests.",
+    description: "Discover new friends and build meaningful connections through chats, comments, and shared interests.",
     backgroundColor: "#f0f9ff",
     showSkipButton: true,
     buttonConfig: { type: 'single', primaryLabel: 'Next' },
