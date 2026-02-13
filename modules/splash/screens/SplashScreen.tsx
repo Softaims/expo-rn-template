@@ -10,8 +10,12 @@ import { useSplashAnimation } from "@/modules/splash/hooks";
 
 export default function SplashScreen() {
   const router = useRouter();
-  const { currentStep, animatedStyle, panGesture, animateToNextStep } = useSplashAnimation();
+  const { currentStep, swipeDirection, animatedStyle, nextAnimatedStyle, panGesture, animateToNextStep } = useSplashAnimation();
   const currentScreen = SPLASH_SCREENS[currentStep - 1];
+  const nextStep = currentStep + 1;
+  const nextScreen = nextStep <= TOTAL_STEPS ? SPLASH_SCREENS[nextStep - 1] : null;
+  const prevStep = currentStep - 1;
+  const prevScreen = prevStep >= 1 ? SPLASH_SCREENS[prevStep - 1] : null;
 
   const handleSkip = () => {
     router.push("/(auth)/login");
@@ -79,15 +83,41 @@ export default function SplashScreen() {
           />
 
           <GestureDetector gesture={panGesture}>
-            <Animated.View style={animatedStyle}>
-              {/* Content Area */}
-              <View className="mb-12">
-                <SplashContent
-                  title={currentScreen.title}
-                  description={currentScreen.description}
-                />
-              </View>
-            </Animated.View>
+            <View className="relative overflow-hidden h-48">
+              {/* Current Content */}
+              <Animated.View style={animatedStyle} className="absolute w-full">
+                <View className="mb-12">
+                  <SplashContent
+                    title={currentScreen.title}
+                    description={currentScreen.description}
+                  />
+                </View>
+              </Animated.View>
+
+              {/* Next Content (overlapping from right) - only when swiping forward */}
+              {swipeDirection === "next" && nextScreen && (
+                <Animated.View style={nextAnimatedStyle} className="absolute w-full">
+                  <View >
+                    <SplashContent
+                      title={nextScreen.title}
+                      description={nextScreen.description}
+                    />
+                  </View>
+                </Animated.View>
+              )}
+
+              {/* Previous Content (overlapping from left) - only when swiping backward */}
+              {swipeDirection === "prev" && prevScreen && (
+                <Animated.View style={nextAnimatedStyle} className="absolute w-full">
+                  <View>
+                    <SplashContent
+                      title={prevScreen.title}
+                      description={prevScreen.description}
+                    />
+                  </View>
+                </Animated.View>
+              )}
+            </View>
           </GestureDetector>
 
           <View className="pb-8">

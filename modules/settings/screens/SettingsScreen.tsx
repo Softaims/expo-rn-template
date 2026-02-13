@@ -66,7 +66,7 @@ export function SettingsScreen({
               rightIcon={
                 <ChevronRightIcon width={24} height={24} stroke="#000" />
               }
-              onPress={() => router.push("/(profile)/edit-profile")}
+              onPress={() => router.push("/edit-profile")}
             />
 
             <SettingsItem
@@ -141,7 +141,7 @@ export function SettingsScreen({
               rightIcon={
                 <ChevronRightIcon width={24} height={24} stroke="#000" />
               }
-              onPress={() => router.push("/(faq)/faq")}
+              onPress={() => router.push("/faq")}
             />
 
             <SettingsItem
@@ -150,7 +150,7 @@ export function SettingsScreen({
               rightIcon={
                 <ChevronRightIcon width={24} height={24} stroke="#000" />
               }
-              onPress={() => router.push("/(contact)/contact-us")}
+              onPress={() => router.push("/contact-us")}
             />
           </View>
 
