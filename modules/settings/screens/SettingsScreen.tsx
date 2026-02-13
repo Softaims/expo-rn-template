@@ -9,6 +9,7 @@ import { Toggle } from "@/components/toggle";
 import { Button } from "@/components/buttons/Button";
 import { ChevronRightIcon } from "@/assets/icons";
 import { showDeleteAccountAlert, showLogoutAlert } from "@/components/alerts";
+import { PermissionSheet } from "@/components/bottomSheets";
 import { useState } from "react";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -22,6 +23,7 @@ export function SettingsScreen({
 }: SettingsScreenProps) {
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [darkModeEnabled, setDarkModeEnabled] = useState(false);
+  const [notificationPermissionVisible, setNotificationPermissionVisible] = useState(false);
   const router = useRouter();
   const { signOut } = useAuth();
 
@@ -44,7 +46,12 @@ export function SettingsScreen({
         rightIcon = (
           <Toggle
             value={notificationsEnabled}
-            onValueChange={setNotificationsEnabled}
+            onValueChange={(value) => {
+              setNotificationsEnabled(value);
+              if (value) {
+                setNotificationPermissionVisible(true);
+              }
+            }}
           />
         );
       } else if (itemId === "darkMode") {
@@ -138,6 +145,20 @@ export function SettingsScreen({
           ))}
         </View>
       </ScrollView>
+
+      <PermissionSheet
+        isVisible={notificationPermissionVisible}
+        setIsVisible={setNotificationPermissionVisible}
+        type="notification"
+        variant="modal-with-image"
+        onContinue={() => {
+          setNotificationPermissionVisible(false);
+        }}
+        onMaybeLater={() => {
+          setNotificationsEnabled(false);
+          setNotificationPermissionVisible(false);
+        }}
+      />
     </SafeAreaView>
   );
 }
