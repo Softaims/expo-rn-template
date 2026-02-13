@@ -1,0 +1,146 @@
+# Production Branch Workflow
+# Uses semantic-release for stable versions: 4.1.2, 4.2.0, 5.0.0, etc.
+# Supports OTA updates and full builds based on PR labels or manual trigger
+# Labels: "OTA" for updates, "BUILD" for full builds (defaults to BUILD if no label)
+#
+# Commit types:
+#   feat!: → major bump (breaking change)
+#   feat:  → minor bump
+#   fix:   → patch bump
+#   refactor: / perf: → patch bump
+#   chore: / docs: → no release
+
+name: Production CI
+
+on:
+  push:
+    branches:
+      - production
+
+  pull_request:
+    types: [closed]
+    branches:
+      - production
+  
+  workflow_dispatch:
+    inputs:
+      workflow_type:
+        description: 'Deployment type'
+        required: true
+        type: choice
+        options:
+          - build
+          - ota
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  release:
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch' || github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Semantic Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx semantic-release
+
+      - name: Get new version
+        id: version
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "📦 New version: $VERSION"
+
+      - name: Calculate build number
+        id: build
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          # Split version into parts (no prerelease suffix on production)
+          MAJOR=$(echo "$VERSION" | cut -d. -f1)
+          MINOR=$(echo "$VERSION" | cut -d. -f2)
+          PATCH=$(echo "$VERSION" | cut -d. -f3)
+          
+          # Calculate build number: MMNNPP0000 format
+          BUILD_NUMBER=$(printf "%d%02d%02d0000" "$MAJOR" "$MINOR" "$PATCH")
+          
+          echo "build_number=$BUILD_NUMBER" >> $GITHUB_OUTPUT
+          echo "🔢 Build number: $BUILD_NUMBER (from version $VERSION)"
+
+      - name: Display release info
+        run: |
+          echo "✅ Release Summary"
+          echo "=================="
+          echo "Version: ${{ steps.version.outputs.version }}"
+          echo "Build Number: ${{ steps.build.outputs.build_number }}"
+          echo "Branch: production (stable)"
+          echo "Pre-release: No"
+
+      - name: Setup Expo/EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      # Determine workflow type from PR labels or manual input
+      - name: Determine workflow type
+        id: workflow_check
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "workflow=${{ inputs.workflow_type }}" >> $GITHUB_OUTPUT
+            echo "Manual trigger: ${{ inputs.workflow_type }} on production"
+          elif [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            LABELS='${{ toJson(github.event.pull_request.labels.*.name) }}'
+            echo "PR Labels: $LABELS"
+            
+            if echo "$LABELS" | grep -qi '"OTA"'; then
+              echo "workflow=ota" >> $GITHUB_OUTPUT
+            else
+              echo "workflow=build" >> $GITHUB_OUTPUT
+            fi
+          else
+            # Default to build for push events
+            echo "workflow=build" >> $GITHUB_OUTPUT
+          fi
+
+      # Run OTA update for code-only changes
+      - name: Run OTA update
+        if: steps.workflow_check.outputs.workflow == 'ota'
+        run: |
+          eas update -p all \
+            --channel production \
+            --message "v${{ steps.version.outputs.version }}"
+
+      # Generate native code before building
+      - name: Run Expo Prebuild
+        if: steps.workflow_check.outputs.workflow == 'build'
+        run: npx expo prebuild
+
+      # Run full build for native changes or new releases
+      - name: Run Build
+        if: steps.workflow_check.outputs.workflow == 'build'
+        env:
+          EAS_NO_VCS: 1
+          CI: 1
+        run: |
+          eas build -p all \
+            --profile production \
+            --auto-submit \
+            --non-interactive \
+            --no-wait

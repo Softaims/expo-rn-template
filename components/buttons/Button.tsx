@@ -1,64 +1,94 @@
-import { ActivityIndicator, Pressable, StyleSheet, Text } from "react-native";
+import { Text } from "@/components/text";
+import { cn } from "@/lib/utils";
+import { Pressable, PressableProps, View } from "react-native";
 
-type ButtonProps = {
-    variant?: "primary-lg" | "primary-md" | "primary-sm" | "secondary-lg" | "secondary-md" | "secondary-sm";
-    onPress: () => void;
-    title: string;
-    disabled?: boolean;
-    loading?: boolean;
+const buttonVariants = {
+  base: "rounded-lg flex-row items-center justify-center",
+  variant: {
+    primary: "bg-primary",
+    secondary: "bg-background border-2 border-primary",
+    disabled: "bg-muted",
+    actioned: "bg-accent",
+    text: "bg-red",
+  },
+  size: {
+    lg: "px-6 py-4",
+    md: "px-5 py-2",
+    sm: "px-4 py-2 w-36",
+  },
+} as const;
+
+const textVariants = {
+  variant: {
+    primary: "text-primary-foreground",
+    secondary: "text-primary",
+    disabled: "text-white",
+    actioned: "text-accent-foreground",
+    text: "text-primary",
+  },
+  size: {
+    lg: "text-lg font-semibold text-[18px]",
+    md: "text-base font-semibold text-base",
+    sm: "text-[14px] font-semibold",
+  },
+} as const;
+
+export interface ButtonProps extends Omit<PressableProps, "onPress" | "style"> {
+  variant?: keyof typeof buttonVariants.variant;
+  size?: keyof typeof buttonVariants.size;
+  title: string;
+  onPress?: () => void;
+
+  // Icon props (JSX elements)
+  leftIcon?: React.ReactNode;
+  rightIcon?: React.ReactNode;
+
+  // Styling props
+  containerStyles?: string;
+  innerWrapperStyles?: string;
+  textStyles?: string;
 }
 
-export function Button({ variant = "primary-lg", onPress, title, disabled, loading }: ButtonProps) {
-    return (
-         <Text className="text-white" >{'title'}</Text>
-    );
+export function Button({
+  variant = "primary",
+  size = "md",
+  disabled,
+  title,
+  leftIcon,
+  rightIcon,
+  onPress,
+  containerStyles,
+  innerWrapperStyles,
+  textStyles,
+  ...props
+}: ButtonProps) {
+  const effectiveVariant = disabled ? "disabled" : variant;
+
+  return (
+    <Pressable
+      disabled={disabled}
+      className={cn(
+        buttonVariants.base,
+        buttonVariants.variant[effectiveVariant],
+        buttonVariants.size[size],
+        containerStyles,
+      )}
+      onPress={onPress}
+      {...props}
+    >
+      <View className={cn("flex-row", innerWrapperStyles)}>
+        {leftIcon}
+        <Text
+          className={cn(
+            textVariants.variant[effectiveVariant],
+            textVariants.size[size],
+            textStyles,
+          )}
+        >
+          {title}
+        </Text>
+        {rightIcon}
+      </View>
+    </Pressable>
+  );
 }
-
-const styles = StyleSheet.create({
-    buttonContainer: {
-        borderRadius: 10,
-    },
-    primaryButtonLarge: {
-        backgroundColor: "#478761",
-        height: 50,
-    },
-    primaryButtonMedium: {
-        backgroundColor: "#478761",
-        height: 42,
-    },
-    primaryButtonSmall: {
-        backgroundColor: "#478761",
-        height: 38,
-    },
-
-    secondaryButtonLarge: {
-        backgroundColor: "transparent",
-        borderWidth: 1,
-        borderColor: "#478761",
-        height: 50,
-    },
-    secondaryButtonMedium: {
-        backgroundColor: "transparent",
-        borderWidth: 1,
-        borderColor: "#478761",
-        height: 42,
-    },
-    secondaryButtonSmall: {
-        backgroundColor: "transparent",
-        borderWidth: 1,
-        borderColor: "#478761",
-        height: 38,
-    },
-
-    text: {
-        fontSize: 18,
-        fontWeight: "700",
-        color: "white",
-    },
-    primaryText: {
-        color: "white",
-    },
-    secondaryText: {
-        color: "#478761",
-    },
-});
