@@ -7,7 +7,7 @@ const toggleVariants = {
   container: "flex-row items-center gap-3",
   track: {
     base: "w-11 h-6 rounded-full justify-center",
-    inactive: "bg-muted-foreground",
+    inactive: "bg-border",
     active: "bg-foreground",
     disabled: "bg-muted opacity-50",
   },

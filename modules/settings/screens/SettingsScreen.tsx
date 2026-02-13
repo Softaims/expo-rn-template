@@ -7,26 +7,14 @@ import { ScreenHeader } from "@/components/headers";
 import { Text } from "@/components/text";
 import { Toggle } from "@/components/toggle";
 import { Button } from "@/components/buttons/Button";
-import {
-  PersonIcon,
-  LockIcon,
-  EditIcon,
-  CardIcon,
-  NotificationIcon,
-  MoonIcon,
-  DocumentIcon,
-  InfoCircleIcon,
-  HelpCircleIcon,
-  PhoneIcon,
-  ChevronRightIcon,
-  TrashIcon,
-} from "@/assets/icons";
+import { ChevronRightIcon } from "@/assets/icons";
 import { showDeleteAccountAlert, showLogoutAlert } from "@/components/alerts";
 import { useState } from "react";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { SettingsScreenProps } from "../types";
 import { useAuth } from "@clerk/clerk-expo";
+import { settingsItemsConfig, getSettingsIcon } from "../config/settingsConfig";
 
 export function SettingsScreen({
   settingsHeaderVariant = "centered",
@@ -35,12 +23,70 @@ export function SettingsScreen({
   const [darkModeEnabled, setDarkModeEnabled] = useState(false);
   const router = useRouter();
   const { signOut } = useAuth();
+
+  const handleItemPress = (itemId: string, route?: string) => {
+    if (route) {
+      router.push(route as any);
+    } else if (itemId === "subscription") {
+      console.log("Subscription");
+    }
+  };
+
+  const renderSettingsItem = (itemId: string, config: any) => {
+    const { icon, text, route, hasToggle, iconColor } = config;
+    const color = iconColor || "#000";
+
+    let rightIcon = <ChevronRightIcon width={24} height={24} stroke="#000" />;
+
+    if (hasToggle) {
+      if (itemId === "notifications") {
+        rightIcon = (
+          <Toggle
+            value={notificationsEnabled}
+            onValueChange={setNotificationsEnabled}
+          />
+        );
+      } else if (itemId === "dark-mode") {
+        rightIcon = (
+          <Toggle
+            value={darkModeEnabled}
+            onValueChange={setDarkModeEnabled}
+          />
+        );
+      }
+    }
+
+    const handlePress = () => {
+      if (itemId === "delete-account") {
+        showDeleteAccountAlert(
+          () => {
+            console.log("Account deleted");
+          },
+          () => {
+            console.log("Deletion cancelled");
+          }
+        );
+      } else {
+        handleItemPress(itemId, route);
+      }
+    };
+
+    return (
+      <SettingsItem
+        key={itemId}
+        leftIcon={getSettingsIcon(icon, color)}
+        text={text}
+        rightIcon={rightIcon}
+        onPress={handlePress}
+      />
+    );
+  };
+
   return (
     <SafeAreaView className="flex-1 bg-background">
       {/* Custom Header */}
       <ScreenHeader
         title="Settings"
-        onBackPress={() => router.back()}
       />
 
       <ScrollView className="flex-1">
@@ -51,149 +97,42 @@ export function SettingsScreen({
             email="selenasamia123@gmail.com"
             avatarSource={{ uri: "https://i.pravatar.cc/150?img=1" }}
             variant={settingsHeaderVariant}
-            
           />
 
-          {/* General Settings */}
-          <Text className="text-lg font-semibold text-muted-foreground mb-4">
-            General Settings
-          </Text>
+          {/* Settings Sections */}
+          {settingsItemsConfig.map((section, sectionIndex) => (
+            <View key={section.title}>
+              <Text className="text-lg font-semibold text-muted-foreground mb-4">
+                {section.title}
+              </Text>
+              <View>
+                {section.items.map((item) =>
+                  renderSettingsItem(item.id, item)
+                )}
+              </View>
 
-          <View>
-            <SettingsItem
-              leftIcon={<PersonIcon width={24} height={24} stroke="#000" />}
-              text="Edit Profile"
-              rightIcon={
-                <ChevronRightIcon width={24} height={24} stroke="#000" />
-              }
-              onPress={() => router.push("/edit-profile")}
-            />
-
-            <SettingsItem
-              leftIcon={<LockIcon width={24} height={24} fill="#000" />}
-              text="Change Password"
-              rightIcon={
-                <ChevronRightIcon width={24} height={24} stroke="#000" />
-              }
-              onPress={() => router.push("/change-password")}
-            />
-
-            <SettingsItem
-              leftIcon={<CardIcon width={24} height={24} stroke="#000" />}
-              text="Subscription"
-              rightIcon={
-                <ChevronRightIcon width={24} height={24} stroke="#000" />
-              }
-              onPress={() => console.log("Subscription")}
-            />
-
-            <SettingsItem
-              leftIcon={
-                <NotificationIcon width={24} height={24} stroke="#000" />
-              }
-              text="Notifications"
-              rightIcon={
-                <Toggle
-                  value={notificationsEnabled}
-                  onValueChange={setNotificationsEnabled}
+              {sectionIndex === settingsItemsConfig.length - 1 && (
+                <Button
+                  title="Logout Account"
+                  variant="primary"
+                  size="lg"
+                  onPress={() =>
+                    showLogoutAlert(
+                      () => {
+                        console.log("Logged out");
+                        signOut();
+                      },
+                      () => {
+                        console.log("Logout cancelled");
+                      }
+                    )
+                  }
+                  containerStyles="bg-foreground mt-4"
+                  textStyles="text-background"
                 />
-              }
-            />
-
-            <SettingsItem
-              leftIcon={<MoonIcon width={24} height={24} stroke="#000" />}
-              text="Dark Mode"
-              rightIcon={
-                <Toggle
-                  value={darkModeEnabled}
-                  onValueChange={setDarkModeEnabled}
-                />
-              }
-            />
-          </View>
-
-          <Text className="text-lg font-semibold text-muted-foreground mb-4">
-            Support
-          </Text>
-
-          <View>
-            <SettingsItem
-              leftIcon={<DocumentIcon width={24} height={24} color="#000" />}
-              text="Terms & Conditions"
-              rightIcon={
-                <ChevronRightIcon width={24} height={24} stroke="#000" />
-              }
-              onPress={() => router.push("/(legal)/terms-and-conditions")}
-            />
-
-            <SettingsItem
-              leftIcon={<InfoCircleIcon width={24} height={24} fill="#000" />}
-              text="Privacy Policy"
-              rightIcon={
-                <ChevronRightIcon width={24} height={24} stroke="#000" />
-              }
-              onPress={() => router.push("/(legal)/privacy-policy")}
-            />
-
-            <SettingsItem
-              leftIcon={<HelpCircleIcon width={24} height={24} stroke="#000" />}
-              text="FAQ's"
-              rightIcon={
-                <ChevronRightIcon width={24} height={24} stroke="#000" />
-              }
-              onPress={() => router.push("/faq")}
-            />
-
-            <SettingsItem
-              leftIcon={<PhoneIcon width={24} height={24} fill="#000" />}
-              text="Contact Us"
-              rightIcon={
-                <ChevronRightIcon width={24} height={24} stroke="#000" />
-              }
-              onPress={() => router.push("/contact-us")}
-            />
-          </View>
-
-          {/* Account Section */}
-          <Text className="text-lg font-semibold text-muted-foreground mb-4">
-            Account
-          </Text>
-
-          <SettingsItem
-            leftIcon={<TrashIcon width={24} height={24} stroke="#EF4444" />}
-            text="Delete Account"
-            rightIcon={
-              <ChevronRightIcon width={24} height={24} stroke="#000" />
-            }
-            onPress={() => showDeleteAccountAlert(
-              () => {
-                // TODO: Implement account deletion
-                console.log("Account deleted");
-              },
-              () => {
-                console.log("Deletion cancelled");
-              }
-            )}
-          />
-
-          <Button
-            title="Logout Account"
-            variant="primary"
-            size="lg"
-            onPress={() => showLogoutAlert(
-              () => {
-                // TODO: Implement logout
-                console.log("Logged out");
-                // perform logout
-                signOut();
-              },
-              () => {
-                console.log("Logout cancelled");
-              }
-            )}
-            containerStyles="bg-foreground mt-4"
-            textStyles="text-background"
-          />
+              )}
+            </View>
+          ))}
         </View>
       </ScrollView>
     </SafeAreaView>

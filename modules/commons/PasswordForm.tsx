@@ -34,7 +34,7 @@ export default function PasswordForm({
       {/* Back Button */}
       <View className="mb-10">
         <Pressable onPress={onBack} className="w-10 justify-center">
-          <ArrowLeftIcon width={24} height={24} color="#000" />
+          <ArrowLeftIcon width={7.5} height={15.5} color="#000" />
         </Pressable>
       </View>
 

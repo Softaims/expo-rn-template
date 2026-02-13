@@ -1,4 +1,5 @@
 import { ImageSourcePropType } from "react-native";
+import { AccordionItemData } from "@/components/accordion";
 
 export interface SettingsHeaderProps {
   title: string;
@@ -34,10 +35,26 @@ export interface SettingsScreenProps {
   settingsHeaderVariant?: "centered" | "default";
 }
 
-
-export interface FieldConfig {
-  name: string;
+export interface ContactUsFieldConfig {
+  name: "email" | "subject" | "message";
   label: string;
-  type: "text" | "email" | "password";
-  placeholder?: string;
-};
+  type?: "email" | "default" | "textarea";
+  placeholder: string;
+}
+
+export type FAQItem = AccordionItemData;
+
+export interface SettingsItemConfig {
+  id: string;
+  icon: "person" | "lock" | "card" | "notification" | "moon" | "document" | "infoCircle" | "helpCircle" | "phone" | "trash";
+  text: string;
+  route?: string;
+  hasToggle?: boolean;
+  iconColor?: string;
+  onPress?: () => void;
+}
+
+export interface SettingsSection {
+  title: string;
+  items: SettingsItemConfig[];
+}

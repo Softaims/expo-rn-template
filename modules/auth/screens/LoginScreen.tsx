@@ -15,6 +15,7 @@ import { loginFields } from "@/modules/auth/config";
 import { useLogin } from "@/modules/auth/hooks";
 import type { LoginScreenProps } from "@/modules/auth/types";
 import { showErrorAlert } from "@/components/alerts";
+import * as Sentry from "@sentry/react-native";
 
 export default function LoginScreen({
   variant = 'default',
@@ -39,7 +40,9 @@ export default function LoginScreen({
       });
       // Login successful - Clerk will handle navigation
     } catch (error: any) {
-      console.error("Login error:", error);
+      Sentry.captureException(error, {
+        tags: { screen: "LoginScreen", action: "login" },
+      });
       const errorMessage =
         error?.errors?.[0]?.longMessage ||
         error?.errors?.[0]?.message ||

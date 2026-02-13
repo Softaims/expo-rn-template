@@ -10,6 +10,7 @@ import { Button } from "@/components/buttons/Button";
 import { showSuccessAlert, showErrorAlert } from "@/components/alerts";
 import { contactUsSchema, ContactUsFormData } from "@/modules/settings/schemas";
 import { contactUsFields } from "@/modules/settings/config";
+import * as Sentry from "@sentry/react-native";
 
 export function ContactUsScreen() {
   const router = useRouter();
@@ -46,10 +47,13 @@ export function ContactUsScreen() {
 
       // Clear form
       reset();
-    } catch {
+    } catch (error: any) {
+      Sentry.captureException(error, {
+        tags: { screen: "ContactUsScreen", action: "submitFeedback" },
+      });
       showErrorAlert({
         title: "Submission Failed",
-        message: "Failed to submit feedback. Please try again.",
+        message: error?.message || "Failed to submit feedback. Please try again.",
       });
     } finally {
       setIsSubmitting(false);

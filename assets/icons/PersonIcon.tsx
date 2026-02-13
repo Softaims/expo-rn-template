@@ -1,21 +1,19 @@
-import Svg, { Path } from "react-native-svg";
+import Svg, { Circle, Ellipse } from "react-native-svg";
 
 interface IconProps {
   width?: number;
   height?: number;
   stroke?: string;
+  fill?: string;
 }
 
-export function PersonIcon({ width = 24, height = 24, stroke = "#000" }: IconProps) {
+export function PersonIcon({ width = 26, height = 26, stroke = "#000", fill }: IconProps) {
+  const color = fill || stroke;
+
   return (
-    <Svg width={width} height={height} viewBox="0 0 24 24" fill="none">
-      <Path
-        stroke={stroke}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={2}
-        d="M20 21c0-2.761-3.582-5-8-5s-8 2.239-8 5m8-8a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"
-      />
+    <Svg width={width} height={height} viewBox="0 0 28 28" fill="none">
+      <Circle cx="14" cy="8.39935" r="3.73333" fill={color} />
+      <Ellipse cx="14.0004" cy="18.6669" rx="6.53333" ry="3.73333" fill={color} />
     </Svg>
   );
 }

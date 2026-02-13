@@ -15,6 +15,7 @@ import { signupFields } from "@/modules/auth/config";
 import { useRegister } from "@/modules/auth/hooks";
 import type { SignupScreenProps } from "@/modules/auth/types";
 import { showSuccessAlert, showErrorAlert } from "@/components/alerts";
+import * as Sentry from "@sentry/react-native";
 
 export default function SignupScreen({
   variant = "bottom-sheet",
@@ -54,7 +55,9 @@ export default function SignupScreen({
         });
       }
     } catch (error: any) {
-      console.error("Signup error:", error);
+      Sentry.captureException(error, {
+        tags: { screen: "SignupScreen", action: "signup" },
+      });
       const errorMessage = error?.errors?.[0]?.longMessage || error?.errors?.[0]?.message || error?.message || "Failed to create account. Please try again.";
       showErrorAlert({
         title: "Signup Failed",

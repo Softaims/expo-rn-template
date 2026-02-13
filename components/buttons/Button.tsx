@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import { Pressable, PressableProps, View } from "react-native";
 
 const buttonVariants = {
-  base: "rounded-lg flex-row items-center justify-center",
+  base: "rounded-[10px] flex-row items-center justify-center",
   variant: {
     primary: "bg-primary",
     secondary: "bg-background border-2 border-primary",
