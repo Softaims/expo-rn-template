@@ -1,4 +1,4 @@
-import { View, Pressable, Image, ImageSourcePropType, Text } from "react-native";
+import { View, Pressable, Image, ImageSourcePropType} from "react-native";
 import { cn } from "@/lib/utils";
 import { AvatarPlaceholder, EditIcon } from "@/assets/icons";
 
