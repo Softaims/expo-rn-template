@@ -21,6 +21,7 @@ export function SettingsItem({
   leftIconStyles,
   textStyles,
   rightIconStyles,
+  variant = "default",
 }: SettingsItemProps) {
   return (
     <Pressable
@@ -29,7 +30,9 @@ export function SettingsItem({
       className={cn(
         settingsItemVariants.container,
         disabled && "opacity-50",
-        containerStyles
+        containerStyles,
+        variant === "default" && "bg-input",
+        variant === "container" && "border-0"
       )}
     >
       <View className={settingsItemVariants.leftSection}>

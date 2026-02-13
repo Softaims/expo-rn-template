@@ -14,7 +14,6 @@ import {
   MoonIcon,
   DocumentIcon,
   InfoCircleIcon,
-  HelpCircleIcon,
   PhoneIcon,
   TrashIcon,
 } from "@/assets/icons";
@@ -109,16 +108,16 @@ export const settingsItemsConfig: SettingsSection[] = [
     title: "General Settings",
     items: [
       {
-        id: "edit-profile",
+        id: "editProfile",
         icon: "person",
         text: "Edit Profile",
-        route: "/(tabs)/(settings)/edit-profile",
+        route: "/(tabs)/(settings)/editProfile",
       },
       {
-        id: "change-password",
+        id: "changePassword",
         icon: "lock",
         text: "Change Password",
-        route: "/(tabs)/(settings)/change-password",
+        route: "/(tabs)/(settings)/changePassword",
       },
       // {
       //   id: "subscription",
@@ -132,7 +131,7 @@ export const settingsItemsConfig: SettingsSection[] = [
         hasToggle: true,
       },
       {
-        id: "dark-mode",
+        id: "darkMode",
         icon: "moon",
         text: "Dark Mode",
         hasToggle: true,
@@ -143,16 +142,16 @@ export const settingsItemsConfig: SettingsSection[] = [
     title: "Support",
     items: [
       {
-        id: "terms-conditions",
+        id: "termsConditions",
         icon: "document",
         text: "Terms & Conditions",
-        route: "/(legal)/terms-and-conditions",
+        route: "/(legal)/termsAndConditions",
       },
       {
-        id: "privacy-policy",
+        id: "privacyPolicy",
         icon: "infoCircle",
         text: "Privacy Policy",
-        route: "/(legal)/privacy-policy",
+        route: "/(legal)/privacyPolicy",
       },
       {
         id: "faq",
@@ -161,10 +160,10 @@ export const settingsItemsConfig: SettingsSection[] = [
         route: "/(tabs)/(settings)/faq",
       },
       {
-        id: "contact-us",
+        id: "contactUs",
         icon: "phone",
         text: "Contact Us",
-        route: "/(tabs)/(settings)/contact-us",
+        route: "/(tabs)/(settings)/contactUs",
       },
     ],
   },
@@ -172,7 +171,7 @@ export const settingsItemsConfig: SettingsSection[] = [
     title: "Account",
     items: [
       {
-        id: "delete-account",
+        id: "deleteAccount",
         icon: "trash",
         text: "Delete Account",
         iconColor: "#EF4444",

@@ -1,11 +1,12 @@
 import { View, Image } from "react-native";
 import { Text } from "@/components/text";
 import { cn } from "@/lib/utils";
+import { AvatarPlaceholder } from "@/assets/icons";
 import { AvatarContainerProps } from "@/modules/settings/types";
 
 const avatarContainerVariants = {
   container: {
-    default: "flex-row items-center bg-muted border border-border rounded-2xl p-4 mb-6",
+    default: "flex-row items-center bg-input border border-border rounded-[10px] p-2 mb-6",
     centered: "items-center justify-center py-6 mb-6",
   },
   avatar: {
@@ -39,10 +40,16 @@ export function AvatarContainer({
 
   return (
     <View className={cn(avatarContainerVariants.container[variant], containerStyles)}>
-      <Image
-        source={avatarSource}
-        className={cn(avatarContainerVariants.avatar[variant], avatarStyles)}
-      />
+      {avatarSource ? (
+        <Image
+          source={avatarSource}
+          className={cn(avatarContainerVariants.avatar[variant], avatarStyles)}
+        />
+      ) : (
+        <View className={cn(avatarContainerVariants.avatar[variant], "items-center justify-center bg-gray-100 rounded-full", avatarStyles)}>
+          <AvatarPlaceholder width={32} height={32} fill="#9CA3AF" />
+        </View>
+      )}
       <View className={avatarContainerVariants.textContainer[variant]}>
         <Text className={cn(avatarContainerVariants.name[variant], nameStyles)}>
           {name}

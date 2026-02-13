@@ -17,7 +17,8 @@ import { useAuth } from "@clerk/clerk-expo";
 import { settingsItemsConfig, getSettingsIcon } from "../config/settingsConfig";
 
 export function SettingsScreen({
-  settingsHeaderVariant = "centered",
+  settingsHeaderVariant = "default",
+  settingsItemVariants = "default",
 }: SettingsScreenProps) {
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [darkModeEnabled, setDarkModeEnabled] = useState(false);
@@ -46,7 +47,7 @@ export function SettingsScreen({
             onValueChange={setNotificationsEnabled}
           />
         );
-      } else if (itemId === "dark-mode") {
+      } else if (itemId === "darkMode") {
         rightIcon = (
           <Toggle
             value={darkModeEnabled}
@@ -57,7 +58,7 @@ export function SettingsScreen({
     }
 
     const handlePress = () => {
-      if (itemId === "delete-account") {
+      if (itemId === "deleteAccount") {
         showDeleteAccountAlert(
           () => {
             console.log("Account deleted");
@@ -78,6 +79,7 @@ export function SettingsScreen({
         text={text}
         rightIcon={rightIcon}
         onPress={handlePress}
+        variant={settingsItemVariants}
       />
     );
   };
@@ -105,7 +107,8 @@ export function SettingsScreen({
               <Text className="text-lg font-semibold text-muted-foreground mb-4">
                 {section.title}
               </Text>
-              <View>
+
+              <View className={settingsItemVariants === "container" ? "bg-input border border-border rounded-[10px]" : ""}>
                 {section.items.map((item) =>
                   renderSettingsItem(item.id, item)
                 )}

@@ -62,7 +62,7 @@ export default function LoginScreen({
 
   const handleForgotPassword = () => {
     setIsBottomSheetVisible(false);
-    router.push("/(auth)/forgot-password");
+    router.push("/(auth)/forgotPassword");
   };
 
   const content = (

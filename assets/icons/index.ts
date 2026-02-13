@@ -1,6 +1,7 @@
 export * from "./AltArrowDownIcon";
 export * from "./AltArrowLeftIcon";
 export * from "./AppleIcon";
+export { AvatarPlaceholder } from "./AvatarPlaceholder";
 export { ArrowLeftIcon } from "./ArrowLeftIcon";
 export { ArrowRightIcon } from "./ArrowRightIcon";
 export { BookmarkIcon } from "./BookmarkIcon";

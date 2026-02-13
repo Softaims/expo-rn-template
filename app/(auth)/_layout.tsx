@@ -15,9 +15,9 @@ export default function AuthLayout() {
     <Stack screenOptions={{ animation: "none", headerShown: false }}>
       <Stack.Screen name="login/index" />
       <Stack.Screen name="signup/index" />
-      <Stack.Screen name="forgot-password/index" />
-      <Stack.Screen name="otp-verification/index" />
-      <Stack.Screen name="reset-password/index" />
+      <Stack.Screen name="forgotPassword/index" />
+      <Stack.Screen name="otpverification/index" />
+      <Stack.Screen name="resetpassword/index" />
     </Stack>
   );
 }

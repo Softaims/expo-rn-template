@@ -30,7 +30,7 @@ export default function ForgotPasswordScreen({ variant = 'with-icon' }: ForgotPa
         buttonText: "Continue",
         onPress: () => {
           router.push({
-            pathname: "/(auth)/otp-verification",
+            pathname: "/(auth)/otpVerification",
             params: {
               email: data.email,
               flow: "reset-password"

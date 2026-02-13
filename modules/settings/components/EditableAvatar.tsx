@@ -1,6 +1,6 @@
 import { View, Pressable, Image, ImageSourcePropType, Text } from "react-native";
 import { cn } from "@/lib/utils";
-import { PersonIcon, EditIcon } from "@/assets/icons";
+import { AvatarPlaceholder, EditIcon } from "@/assets/icons";
 
 export interface EditableAvatarProps {
   avatarSource?: ImageSourcePropType;
@@ -18,9 +18,9 @@ const sizeVariants = {
 };
 
 const editIconSizeVariants = {
-  sm: "w-8 h-8",
-  md: "w-10 h-10",
-  lg: "w-12 h-12",
+  md: "w-8 h-8",
+  sm: "w-6 h-6",
+  lg: "w-10 h-10",
 };
 
 export function EditableAvatar({
@@ -31,15 +31,6 @@ export function EditableAvatar({
   avatarStyles,
   size = "lg",
 }: EditableAvatarProps) {
-  const initials = name
-    ? name
-        .split(" ")
-        .map((n) => n[0])
-        .join("")
-        .toUpperCase()
-        .slice(0, 2)
-    : "";
-
   return (
     <View className={cn("relative items-center justify-center", containerStyles)}>
       <View
@@ -55,14 +46,8 @@ export function EditableAvatar({
             className="w-full h-full"
             resizeMode="cover"
           />
-        ) : initials ? (
-          <View className="w-full h-full items-center justify-center">
-            <View className="text-2xl font-bold text-white">
-              {/* Render initials as text */}
-            </View>
-          </View>
         ) : (
-          <PersonIcon width={40} height={40} stroke="#9CA3AF" />
+          <AvatarPlaceholder width={40} height={40} fill="#9CA3AF" />
         )}
       </View>
 
@@ -73,7 +58,7 @@ export function EditableAvatar({
           "absolute bottom-0 right-0 bg-foreground rounded-full items-center justify-center border-2 border-background"
         )}
       >
-        <EditIcon width={16} height={16} stroke="#fff" />
+        <EditIcon width={18} height={18} fill="#fff" />
       </Pressable>
     </View>
   );

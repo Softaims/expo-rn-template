@@ -28,6 +28,7 @@ export interface SettingsItemProps {
   leftIconStyles?: string;
   textStyles?: string;
   rightIconStyles?: string;
+  variant?: "default" | "container";
 }
 
 export interface SettingsScreenProps {
