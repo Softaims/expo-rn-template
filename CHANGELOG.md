@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.0-alpha.2](https://github.com/Softaims/expo-rn-template/compare/v1.0.0-alpha.1...v1.0.0-alpha.2) (2026-02-13)
+
+### ✨ Features
+
+* workflow-test-07 ([ac92bd2](https://github.com/Softaims/expo-rn-template/commit/ac92bd2836ed43332f0b98450d6c154a393b4581))
+
 ## 1.0.0-alpha.1 (2026-02-13)
 
 ### ✨ Features
