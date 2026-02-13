@@ -153,6 +153,7 @@ export const RulerPicker = ({
     initialValue.toFixed(fractionDigits)
   );
   const scrollPosition = useRef(new Animated.Value(0)).current;
+  const hasInitialScrolled = useRef(false);
 
   const valueCallback: Animated.ValueListenerCallback = useCallback(
     ({ value }) => {
@@ -259,6 +260,10 @@ export const RulerPicker = ({
     ]
   );
   function onContentSizeChange() {
+    if (hasInitialScrolled.current) {
+      return;
+    }
+    hasInitialScrolled.current = true;
     const initialIndex = Math.floor((initialValue - min) / step);
     listRef.current?.scrollToOffset({
       offset: initialIndex * (stepWidth + gapBetweenSteps),
@@ -267,7 +272,7 @@ export const RulerPicker = ({
   }
 
   return (
-    <View style={{ width, height, borderWidth:1 }}>
+    <View style={{ width, height }}>
       <AnimatedFlashList
         ref={listRef}
         data={arrData}
