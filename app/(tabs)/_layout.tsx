@@ -14,7 +14,6 @@ export default function HomeLayout() {
 
   return (
     <Tabs>
-      <Tabs.Screen name="(chat)" options={{ headerShown: false }} />
       <Tabs.Screen name="(settings)" options={{ headerShown: false }} />
     </Tabs>
   );

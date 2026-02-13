@@ -8,7 +8,7 @@ export default function AuthLayout() {
   }
 
   if (isSignedIn) {
-    return <Redirect href="/(tabs)/(chat)/RecentMessagesScreen" />;
+    return <Redirect href="/(tabs)/(settings)/settings" />;
   }
 
   return (

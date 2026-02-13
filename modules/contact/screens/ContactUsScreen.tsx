@@ -89,17 +89,15 @@ export function ContactUsScreen() {
         ))}
       </ScrollView>
 
-      <View className="px-4 pb-4">
-        <Button
-          title="Submit Feedback"
-          variant="primary"
-          size="lg"
-          onPress={handleSubmit(onSubmit)}
-          disabled={isSubmitting}
-          containerStyles="bg-foreground"
-          textStyles="text-background"
-        />
-      </View>
+      <Button
+        title="Submit Feedback"
+        variant="primary"
+        size="lg"
+        onPress={handleSubmit(onSubmit)}
+        disabled={isSubmitting}
+        containerStyles="bg-foreground mx-4 mb-4"
+        textStyles="text-background"
+      />
     </SafeAreaView>
   );
 }

@@ -6,6 +6,7 @@ import * as Sentry from "@sentry/react-native";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { tokenCache } from '@clerk/clerk-expo/token-cache'
 
 Sentry.init({
   dsn: "https://8f30047611e9a0499a44b1dd8bcc1963@o4510871958323200.ingest.de.sentry.io/4510871958716496",
@@ -51,7 +52,7 @@ export default Sentry.wrap(function RootLayout() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <ClerkProvider publishableKey={publishableKey}>
+      <ClerkProvider publishableKey={publishableKey} tokenCache={tokenCache}>
         <BottomSheetModalProvider>
           <AlertProvider>
             <Stack screenOptions={{ headerShown: false }}>

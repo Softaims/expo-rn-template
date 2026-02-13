@@ -12,7 +12,7 @@ export default function SplashLayout() {
   }
 
   if (isSignedIn) {
-    return <Redirect href="/(tabs)/(chat)/RecentMessagesScreen" />;
+    return <Redirect href="/(tabs)/(settings)/settings" />;
   }
 
   return (

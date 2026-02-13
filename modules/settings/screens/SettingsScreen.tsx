@@ -28,7 +28,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { SettingsScreenProps } from "../types";
 
 export function SettingsScreen({
-  settingsHeaderVariant = "default",
+  settingsHeaderVariant = "centered",
 }: SettingsScreenProps) {
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [darkModeEnabled, setDarkModeEnabled] = useState(false);
