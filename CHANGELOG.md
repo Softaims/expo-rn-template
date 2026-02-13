@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.0](https://github.com/Softaims/expo-rn-template/compare/v1.0.0...v1.1.0) (2026-02-13)
+
+### ✨ Features
+
+* test ([1b6d8b9](https://github.com/Softaims/expo-rn-template/commit/1b6d8b9354aa1e98499b59223a02aabff42d4ae3))
+
 ## 1.0.0 (2026-02-13)
 
 ### ✨ Features
