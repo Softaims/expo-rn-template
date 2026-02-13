@@ -3,18 +3,19 @@ import Svg, { Path } from "react-native-svg";
 interface IconProps {
   width?: number;
   height?: number;
-  stroke?: string;
+  fill?: string;
 }
 
-export function NotificationIcon({ width = 24, height = 24, stroke = "#000" }: IconProps) {
+export function NotificationIcon({ width = 26, height = 26, fill = "#000" }: IconProps) {
   return (
-    <Svg width={width} height={height} viewBox="0 0 24 24" fill="none">
+    <Svg width={width} height={height} viewBox="0 0 26 26" fill="none">
       <Path
-        stroke={stroke}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={2}
-        d="M13.73 21a2 2 0 0 1-3.46 0M18 8A6 6 0 1 0 6 8c0 7-3 9-3 9h18s-3-2-3-9Z"
+        d="M9.83823 20.1436C10.5672 21.0702 11.7123 21.6673 13 21.6673C14.2877 21.6673 15.4329 21.0702 16.1618 20.1436C14.0629 20.428 11.9371 20.428 9.83823 20.1436Z"
+        fill={fill}
+      />
+      <Path
+        d="M18.8493 10.4006V11.0109C18.8493 11.7432 19.0583 12.4591 19.4499 13.0685L20.4097 14.5617C21.2864 15.9255 20.6171 17.7794 19.0924 18.2107C15.1036 19.3389 10.8964 19.3389 6.90766 18.2107C5.38292 17.7794 4.71366 15.9255 5.59032 14.5616L6.5501 13.0685C6.94177 12.4591 7.15077 11.7432 7.15077 11.0109V10.4006C7.15077 7.05012 9.76956 4.33398 13 4.33398C16.2305 4.33398 18.8493 7.05012 18.8493 10.4006Z"
+        fill={fill}
       />
     </Svg>
   );

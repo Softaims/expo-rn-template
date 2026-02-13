@@ -4,9 +4,9 @@ import { cn } from "@/lib/utils";
 import { SettingsItemProps } from "@/modules/settings/types";
 
 const settingsItemVariants = {
-  container: "flex-row items-center justify-between bg-muted border border-border rounded-2xl px-4 py-4 mb-3",
-  leftSection: "flex-row items-center gap-3 flex-1",
-  iconContainer: "w-10 h-10 items-center justify-center",
+  container: "flex-row items-center justify-between bg-input border border-border rounded-[10px] px-4 py-4 mb-3",
+  leftSection: "flex-row items-center gap-1 flex-1",
+  iconContainer: "w-7 h-7 items-center justify-center",
   textContainer: "flex-1",
   rightSection: "items-center justify-center",
 } as const;
@@ -21,6 +21,7 @@ export function SettingsItem({
   leftIconStyles,
   textStyles,
   rightIconStyles,
+  variant = "default",
 }: SettingsItemProps) {
   return (
     <Pressable
@@ -29,7 +30,9 @@ export function SettingsItem({
       className={cn(
         settingsItemVariants.container,
         disabled && "opacity-50",
-        containerStyles
+        containerStyles,
+        variant === "default" && "bg-input",
+        variant === "container" && "border-0"
       )}
     >
       <View className={settingsItemVariants.leftSection}>

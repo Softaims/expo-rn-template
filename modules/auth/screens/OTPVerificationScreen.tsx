@@ -8,6 +8,7 @@ import { OTPInput, Button, Text } from "@/components";
 import { showSuccessAlert, showErrorAlert } from "@/components/alerts";
 import { useVerifyEmail, useRegister, useForgotPassword } from "@/modules/auth/hooks";
 import type { OTPVerificationScreenProps } from "@/modules/auth/types";
+import * as Sentry from "@sentry/react-native";
 
 export default function OTPVerificationScreen({ variant = "default" }: OTPVerificationScreenProps) {
   const router = useRouter();
@@ -53,7 +54,9 @@ export default function OTPVerificationScreen({ variant = "default" }: OTPVerifi
         });
       }
     } catch (error: any) {
-      console.error("OTP verification error:", error);
+      Sentry.captureException(error, {
+        tags: { screen: "OTPVerificationScreen", action: "verify", flow },
+      });
       const errorMessage = error?.errors?.[0]?.longMessage || error?.errors?.[0]?.message || error?.message || "Incorrect verification code. Please try again.";
       showErrorAlert({
         title: "Verification Failed",
@@ -78,7 +81,9 @@ export default function OTPVerificationScreen({ variant = "default" }: OTPVerifi
       });
       setOtp("");
     } catch (error: any) {
-      console.error("Resend code error:", error);
+      Sentry.captureException(error, {
+        tags: { screen: "OTPVerificationScreen", action: "resendCode", flow },
+      });
       const errorMessage = error?.errors?.[0]?.longMessage || error?.errors?.[0]?.message || error?.message || "Failed to resend code. Please try again.";
       showErrorAlert({
         title: "Resend Failed",

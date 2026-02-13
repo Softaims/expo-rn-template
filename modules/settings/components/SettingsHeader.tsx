@@ -4,8 +4,8 @@ import { cn } from "@/lib/utils";
 import { SettingsHeaderProps } from "@/modules/settings/types";
 
 const settingsHeaderVariants = {
-  container: "mb-4",
-  text: "text-lg font-semibold text-muted-foreground",
+  container: "mb-4 items-center justify-center",
+  text: "text-lg font-semibold text-muted-foreground text-center",
 } as const;
 
 export function SettingsHeader({

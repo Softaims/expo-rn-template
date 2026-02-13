@@ -91,7 +91,7 @@ export function Accordion({
               >
                 {item.title}
               </Text>
-              <View className={cn("", iconStyles)}>
+              <View className={cn("bg-muted rounded-full p-1", iconStyles)}>
                 {isOpen
                   ? openIcon || <MinusIcon width={20} height={20} color="#000" />
                   : closedIcon || <PlusIcon width={20} height={20} stroke="#000" />}

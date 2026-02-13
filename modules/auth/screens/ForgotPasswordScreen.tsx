@@ -11,6 +11,7 @@ import {
 import { forgotPasswordFields } from "@/modules/auth/config";
 import { useForgotPassword } from "@/modules/auth/hooks";
 import type { ForgotPasswordScreenProps } from "@/modules/auth/types";
+import * as Sentry from "@sentry/react-native";
 
 export default function ForgotPasswordScreen({ variant = 'with-icon' }: ForgotPasswordScreenProps) {
   const router = useRouter();
@@ -29,7 +30,7 @@ export default function ForgotPasswordScreen({ variant = 'with-icon' }: ForgotPa
         buttonText: "Continue",
         onPress: () => {
           router.push({
-            pathname: "/(auth)/otp-verification",
+            pathname: "/(auth)/otpVerification",
             params: {
               email: data.email,
               flow: "reset-password"
@@ -38,7 +39,9 @@ export default function ForgotPasswordScreen({ variant = 'with-icon' }: ForgotPa
         },
       });
     } catch (error: any) {
-      console.error("Forgot password error:", error);
+      Sentry.captureException(error, {
+        tags: { screen: "ForgotPasswordScreen", action: "sendResetCode" },
+      });
       const errorMessage = error?.errors?.[0]?.longMessage || error?.errors?.[0]?.message || error?.message || "Failed to send verification code";
       showErrorAlert({
         title: "Error",

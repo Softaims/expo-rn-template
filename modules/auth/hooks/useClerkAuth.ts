@@ -44,28 +44,19 @@ export function useLogin() {
       throw new Error("Sign in is not ready");
     }
 
-    try {
-      // First, create the sign-in attempt
-      const signInAttempt = await signIn.create({
-        identifier: params.identifier,
-        password: params.password,
-      });
+    const signInAttempt = await signIn.create({
+      identifier: params.identifier,
+      password: params.password,
+    });
 
-      // If the sign-in is complete, set the active session
-      if (signInAttempt.status === "complete") {
-        if (setActive) {
-          await setActive({ session: signInAttempt.createdSessionId });
-        }
-        return signInAttempt;
+    if (signInAttempt.status === "complete") {
+      if (setActive) {
+        await setActive({ session: signInAttempt.createdSessionId });
       }
-
-      throw new Error(`Authentication incomplete: ${signInAttempt.status}`);
-    } catch (error: any) {
-      if (error.errors && error.errors.length > 0) {
-        throw error;
-      }
-      throw error;
+      return signInAttempt;
     }
+
+    throw new Error(`Authentication incomplete: ${signInAttempt.status}`);
   };
 
   return {
@@ -233,18 +224,12 @@ export function useAppleOAuth() {
   const { startOAuthFlow } = useOAuth({ strategy: "oauth_apple" });
 
   const signInWithApple = useCallback(async () => {
-    try {
-      const { createdSessionId, setActive } = await startOAuthFlow({
-        redirectUrl: Linking.createURL("/(auth)/login"),
-      });
+    const { createdSessionId, setActive } = await startOAuthFlow({
+      redirectUrl: Linking.createURL("/(auth)/login"),
+    });
 
-      if (createdSessionId && setActive !== undefined) {
-        await setActive({ session: createdSessionId });
-      }
-    } catch (error) {
-      // Handle user cancellation gracefully
-      console.log("Apple sign-in cancelled or failed:", error);
-      throw error;
+    if (createdSessionId && setActive !== undefined) {
+      await setActive({ session: createdSessionId });
     }
   }, [startOAuthFlow]);
 

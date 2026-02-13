@@ -1,7 +1,7 @@
 import { View, Pressable } from "react-native";
 import { Text } from "@/components/text";
 import { cn } from "@/lib/utils";
-import { Ionicons } from "@expo/vector-icons";
+import { ArrowLeftIcon } from "@/assets/icons";
 
 export interface ScreenHeaderProps {
   title: string;
@@ -33,7 +33,7 @@ export function ScreenHeader({
           leftIcon
         ) : onBackPress ? (
           <Pressable onPress={onBackPress}>
-            <Ionicons name="arrow-back" size={24} color="#000" />
+            <ArrowLeftIcon width={7.5} height={15.5} fill="#000" />
           </Pressable>
         ) : null}
       </View>

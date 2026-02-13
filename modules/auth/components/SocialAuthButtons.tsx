@@ -4,6 +4,7 @@ import { Text } from '@/components/text';
 import { GoogleIcon, AppleIcon } from '@/assets/icons';
 import { useGoogleOAuth, useAppleOAuth } from '@/modules/auth/hooks';
 import { cn } from '@/lib/utils';
+import * as Sentry from "@sentry/react-native";
 
 export default function SocialAuthButtons() {
   const { signInWithGoogle } = useGoogleOAuth();
@@ -15,8 +16,11 @@ export default function SocialAuthButtons() {
     try {
       await authFn();
     } catch (error: any) {
+      // Only capture to Sentry if it's not a user cancellation
       if (error.code !== 'ERR_REQUEST_CANCELED') {
-        console.error(`${provider} auth failed:`, error);
+        Sentry.captureException(error, {
+          tags: { component: "SocialAuthButtons", action: "oauth", provider },
+        });
       }
     } finally {
       setLoadingProvider(null);

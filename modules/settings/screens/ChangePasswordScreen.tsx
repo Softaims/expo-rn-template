@@ -5,6 +5,7 @@ import { changePasswordFields } from "../config/settingsConfig";
 import { useChangePassword } from "@/modules/auth/hooks";
 import { showSuccessAlert, showErrorAlert } from "@/components/alerts";
 import { SafeAreaView } from "react-native-safe-area-context";
+import * as Sentry from "@sentry/react-native";
 
 export default function ChangePasswordScreen() {
   const router = useRouter();
@@ -21,6 +22,9 @@ export default function ChangePasswordScreen() {
         onPress: () => router.back(),
       });
     } catch (error: any) {
+      Sentry.captureException(error, {
+        tags: { screen: "ChangePasswordScreen", action: "changePassword" },
+      });
       showErrorAlert({
         title: "Error",
         message:

@@ -161,8 +161,6 @@ export const showDeleteAccountAlert = (
       </View>
     </View>,
     {
-      animationIn: "zoomIn",
-      animationOut: "zoomOut",
       containerStyles: "px-6 py-6",
     }
   );
@@ -218,8 +216,6 @@ export const showLogoutAlert = (
       </View>
     </View>,
     {
-      animationIn: "zoomIn",
-      animationOut: "zoomOut",
       containerStyles: "px-6 py-6",
     }
   );

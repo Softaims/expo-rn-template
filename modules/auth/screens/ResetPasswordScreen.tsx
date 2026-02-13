@@ -5,6 +5,7 @@ import { ResetPasswordFormData } from "@/modules/auth/schemas";
 import { resetPasswordFields } from "@/modules/auth/config";
 import { useResetPassword } from "@/modules/auth/hooks";
 import { showSuccessAlert, showErrorAlert } from "@/components/alerts";
+import * as Sentry from "@sentry/react-native";
 
 export default function ResetPasswordScreen() {
   const router = useRouter();
@@ -30,6 +31,9 @@ export default function ResetPasswordScreen() {
         onPress: () => router.replace("/(auth)/login"),
       });
     } catch (error: any) {
+      Sentry.captureException(error, {
+        tags: { screen: "ResetPasswordScreen", action: "resetPassword" },
+      });
       showErrorAlert({
         title: "Error",
         message:

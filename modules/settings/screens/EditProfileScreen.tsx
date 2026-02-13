@@ -12,9 +12,9 @@ import {
   EditableAvatar,
   ImagePickerBottomSheet,
   ImagePickerFloatingMenu,
-} from "@/modules/profile/components";
+} from "@/modules/settings/components";
 import { showSuccessAlert } from "@/components/alerts";
-import { editProfileSchema, EditProfileFormData } from "@/modules/profile/schemas";
+import { editProfileSchema, EditProfileFormData } from "@/modules/settings/schemas";
 
 type PickerVariant = "bottomSheet" | "floatingMenu";
 
