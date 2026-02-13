@@ -12,7 +12,6 @@ import { showDeleteAccountAlert, showLogoutAlert } from "@/components/alerts";
 import { PermissionSheet } from "@/components/bottomSheets";
 import { useState } from "react";
 import { useRouter } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { SettingsScreenProps } from "../types";
 import { useAuth } from "@clerk/clerk-expo";
 import { settingsItemsConfig, getSettingsIcon } from "../config/settingsConfig";
@@ -92,14 +91,14 @@ export function SettingsScreen({
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-background">
+    <View className="flex-1 bg-background">
       {/* Custom Header */}
       <ScreenHeader
         title="Settings"
       />
 
       <ScrollView className="flex-1">
-        <View className="px-4 py-6">
+        <View className="py-6">
           {/* Profile Section */}
           <AvatarContainer
             name="Selena Samia"
@@ -159,6 +158,6 @@ export function SettingsScreen({
           setNotificationPermissionVisible(false);
         }}
       />
-    </SafeAreaView>
+    </View>
   );
 }

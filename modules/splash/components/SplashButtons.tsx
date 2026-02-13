@@ -15,7 +15,7 @@ export default function SplashButtons({
 }: SplashButtonsProps) {
   if (buttonConfig.type === "single") {
     return (
-      <View className="px-6">
+      <View>
         <Button
           variant="primary"
           size="lg"
@@ -28,7 +28,7 @@ export default function SplashButtons({
 
   // Dual buttons layout
   return (
-    <View className="px-6 gap-4">
+    <View className="gap-4">
       <Button
         variant="primary"
         size="lg"

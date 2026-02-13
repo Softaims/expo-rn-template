@@ -1,10 +1,10 @@
+import { View } from "react-native";
 import { useRouter } from "expo-router";
 import PasswordForm from "@/modules/commons/PasswordForm";
 import { changePasswordSchema } from "../schemas/settingsSchemas";
 import { changePasswordFields } from "../config/settingsConfig";
 import { useChangePassword } from "@/modules/auth/hooks";
 import { showSuccessAlert, showErrorAlert } from "@/components/alerts";
-import { SafeAreaView } from "react-native-safe-area-context";
 import * as Sentry from "@sentry/react-native";
 
 export default function ChangePasswordScreen() {
@@ -36,7 +36,6 @@ export default function ChangePasswordScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-background">
     <PasswordForm
       title="Change Password"
       description="Enter your old password and set a new one"
@@ -47,6 +46,5 @@ export default function ChangePasswordScreen() {
       onBack={() => router.back()}
       isLoading={isLoading}
     />
-    </SafeAreaView>
   );
 }

@@ -1,5 +1,4 @@
-import { ScrollView } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { ScrollView, View } from "react-native";
 import { useRouter } from "expo-router";
 import { ScreenHeader } from "@/components/headers";
 import { LegalContentSection } from "./LegalContentSection";
@@ -20,10 +19,10 @@ export function LegalDocumentScreen({
   const router = useRouter();
 
   return (
-    <SafeAreaView className="flex-1 bg-background">
+    <View className="flex-1 bg-background">
       <ScreenHeader title={title} onBackPress={() => router.back()} />
 
-      <ScrollView className="flex-1 px-4 py-4">
+      <ScrollView className="flex-1 py-4">
         <Text className="text-sm text-muted-foreground leading-5 mb-6">
           {introText}
         </Text>
@@ -38,6 +37,6 @@ export function LegalDocumentScreen({
           />
         ))}
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }

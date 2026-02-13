@@ -1,5 +1,4 @@
 import { View, ScrollView } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { useState, useCallback } from "react";
 import { useFocusEffect, useRouter } from "expo-router";
 import { BottomSheet } from "@/components";
@@ -17,9 +16,7 @@ import type { LoginScreenProps } from "@/modules/auth/types";
 import { showErrorAlert } from "@/components/alerts";
 import * as Sentry from "@sentry/react-native";
 
-export default function LoginScreen({
-  variant = 'default',
-}: LoginScreenProps) {
+export default function LoginScreen({ variant = "default" }: LoginScreenProps) {
   const router = useRouter();
   const { signIn } = useLogin();
   const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(true);
@@ -74,14 +71,16 @@ export default function LoginScreen({
         />
       </View>
 
-      <AuthForm
-        fields={loginFields}
-        schema={loginSchema}
-        buttonText="Login Account"
-        showForgotPassword={true}
-        onForgotPasswordPress={handleForgotPassword}
-        onSubmit={handleSubmit}
-      />
+      <View className="mb-6">
+        <AuthForm
+          fields={loginFields}
+          schema={loginSchema}
+          buttonText="Login Account"
+          showForgotPassword={true}
+          onForgotPasswordPress={handleForgotPassword}
+          onSubmit={handleSubmit}
+        />
+      </View>
 
       <SocialAuthButtons />
 
@@ -95,7 +94,7 @@ export default function LoginScreen({
 
   if (variant === "bottom-sheet") {
     return (
-      <SafeAreaView className="flex-1 bg-background">
+      <View className="bg-background">
         <BottomSheet
           isVisible={isBottomSheetVisible}
           setIsVisible={setIsBottomSheetVisible}
@@ -104,21 +103,14 @@ export default function LoginScreen({
         >
           <ScrollView className="px-4">{content}</ScrollView>
         </BottomSheet>
-      </SafeAreaView>
+      </View>
     );
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-background">
-      <ScrollView
-        className="flex-1"
-        contentContainerStyle={{ flexGrow: 1 }}
-        showsVerticalScrollIndicator={false}
-        style={{ paddingHorizontal: 16 }}
-      >
-        <AuthHeader />
-        <View className="flex-1 pt-7">{content}</View>
-      </ScrollView>
-    </SafeAreaView>
+    <View className="flex-1 bg-background">
+      <AuthHeader />
+      <View className="flex-1 pt-7">{content}</View>
+    </View>
   );
 }

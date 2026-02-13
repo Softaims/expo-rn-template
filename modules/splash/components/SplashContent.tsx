@@ -8,7 +8,7 @@ interface SplashContentProps {
 
 export default function SplashContent({ title, description }: SplashContentProps) {
   return (
-    <View className="gap-4 px-8">
+    <View className="gap-4">
       <Text variant="heading1" className="text-center text-foreground">
         {title}
       </Text>

@@ -1,19 +1,21 @@
-import { View, Pressable } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { useRouter } from "expo-router";
-import { ArrowLeftIcon, LockForgotIcon } from "@/assets/icons";
+import { LockForgotIcon } from "@/assets/icons";
+import { ScreenHeader } from "@/components";
+import { showErrorAlert, showSuccessAlert } from "@/components/alerts";
 import { AuthContent, AuthForm } from "@/modules/auth/components";
-import { showSuccessAlert, showErrorAlert } from "@/components/alerts";
-import {
-  forgotPasswordSchema,
-  ForgotPasswordFormData,
-} from "@/modules/auth/schemas";
 import { forgotPasswordFields } from "@/modules/auth/config";
 import { useForgotPassword } from "@/modules/auth/hooks";
+import {
+  ForgotPasswordFormData,
+  forgotPasswordSchema,
+} from "@/modules/auth/schemas";
 import type { ForgotPasswordScreenProps } from "@/modules/auth/types";
 import * as Sentry from "@sentry/react-native";
+import { useRouter } from "expo-router";
+import { View } from "react-native";
 
-export default function ForgotPasswordScreen({ variant = 'with-icon' }: ForgotPasswordScreenProps) {
+export default function ForgotPasswordScreen({
+  variant = "with-icon",
+}: ForgotPasswordScreenProps) {
   const router = useRouter();
   const { sendResetCode } = useForgotPassword();
 
@@ -33,7 +35,7 @@ export default function ForgotPasswordScreen({ variant = 'with-icon' }: ForgotPa
             pathname: "/(auth)/otpVerification",
             params: {
               email: data.email,
-              flow: "reset-password"
+              flow: "reset-password",
             },
           });
         },
@@ -42,7 +44,11 @@ export default function ForgotPasswordScreen({ variant = 'with-icon' }: ForgotPa
       Sentry.captureException(error, {
         tags: { screen: "ForgotPasswordScreen", action: "sendResetCode" },
       });
-      const errorMessage = error?.errors?.[0]?.longMessage || error?.errors?.[0]?.message || error?.message || "Failed to send verification code";
+      const errorMessage =
+        error?.errors?.[0]?.longMessage ||
+        error?.errors?.[0]?.message ||
+        error?.message ||
+        "Failed to send verification code";
       showErrorAlert({
         title: "Error",
         message: errorMessage,
@@ -51,12 +57,10 @@ export default function ForgotPasswordScreen({ variant = 'with-icon' }: ForgotPa
   };
 
   return (
-    <SafeAreaView className="flex-1" style={{ paddingHorizontal: 16 }}>
+    <View className="flex-1 bg-background">
       {/* Back Button */}
       <View className="mb-10">
-        <Pressable onPress={handleGoBack} className="w-10 justify-center">
-          <ArrowLeftIcon width={24} height={24} color="#000" />
-        </Pressable>
+        <ScreenHeader onBackPress={handleGoBack} />
       </View>
 
       <View className="flex-1">
@@ -87,6 +91,6 @@ export default function ForgotPasswordScreen({ variant = 'with-icon' }: ForgotPa
           />
         </View>
       </View>
-    </SafeAreaView>
+    </View>
   );
 }

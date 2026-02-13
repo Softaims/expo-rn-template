@@ -1,5 +1,4 @@
 import { View, ScrollView } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { useState, useCallback } from "react";
 import { useFocusEffect, useRouter } from "expo-router";
 import { BottomSheet } from "@/components";
@@ -18,7 +17,7 @@ import { showSuccessAlert, showErrorAlert } from "@/components/alerts";
 import * as Sentry from "@sentry/react-native";
 
 export default function SignupScreen({
-  variant = "bottom-sheet",
+  variant = "default",
 }: SignupScreenProps) {
   const enableBackdropDismiss = false;
 
@@ -50,7 +49,8 @@ export default function SignupScreen({
       } else if (result.status === "complete") {
         showSuccessAlert({
           title: "Account Created!",
-          message: "Your account has been created successfully. You can now login to your account",
+          message:
+            "Your account has been created successfully. You can now login to your account",
           buttonText: "Login Now",
         });
       }
@@ -58,7 +58,11 @@ export default function SignupScreen({
       Sentry.captureException(error, {
         tags: { screen: "SignupScreen", action: "signup" },
       });
-      const errorMessage = error?.errors?.[0]?.longMessage || error?.errors?.[0]?.message || error?.message || "Failed to create account. Please try again.";
+      const errorMessage =
+        error?.errors?.[0]?.longMessage ||
+        error?.errors?.[0]?.message ||
+        error?.message ||
+        "Failed to create account. Please try again.";
       showErrorAlert({
         title: "Signup Failed",
         message: errorMessage,
@@ -80,13 +84,14 @@ export default function SignupScreen({
           />
         </View>
 
-        <AuthForm
-          fields={signupFields}
-          schema={signupSchema}
-          buttonText="Sign Up"
-          onSubmit={handleSubmit}
-        />
-
+        <View className="mb-6">
+          <AuthForm
+            fields={signupFields}
+            schema={signupSchema}
+            buttonText="Sign Up"
+            onSubmit={handleSubmit}
+          />
+        </View>
         <SocialAuthButtons />
       </View>
 
@@ -100,7 +105,7 @@ export default function SignupScreen({
 
   if (variant === "bottom-sheet") {
     return (
-      <SafeAreaView className="flex-1 bg-background">
+      <View className="flex-1 bg-background">
         <BottomSheet
           isVisible={isBottomSheetVisible}
           setIsVisible={setIsBottomSheetVisible}
@@ -111,21 +116,14 @@ export default function SignupScreen({
             {content}
           </ScrollView>
         </BottomSheet>
-      </SafeAreaView>
+      </View>
     );
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-background">
-      <ScrollView
-        className="flex-1"
-        contentContainerStyle={{ flexGrow: 1 }}
-        showsVerticalScrollIndicator={false}
-        style={{ paddingHorizontal: 16 }}
-      >
-        <AuthHeader />
-        <View className="flex-1 pt-7">{content}</View>
-      </ScrollView>
-    </SafeAreaView>
+    <View className="flex-1 bg-background">
+      <AuthHeader />
+      <View className="flex-1 pt-7">{content}</View>
+    </View>
   );
 }

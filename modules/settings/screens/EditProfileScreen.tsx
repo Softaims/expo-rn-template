@@ -1,5 +1,4 @@
-import { View, ScrollView} from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { View, ScrollView } from "react-native";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
@@ -14,7 +13,10 @@ import {
   ImagePickerFloatingMenu,
 } from "@/modules/settings/components";
 import { showSuccessAlert } from "@/components/alerts";
-import { editProfileSchema, EditProfileFormData } from "@/modules/settings/schemas";
+import {
+  editProfileSchema,
+  EditProfileFormData,
+} from "@/modules/settings/schemas";
 
 type PickerVariant = "bottomSheet" | "floatingMenu";
 
@@ -60,49 +62,52 @@ export function EditProfileScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-background">
+    <View className="flex-1 bg-background">
       <ScreenHeader title="Edit Profile" onBackPress={() => router.back()} />
 
-      <ScrollView className="flex-1 px-4" contentContainerStyle={{ paddingVertical: 24 }}>
-        <View className="items-center mb-8">
-          <View className="relative">
-            <Controller
-              control={control}
-              name="username"
-              render={({ field: { value } }) => (
-                <EditableAvatar name={value || "S"} onEditPress={handleAvatarPress} />
-              )}
-            />
+        <View className="flex-1 mt-6">
+          <View className="items-center mb-8">
+            <View className="relative">
+              <Controller
+                control={control}
+                name="username"
+                render={({ field: { value } }) => (
+                  <EditableAvatar
+                    name={value || "S"}
+                    onEditPress={handleAvatarPress}
+                  />
+                )}
+              />
 
-            {variant === "floatingMenu" && isFloatingMenuVisible && (
-              <View className="absolute top-0 z-10">
-                <ImagePickerFloatingMenu
-                  onTakePhoto={() => handleImagePicker("camera")}
-                  onUploadFromGallery={() => handleImagePicker("gallery")}
-                />
-              </View>
-            )}
+              {variant === "floatingMenu" && isFloatingMenuVisible && (
+                <View className="absolute top-0 z-10">
+                  <ImagePickerFloatingMenu
+                    onTakePhoto={() => handleImagePicker("camera")}
+                    onUploadFromGallery={() => handleImagePicker("gallery")}
+                  />
+                </View>
+              )}
+            </View>
           </View>
+
+          <Controller
+            control={control}
+            name="username"
+            render={({ field: { onChange, value } }) => (
+              <TextInput
+                label="Username"
+                placeholder="Enter Username"
+                value={value}
+                onChangeText={onChange}
+                leftIcon={null}
+                inputContainerStyles="bg-background"
+                errorMessage={errors.username?.message}
+              />
+            )}
+          />
         </View>
 
-        <Controller
-          control={control}
-          name="username"
-          render={({ field: { onChange, value } }) => (
-            <TextInput
-              label="Username"
-              placeholder="Enter Username"
-              value={value}
-              onChangeText={onChange}
-              leftIcon={null}
-              inputContainerStyles="bg-background"
-              errorMessage={errors.username?.message}
-            />
-          )}
-        />
-      </ScrollView>
-
-      <View className="px-4 pb-4">
+      <View>
         <Button
           title="Update Username"
           variant="primary"
@@ -119,6 +124,6 @@ export function EditProfileScreen() {
         onTakePhoto={() => handleImagePicker("camera")}
         onUploadFromGallery={() => handleImagePicker("gallery")}
       />
-    </SafeAreaView>
+    </View>
   );
 }

@@ -1,10 +1,9 @@
 import { View, Pressable } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { ArrowLeftIcon, EmailVerificationIcon } from "@/assets/icons";
 import { AuthContent } from "@/modules/auth/components";
-import { OTPInput, Button, Text } from "@/components";
+import { OTPInput, Button, Text, ScreenHeader } from "@/components";
 import { showSuccessAlert, showErrorAlert } from "@/components/alerts";
 import { useVerifyEmail, useRegister, useForgotPassword } from "@/modules/auth/hooks";
 import type { OTPVerificationScreenProps } from "@/modules/auth/types";
@@ -105,12 +104,10 @@ export default function OTPVerificationScreen({ variant = "default" }: OTPVerifi
   const otpLength = 6;
 
   return (
-    <SafeAreaView className="flex-1" style={{ paddingHorizontal: 16 }}>
+    <View className="flex-1 bg-background">
       {/* Back Button */}
       <View className="mb-10">
-        <Pressable onPress={handleGoBack} className="w-10 justify-center">
-          <ArrowLeftIcon width={24} height={24} color="#000" />
-        </Pressable>
+        <ScreenHeader onBackPress={handleGoBack} />
       </View>
 
       <View className="flex-1">
@@ -167,6 +164,6 @@ export default function OTPVerificationScreen({ variant = "default" }: OTPVerifi
           </View>
         </View>
       </View>
-    </SafeAreaView>
+    </View>
   );
 }

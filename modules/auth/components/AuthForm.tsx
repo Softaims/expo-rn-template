@@ -98,7 +98,7 @@ export default function AuthForm({
         title={buttonText}
         onPress={handleSubmit(onSubmit)}
         disabled={isLoading}
-        containerStyles="mt-10 mb-6"
+        containerStyles="mt-10"
       />
     </View>
   );

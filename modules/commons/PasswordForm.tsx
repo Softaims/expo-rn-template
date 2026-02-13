@@ -1,10 +1,9 @@
-
 import { View, Pressable } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { ArrowLeftIcon, ResetPasswordIcon } from "@/assets/icons";
 import { AuthContent, AuthForm } from "@/modules/auth/components";
 import type { FieldConfig } from "@/modules/auth/types";
 import type { ZodType } from "zod";
+import { ScreenHeader } from "@/components";
 
 interface PasswordFormProps {
   title: string;
@@ -30,13 +29,9 @@ export default function PasswordForm({
   isLoading,
 }: PasswordFormProps) {
   return (
-    <View className="flex-1" style={{ paddingHorizontal: 16 }}>
+    <View className="flex-1 bg-background">
       {/* Back Button */}
-      <View className="mb-10">
-        <Pressable onPress={onBack} className="w-10 justify-center">
-          <ArrowLeftIcon width={7.5} height={15.5} color="#000" />
-        </Pressable>
-      </View>
+      <ScreenHeader title={title} onBackPress={onBack}/>
 
       <View className="flex-1">
         <View>

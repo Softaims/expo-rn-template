@@ -8,7 +8,6 @@ export interface SplashScreenData {
   id: number;
   title: string;
   description: string;
-  backgroundColor: string;
   showSkipButton: boolean;
   buttonConfig: ButtonConfig;
 }
