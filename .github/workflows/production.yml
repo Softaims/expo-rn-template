@@ -92,55 +92,55 @@ jobs:
           echo "Branch: production (stable)"
           echo "Pre-release: No"
 
-      - name: Setup Expo/EAS
-        uses: expo/expo-github-action@v8
-        with:
-          eas-version: latest
-          token: ${{ secrets.EXPO_TOKEN }}
+      # - name: Setup Expo/EAS
+      #   uses: expo/expo-github-action@v8
+      #   with:
+      #     eas-version: latest
+      #     token: ${{ secrets.EXPO_TOKEN }}
 
       # Determine workflow type from PR labels or manual input
-      - name: Determine workflow type
-        id: workflow_check
-        run: |
-          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-            echo "workflow=${{ inputs.workflow_type }}" >> $GITHUB_OUTPUT
-            echo "Manual trigger: ${{ inputs.workflow_type }} on production"
-          elif [[ "${{ github.event_name }}" == "pull_request" ]]; then
-            LABELS='${{ toJson(github.event.pull_request.labels.*.name) }}'
-            echo "PR Labels: $LABELS"
+      # - name: Determine workflow type
+      #   id: workflow_check
+      #   run: |
+      #     if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+      #       echo "workflow=${{ inputs.workflow_type }}" >> $GITHUB_OUTPUT
+      #       echo "Manual trigger: ${{ inputs.workflow_type }} on production"
+      #     elif [[ "${{ github.event_name }}" == "pull_request" ]]; then
+      #       LABELS='${{ toJson(github.event.pull_request.labels.*.name) }}'
+      #       echo "PR Labels: $LABELS"
             
-            if echo "$LABELS" | grep -qi '"OTA"'; then
-              echo "workflow=ota" >> $GITHUB_OUTPUT
-            else
-              echo "workflow=build" >> $GITHUB_OUTPUT
-            fi
-          else
-            # Default to build for push events
-            echo "workflow=build" >> $GITHUB_OUTPUT
-          fi
+      #       if echo "$LABELS" | grep -qi '"OTA"'; then
+      #         echo "workflow=ota" >> $GITHUB_OUTPUT
+      #       else
+      #         echo "workflow=build" >> $GITHUB_OUTPUT
+      #       fi
+      #     else
+      #       # Default to build for push events
+      #       echo "workflow=build" >> $GITHUB_OUTPUT
+      #     fi
 
       # Run OTA update for code-only changes
-      - name: Run OTA update
-        if: steps.workflow_check.outputs.workflow == 'ota'
-        run: |
-          eas update -p all \
-            --channel production \
-            --message "v${{ steps.version.outputs.version }}"
+      # - name: Run OTA update
+      #   if: steps.workflow_check.outputs.workflow == 'ota'
+      #   run: |
+      #     eas update -p all \
+      #       --channel production \
+      #       --message "v${{ steps.version.outputs.version }}"
 
       # Generate native code before building
-      - name: Run Expo Prebuild
-        if: steps.workflow_check.outputs.workflow == 'build'
-        run: npx expo prebuild
+      # - name: Run Expo Prebuild
+      #   if: steps.workflow_check.outputs.workflow == 'build'
+      #   run: npx expo prebuild
 
       # Run full build for native changes or new releases
-      - name: Run Build
-        if: steps.workflow_check.outputs.workflow == 'build'
-        env:
-          EAS_NO_VCS: 1
-          CI: 1
-        run: |
-          eas build -p all \
-            --profile production \
-            --auto-submit \
-            --non-interactive \
-            --no-wait
+      # - name: Run Build
+      #   if: steps.workflow_check.outputs.workflow == 'build'
+      #   env:
+      #     EAS_NO_VCS: 1
+      #     CI: 1
+      #   run: |
+      #     eas build -p all \
+      #       --profile production \
+      #       --auto-submit \
+      #       --non-interactive \
+      #       --no-wait
