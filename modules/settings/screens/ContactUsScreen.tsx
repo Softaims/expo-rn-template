@@ -80,8 +80,8 @@ export function ContactUsScreen() {
                   placeholder={field.placeholder}
                   value={value as string}
                   onChangeText={onChange}
-                  labelStyles="text-muted-foreground font-normal text-sm mb-1"
-                  inputContainerStyles="bg-background"
+                  // labelStyles="text-muted-foreground font-normal text-sm mb-1"
+                  // inputContainerStyles="bg-background"
                   multiline={field.type === "textarea"}
                   numberOfLines={field.type === "textarea" ? 8 : undefined}
                   textAlignVertical={field.type === "textarea" ? "top" : undefined}
