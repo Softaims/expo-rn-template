@@ -1,76 +1,79 @@
-import { useState } from 'react';
-import { View, Pressable, ActivityIndicator, Platform } from 'react-native';
-import { Text } from '@/components/text';
-import { GoogleIcon, AppleIcon } from '@/assets/icons';
-import { useGoogleOAuth, useAppleOAuth } from '@/modules/auth/hooks';
-import { cn } from '@/lib/utils';
-import * as Sentry from "@sentry/react-native";
+import { useState } from "react";
+import { View, Pressable, ActivityIndicator } from "react-native";
+import { Text } from "@/components/text";
+import { cn } from "@/lib/utils";
+import { captureException } from "@/modules/sentry/utils/sentryUtils";
+import { useGoogleOAuth, useAppleOAuth } from "@/modules/auth/hooks";
+import {
+  socialAuthProviders,
+  type SocialAuthProviderConfig,
+} from "@/modules/auth/config";
 
-export default function SocialAuthButtons() {
+interface SocialAuthButtonsProps {
+  providers?: SocialAuthProviderConfig[];
+  dividerText?: string;
+}
+
+export default function SocialAuthButtons({ providers = socialAuthProviders, dividerText = "or Continue with" }: SocialAuthButtonsProps) {
   const { signInWithGoogle } = useGoogleOAuth();
   const { signInWithApple } = useAppleOAuth();
-  const [loadingProvider, setLoadingProvider] = useState<'google' | 'apple' | null>(null);
+  const [loadingId, setLoadingId] = useState<string | null>(null);
 
-  const handleOAuth = async (provider: 'google' | 'apple', authFn: () => Promise<void>) => {
-    setLoadingProvider(provider);
+  const authHandlers: Record<string, () => Promise<void>> = {
+    google: signInWithGoogle,
+    apple: signInWithApple,
+  };
+
+  const handleOAuth = async (id: string) => {
+    const authFn = authHandlers[id];
+    if (!authFn) return;
+
+    setLoadingId(id);
     try {
       await authFn();
     } catch (error: any) {
       // Only capture to Sentry if it's not a user cancellation
-      if (error.code !== 'ERR_REQUEST_CANCELED') {
-        Sentry.captureException(error, {
-          tags: { component: "SocialAuthButtons", action: "oauth", provider },
-        });
+      if (error.code !== "ERR_REQUEST_CANCELED") {
+        captureException(error);
       }
     } finally {
-      setLoadingProvider(null);
+      setLoadingId(null);
     }
   };
 
-  const isDisabled = loadingProvider !== null;
+  const isDisabled = loadingId !== null;
 
   return (
-    <View className="gap-6">
+    <View className="gap-6 mt-[24px]">
+
       <View className="flex-row items-center gap-3">
         <View className="flex-1 h-[1px] bg-border" />
         <Text variant="bodyText2" className="text-muted-foreground">
-          or Continue with
+          {dividerText}
         </Text>
         <View className="flex-1 h-[1px] bg-border" />
       </View>
 
       <View className="flex-row justify-center gap-6">
-        <Pressable
-          onPress={() => handleOAuth('google', signInWithGoogle)}
-          disabled={isDisabled}
-          className={cn(
-            "w-14 h-14 rounded-full bg-background border border-border items-center justify-center",
-            !isDisabled && "active:opacity-70"
-          )}
-        >
-          {loadingProvider === 'google' ? (
-            <ActivityIndicator size="small" />
-          ) : (
-            <GoogleIcon width={24} height={24} />
-          )}
-        </Pressable>
-
-        {Platform.OS === 'ios' && (
-          <Pressable
-            onPress={() => handleOAuth('apple', signInWithApple)}
-            disabled={isDisabled}
-            className={cn(
-              "w-14 h-14 rounded-full bg-background border border-border items-center justify-center",
-              !isDisabled && "active:opacity-70"
-            )}
-          >
-            {loadingProvider === 'apple' ? (
-              <ActivityIndicator size="small" />
-            ) : (
-              <AppleIcon width={24} height={24} />
-            )}
-          </Pressable>
-        )}
+        {
+          providers.map((provider) => (
+            <Pressable
+              key={provider.id}
+              onPress={() => handleOAuth(provider.id)}
+              disabled={isDisabled}
+              className={cn(
+                "w-14 h-14 rounded-full bg-background border border-border items-center justify-center",
+                !isDisabled && "active:opacity-70",
+              )}
+            >
+              {loadingId === provider.id ? (
+                <ActivityIndicator size="small" />
+              ) : (
+                provider.icon
+              )}
+            </Pressable>
+          ))
+        }
       </View>
     </View>
   );

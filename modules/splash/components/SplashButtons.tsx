@@ -3,49 +3,23 @@ import { Button } from "@/components";
 import type { ButtonConfig } from "@/modules/splash/types";
 
 interface SplashButtonsProps {
-  buttonConfig: ButtonConfig;
-  onPrimaryPress: () => void;
-  onSecondaryPress?: () => void;
+  buttons: ButtonConfig[];
 }
 
-export default function SplashButtons({
-  buttonConfig,
-  onPrimaryPress,
-  onSecondaryPress,
-}: SplashButtonsProps) {
-  if (buttonConfig.type === "single") {
-    return (
-      <View>
-        <Button
-          variant="primary"
-          size="lg"
-          title={buttonConfig.primaryLabel}
-          onPress={onPrimaryPress}
-        />
-      </View>
-    );
-  }
-
-  // Dual buttons layout
+export default function SplashButtons({ buttons }: SplashButtonsProps) {
   return (
-    <View className="gap-4">
-      <Button
-        variant="primary"
-        size="lg"
-        title={buttonConfig.primaryLabel}
-        onPress={onPrimaryPress}
-        containerStyles="w-full"
-      />
-      {buttonConfig.secondaryLabel && onSecondaryPress && (
+    <View className="gap-4 px-4">
+      {buttons.map((button, index) => (
         <Button
-          variant="secondary"
+          key={index}
+          variant={button.type}
           size="lg"
-          title={buttonConfig.secondaryLabel}
-          onPress={onSecondaryPress}
-          containerStyles="border-1 border-border"
-
+          title={button.label}
+          onPress={button.onPress}
+          containerStyles={button.containerStyles ?? (button.type === 'secondary' ? 'border-1 border-border' : 'w-full')}
+          textStyles={button.textStyles}
         />
-      )}
+      ))}
     </View>
   );
 }

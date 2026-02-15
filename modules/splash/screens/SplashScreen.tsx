@@ -1,141 +1,99 @@
-import { BarGroup, Button } from "@/components";
+import { useCallback } from "react";
+import { FlatList, useWindowDimensions, View } from "react-native";
+import { BarGroup, Button, ScreenWrapper } from "@/components";
 import { SplashButtons, SplashContent } from "@/modules/splash/components";
 import { SPLASH_SCREENS, TOTAL_STEPS } from "@/modules/splash/config";
-import { useSplashAnimation } from "@/modules/splash/hooks";
-import { useRouter } from "expo-router";
-import { View } from "react-native";
-import { GestureDetector } from "react-native-gesture-handler";
-import Animated from "react-native-reanimated";
+import { useSplashAnimation, useSplashNavigation } from "@/modules/splash/hooks";
+import type { SplashScreenData } from "@/modules/splash/types";
 
 export default function SplashScreen() {
-  const router = useRouter();
+  const { width } = useWindowDimensions();
+
   const {
     currentStep,
-    swipeDirection,
-    animatedStyle,
-    nextAnimatedStyle,
-    panGesture,
+    animatedStep,
+    flatListRef,
+    handleScroll,
+    handleMomentumScrollEnd,
     animateToNextStep,
   } = useSplashAnimation();
-  const currentScreen = SPLASH_SCREENS[currentStep - 1];
-  const nextStep = currentStep + 1;
-  const nextScreen =
-    nextStep <= TOTAL_STEPS ? SPLASH_SCREENS[nextStep - 1] : null;
-  const prevStep = currentStep - 1;
-  const prevScreen = prevStep >= 1 ? SPLASH_SCREENS[prevStep - 1] : null;
 
-  const handleSkip = () => {
-    router.push("/(auth)/login");
-  };
+  const {
+    currentScreen,
+    buttonsWithHandlers,
+    handleSkip,
+    handleStorybook,
+  } = useSplashNavigation({ currentStep, animateToNextStep });
 
-  const handleLogin = () => {
-    router.push("/(auth)/login");
-  };
+  const renderItem = useCallback(({ item }: { item: SplashScreenData }) => (
+    <View style={{ width }} className="px-4">
+      <SplashContent
+        title={item.title}
+        description={item.description}
+      />
+    </View>
+  ), [width]);
 
-  const handleSignUp = () => {
-    router.push("/(auth)/signup");
-  };
-
-  const handlePrimaryPress = () => {
-    if (currentStep === TOTAL_STEPS) {
-      handleLogin();
-    } else {
-      animateToNextStep();
-    }
-  };
-
-  const handleSecondaryPress = () => {
-    if (currentStep === TOTAL_STEPS) {
-      handleSignUp();
-    }
-  };
+  const keyExtractor = useCallback((item: SplashScreenData) => item.id.toString(), []);
 
   return (
-    <View
-      className="flex-1 justify-between bg-background"
-    >
-      {/* Skip and Storybook Buttons */}
-      {currentScreen.showSkipButton && (
-        <View className="flex-row justify-between items-center">
-          <Button
-            variant="text"
-            size="sm"
-            title="Storybook"
-            onPress={() => router.push("/storybook")}
-            containerStyles="bg-transparent"
-            textStyles="font-medium"
-          />
-          <Button
-            variant="text"
-            size="sm"
-            title="Skip"
-            onPress={handleSkip}
-            textStyles="font-medium"
-          />
-        </View>
-      )}
-
-      <View>
-        <BarGroup
-          containerStyles="items-center mb-8"
-          totalSteps={TOTAL_STEPS}
-          currentStep={currentStep}
-          progress={(currentStep / TOTAL_STEPS) * 100}
-          variant="bar"
-        />
-
-        <GestureDetector gesture={panGesture}>
-          <View className="relative overflow-hidden h-48">
-            {/* Current Content */}
-            <Animated.View style={animatedStyle} className="absolute w-full">
-              <View className="mb-12">
-                <SplashContent
-                  title={currentScreen.title}
-                  description={currentScreen.description}
-                />
-              </View>
-            </Animated.View>
-
-            {/* Next Content (overlapping from right) - only when swiping forward */}
-            {swipeDirection === "next" && nextScreen && (
-              <Animated.View
-                style={nextAnimatedStyle}
-                className="absolute w-full"
-              >
-                <View>
-                  <SplashContent
-                    title={nextScreen.title}
-                    description={nextScreen.description}
-                  />
-                </View>
-              </Animated.View>
-            )}
-
-            {/* Previous Content (overlapping from left) - only when swiping backward */}
-            {swipeDirection === "prev" && prevScreen && (
-              <Animated.View
-                style={nextAnimatedStyle}
-                className="absolute w-full"
-              >
-                <View>
-                  <SplashContent
-                    title={prevScreen.title}
-                    description={prevScreen.description}
-                  />
-                </View>
-              </Animated.View>
-            )}
+    <ScreenWrapper containerStyles="px-0">
+      <View className="flex-1 justify-between bg-background">
+        {currentScreen.showSkipButton ? (
+          <View className="flex-row justify-between items-center px-4">
+            <Button
+              variant="text"
+              size="sm"
+              title="Storybook"
+              onPress={handleStorybook}
+              containerStyles="bg-transparent"
+              textStyles="font-medium"
+            />
+            <Button
+              variant="text"
+              size="sm"
+              title="Skip"
+              onPress={handleSkip}
+              textStyles="font-medium"
+            />
           </View>
-        </GestureDetector>
+        ) : (
+          <View />
+        )}
 
-        <View className="pb-8">
-          <SplashButtons
-            buttonConfig={currentScreen.buttonConfig}
-            onPrimaryPress={handlePrimaryPress}
-            onSecondaryPress={handleSecondaryPress}
+        <View>
+          <BarGroup
+            containerStyles="items-center mb-8"
+            totalSteps={TOTAL_STEPS}
+            currentStep={currentStep}
+            progress={(currentStep / TOTAL_STEPS) * 100}
+            variant="bar"
+            animatedStep={animatedStep}
           />
+
+          <FlatList
+            ref={flatListRef}
+            data={SPLASH_SCREENS}
+            renderItem={renderItem}
+            keyExtractor={keyExtractor}
+            horizontal
+            pagingEnabled
+            showsHorizontalScrollIndicator={false}
+            bounces={false}
+            onScroll={handleScroll}
+            onMomentumScrollEnd={handleMomentumScrollEnd}
+            scrollEventThrottle={16}
+            getItemLayout={(_, index) => ({
+              length: width,
+              offset: width * index,
+              index,
+            })}
+            contentContainerClassName="mb-[32px]"
+          />
+
+          <SplashButtons buttons={buttonsWithHandlers} />
         </View>
       </View>
-    </View>
+    </ScreenWrapper>
   );
 }

@@ -1,7 +1,9 @@
 export interface ButtonConfig {
-  type: 'single' | 'dual';
-  primaryLabel: string;
-  secondaryLabel?: string;
+  type: 'primary' | 'secondary';
+  label: string;
+  onPress: () => void;
+  containerStyles?: string;
+  textStyles?: string;
 }
 
 export interface SplashScreenData {
@@ -9,5 +11,5 @@ export interface SplashScreenData {
   title: string;
   description: string;
   showSkipButton: boolean;
-  buttonConfig: ButtonConfig;
+  buttonConfig: ButtonConfig[];
 }

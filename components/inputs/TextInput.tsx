@@ -208,8 +208,8 @@ export function TextInput(props: InputProps) {
             className={cn(
               "flex-1 py-[12px]",
               props.type === "textarea" && "h-[140px]",
-              (props.errorMessage || props.errorComponent) &&
-                "text-destructive",
+              // (props.errorMessage || props.errorComponent) &&
+              //   "text-destructive",
               props.inputStyles,
             )}
             {...props}

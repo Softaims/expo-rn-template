@@ -1,5 +1,14 @@
 import { View, Text } from "react-native";
+import Animated, {
+  useAnimatedStyle,
+  withTiming,
+  interpolate,
+  interpolateColor,
+  SharedValue,
+  Easing,
+} from "react-native-reanimated";
 import { cn } from "@/lib/utils";
+import { useColorScheme } from "nativewind";
 
 // Example steps structure:
 // const steps = [
@@ -39,6 +48,60 @@ export interface BarGroupProps {
 
   // Variant: "dot" (default) or "bar" (active becomes wider)
   variant?: "dot" | "bar";
+
+  // Animated step value for smooth transitions
+  animatedStep?: SharedValue<number>;
+}
+
+const TIMING_CONFIG = {
+  duration: 300,
+  easing: Easing.bezier(0.25, 0.1, 0.25, 1),
+};
+
+// Animated bar item component for smooth transitions
+function AnimatedBarItem({
+  stepNumber,
+  animatedStep,
+  isActive,
+}: {
+  stepNumber: number;
+  animatedStep: SharedValue<number>;
+  isActive: boolean;
+}) {
+  const { colorScheme } = useColorScheme();
+  const isDark = colorScheme === "dark";
+
+  // Colors based on theme
+  const primaryColor = isDark ? "#FFFFFF" : "#000000";
+  const mutedColor = isDark ? "#374151" : "#E5E7EB";
+
+  const animatedStyle = useAnimatedStyle(() => {
+    // Calculate how "active" this step should be (0 to 1)
+    const distance = Math.abs(animatedStep.value - stepNumber);
+    const activeProgress = interpolate(distance, [0, 0.5, 1], [1, 0.3, 0], "clamp");
+
+    // Interpolate width: 8 (dot) to 32 (bar)
+    const width = interpolate(activeProgress, [0, 1], [8, 32]);
+
+    // Interpolate color
+    const backgroundColor = interpolateColor(
+      activeProgress,
+      [0, 1],
+      [mutedColor, primaryColor]
+    );
+
+    return {
+      width,
+      backgroundColor,
+    };
+  });
+
+  return (
+    <Animated.View
+      style={animatedStyle}
+      className="h-2 rounded-full items-center justify-center"
+    />
+  );
 }
 
 export function BarGroup({
@@ -52,6 +115,7 @@ export function BarGroup({
   currentThumbStyle,
   textInsideStyle,
   variant = "dot",
+  animatedStep,
 }: BarGroupProps) {
   const effectiveProgress = Math.min(Math.max(progress, 0), 100);
 
@@ -66,7 +130,28 @@ export function BarGroup({
   const defaultCurrentThumbStyle = "bg-white border-primary border-[1px] ";
 
   if (variant === "bar") {
-    // Bar variant: only current step is wider with primary color, all others are dots with inactive color
+    // If animatedStep is provided, use animated bars
+    if (animatedStep) {
+      return (
+        <View className={cn("w-full", containerStyles)}>
+          <View className="flex-row items-center gap-3">
+            {barSteps.map((step, i) => {
+              const stepNumber = i + 1;
+              return (
+                <AnimatedBarItem
+                  key={step.id}
+                  stepNumber={stepNumber}
+                  animatedStep={animatedStep}
+                  isActive={stepNumber === current}
+                />
+              );
+            })}
+          </View>
+        </View>
+      );
+    }
+
+    // Bar variant without animation: only current step is wider with primary color
     return (
       <View className={cn("w-full", containerStyles)}>
         <View className="flex-row items-center gap-3">

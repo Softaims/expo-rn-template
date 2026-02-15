@@ -26,7 +26,7 @@ export function useAuth() {
 
   return {
     user,
-    isSignedIn,
+    isSignedIn: isSignedIn ?? false,
     isLoaded,
     signOut,
     getToken,

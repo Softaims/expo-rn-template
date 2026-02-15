@@ -62,15 +62,10 @@ export default function AuthForm({
               value={value as string}
               onChangeText={onChange}
               borderActiveColor={error ? "border-destructive" : undefined}
+              errorMessage={error ? error.message : undefined}
             />
           )}
         />
-        {error && (
-          <View className="flex-row items-center gap-1 mt-1">
-            <ErrorIcon width={16} height={16} />
-            <Text className="text-destructive text-sm">{error.message}</Text>
-          </View>
-        )}
       </View>
     );
   };

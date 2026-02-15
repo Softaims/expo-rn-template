@@ -11,7 +11,7 @@ export const loginFields: FieldConfig[] = [
     name: 'password',
     label: 'Password',
     type: 'password',
-    placeholder: '********',
+    placeholder: 'Enter your password',
   },
 ];
 
@@ -26,13 +26,13 @@ export const signupFields: FieldConfig[] = [
     name: 'password',
     label: 'Password',
     type: 'password',
-    placeholder: '********',
+    placeholder: 'Enter your password',
   },
   {
     name: 'repeatPassword',
     label: 'Repeat Password',
     type: 'password',
-    placeholder: '********',
+    placeholder: 'Confirm your password',
   },
 ];
 
@@ -50,12 +50,12 @@ export const resetPasswordFields: FieldConfig[] = [
     name: 'newPassword',
     label: 'New Password',
     type: 'password',
-    placeholder: '********',
+    placeholder: 'Enter your new password',
   },
   {
     name: 'confirmPassword',
     label: 'Confirm Password',
     type: 'password',
-    placeholder: '********',
+    placeholder: 'Confirm your new password',
   },
 ];
