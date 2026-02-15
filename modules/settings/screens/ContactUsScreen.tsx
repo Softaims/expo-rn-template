@@ -1,5 +1,4 @@
 import { View, ScrollView } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
@@ -53,7 +52,8 @@ export function ContactUsScreen() {
       });
       showErrorAlert({
         title: "Submission Failed",
-        message: error?.message || "Failed to submit feedback. Please try again.",
+        message:
+          error?.message || "Failed to submit feedback. Please try again.",
       });
     } finally {
       setIsSubmitting(false);
@@ -61,13 +61,10 @@ export function ContactUsScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-background">
+    <View className="flex-1 bg-background">
       <ScreenHeader title="Contact Us" onBackPress={() => router.back()} />
 
-      <ScrollView
-        className="flex-1 px-4"
-        contentContainerStyle={{ paddingVertical: 16 }}
-      >
+      <View className="flex-1 py-4">
         {contactUsFields.map((field) => (
           <View key={field.name} className="mb-4">
             <Controller
@@ -84,14 +81,16 @@ export function ContactUsScreen() {
                   // inputContainerStyles="bg-background"
                   multiline={field.type === "textarea"}
                   numberOfLines={field.type === "textarea" ? 8 : undefined}
-                  textAlignVertical={field.type === "textarea" ? "top" : undefined}
+                  textAlignVertical={
+                    field.type === "textarea" ? "top" : undefined
+                  }
                   errorMessage={errors[field.name]?.message}
                 />
               )}
             />
           </View>
         ))}
-      </ScrollView>
+      </View>
 
       <Button
         title="Submit Feedback"
@@ -102,6 +101,6 @@ export function ContactUsScreen() {
         containerStyles="bg-foreground mx-4 mb-4"
         textStyles="text-background"
       />
-    </SafeAreaView>
+    </View>
   );
 }

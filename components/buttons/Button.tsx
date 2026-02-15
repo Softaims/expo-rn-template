@@ -9,12 +9,12 @@ const buttonVariants = {
     secondary: "bg-background border-2 border-primary",
     disabled: "bg-muted",
     actioned: "bg-accent",
-    text: "bg-red",
+    text: "bg-transparent",
   },
   size: {
     lg: "px-6 py-4",
     md: "px-5 py-2",
-    sm: "px-4 py-2 w-36",
+    sm: "px-0 py-0",
   },
 } as const;
 

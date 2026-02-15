@@ -9,9 +9,9 @@ import { Toggle } from "@/components/toggle";
 import { Button } from "@/components/buttons/Button";
 import { ChevronRightIcon } from "@/assets/icons";
 import { showDeleteAccountAlert, showLogoutAlert } from "@/components/alerts";
+import { PermissionSheet } from "@/components/bottomSheets";
 import { useState } from "react";
 import { useRouter } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { SettingsScreenProps } from "../types";
 import { useAuth } from "@clerk/clerk-expo";
 import { settingsItemsConfig, getSettingsIcon } from "../config/settingsConfig";
@@ -22,6 +22,7 @@ export function SettingsScreen({
 }: SettingsScreenProps) {
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [darkModeEnabled, setDarkModeEnabled] = useState(false);
+  const [notificationPermissionVisible, setNotificationPermissionVisible] = useState(false);
   const router = useRouter();
   const { signOut } = useAuth();
 
@@ -44,7 +45,12 @@ export function SettingsScreen({
         rightIcon = (
           <Toggle
             value={notificationsEnabled}
-            onValueChange={setNotificationsEnabled}
+            onValueChange={(value) => {
+              setNotificationsEnabled(value);
+              if (value) {
+                setNotificationPermissionVisible(true);
+              }
+            }}
           />
         );
       } else if (itemId === "darkMode") {
@@ -85,14 +91,14 @@ export function SettingsScreen({
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-background">
+    <View className="flex-1 bg-background">
       {/* Custom Header */}
       <ScreenHeader
         title="Settings"
       />
 
       <ScrollView className="flex-1">
-        <View className="px-4 py-6">
+        <View className="py-6">
           {/* Profile Section */}
           <AvatarContainer
             name="Selena Samia"
@@ -138,6 +144,20 @@ export function SettingsScreen({
           ))}
         </View>
       </ScrollView>
-    </SafeAreaView>
+
+      <PermissionSheet
+        isVisible={notificationPermissionVisible}
+        setIsVisible={setNotificationPermissionVisible}
+        type="notification"
+        variant="modal-with-image"
+        onContinue={() => {
+          setNotificationPermissionVisible(false);
+        }}
+        onMaybeLater={() => {
+          setNotificationsEnabled(false);
+          setNotificationPermissionVisible(false);
+        }}
+      />
+    </View>
   );
 }
