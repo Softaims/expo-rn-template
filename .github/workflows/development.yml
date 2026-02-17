@@ -1,0 +1,81 @@
+# Development Branch CI Workflow
+# Uses semantic-release to determine version based on commit messages
+# Creates alpha pre-releases: 4.1.2-alpha.1, 4.1.2-alpha.2, etc.
+#
+# Commit types:
+#   feat!: → major bump (breaking change)
+#   feat:  → minor bump
+#   fix:   → patch bump
+#   refactor: / perf: → patch bump
+#   chore: / docs: → no release
+
+name: Development CI
+
+on:
+  push:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Semantic Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx semantic-release
+
+      - name: Get new version
+        id: version
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "📦 New version: $VERSION"
+
+      - name: Calculate build number
+        id: build
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          # Remove prerelease suffix if present (e.g., 4.1.2-alpha.1 -> 4.1.2)
+          CLEAN_VERSION=$(echo "$VERSION" | sed 's/-.*//')
+          
+          # Split version into parts
+          MAJOR=$(echo "$CLEAN_VERSION" | cut -d. -f1)
+          MINOR=$(echo "$CLEAN_VERSION" | cut -d. -f2)
+          PATCH=$(echo "$CLEAN_VERSION" | cut -d. -f3)
+          
+          # Calculate build number: MMNNPP0000 format
+          BUILD_NUMBER=$(printf "%d%02d%02d0000" "$MAJOR" "$MINOR" "$PATCH")
+          
+          echo "build_number=$BUILD_NUMBER" >> $GITHUB_OUTPUT
+          echo "🔢 Build number: $BUILD_NUMBER (from version $VERSION)"
+
+      - name: Display release info
+        run: |
+          echo "✅ Release Summary"
+          echo "=================="
+          echo "Version: ${{ steps.version.outputs.version }}"
+          echo "Build Number: ${{ steps.build.outputs.build_number }}"
+          echo "Branch: development (alpha)"
+          echo "Pre-release: Yes"

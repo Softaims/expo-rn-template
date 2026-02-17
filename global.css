@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Colors - Light Theme */
+  --color-primary: #000000;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #929292;
+  --color-secondary-foreground: #ffffff;
+  --color-background: #ffffff;
+  --color-foreground: #000000;
+  --color-muted: #efefef;
+  --color-muted-foreground: #929292;
+  --color-accent: #a0a0a0;
+  --color-accent-foreground: #ffffff;
+  --color-destructive: #ff5050;
+  --color-destructive-foreground: #ffffff;
+  --color-border: #e5e5e5;
+  --color-input: #fafafa;
+  --color-ring: #000000;
+  --color-chat-message: #f5f5f5;
+}
+
+.dark {
+  --color-primary: #ffffff;
+  --color-primary-foreground: #000000;
+  --color-secondary: #929292;
+  --color-secondary-foreground: #000000;
+  --color-background: #000000;
+  --color-foreground: #ffffff;
+  --color-muted: #1a1a1a;
+  --color-muted-foreground: #929292;
+  --color-accent: #a0a0a0;
+  --color-accent-foreground: #000000;
+  --color-destructive: #ff5050;
+  --color-destructive-foreground: #ffffff;
+  --color-border: #2a2a2a;
+  --color-input: #1a1a1a;
+  --color-ring: #ffffff;
+  --color-chat-message: #1a1a1a;
+}
