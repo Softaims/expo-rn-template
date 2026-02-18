@@ -4,20 +4,39 @@ A production-ready Expo React Native template with semantic versioning, CI/CD wo
 
 ## Getting Started
 
-### 1. Create a New Project from Template
+### 1. Clone the Template
 
 ```bash
-npx create-expo-app your-app-name -t https://github.com/Softaims/expo-rn-template
+git clone https://github.com/Softaims/expo-rn-template.git your-app-name
+cd your-app-name
+rm -rf .git
 ```
 
-### 2. Install Dependencies
+### 2. Reset Project for Your App
+
+Run the reset script to configure the project with your app name. This will:
+- Update `package.json` with your app name and reset version to `1.0.0`
+- Update `app.config.ts` with `APP_NAME`, `SLUG`, and `SCHEME`
+- Reset `CHANGELOG.md`
 
 ```bash
 cd your-app-name
+npm run reset -- your-app-name
+```
+
+Or directly:
+
+```bash
+npx ts-node scripts/reset.ts your-app-name
+```
+
+### 3. Install Dependencies
+
+```bash
 npm install
 ```
 
-### 3. Initialize Git Repository
+### 4. Initialize Git Repository
 
 Before pushing your first commit, create both `main` and `production` branches. This is **required** for semantic-release to work properly.
 
@@ -39,7 +58,7 @@ git push -u origin main
 
 > **Important**: The `production` branch must exist before pushing to `main`, otherwise semantic-release will fail.
 
-### 4. Start the App
+### 5. Start the App
 
 ```bash
 npx expo start
