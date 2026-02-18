@@ -15,6 +15,7 @@ rm -rf .git
 ### 2. Reset Project for Your App
 
 Run the reset script to configure the project with your app name. This will:
+
 - Update `package.json` with your app name and reset version to `1.0.0`
 - Update `app.config.ts` with `APP_NAME`, `SLUG`, and `SCHEME`
 - Reset `CHANGELOG.md`
@@ -32,8 +33,8 @@ npx tsx scripts/reset.ts your-app-name
 After running the reset script, manually update these fields in `app.config.ts`:
 
 ```typescript
-const BUNDLE_IDENTIFIER = "com.yourcompany.yourapp";  // iOS bundle identifier
-const PACKAGE_NAME = "com.yourcompany.yourapp";       // Android package name
+const BUNDLE_IDENTIFIER = "com.yourcompany.yourapp"; // iOS bundle identifier
+const PACKAGE_NAME = "com.yourcompany.yourapp"; // Android package name
 ```
 
 ### 3. Install Dependencies
@@ -71,6 +72,7 @@ npx expo start
 ```
 
 You can open the app in:
+
 - [Development build](https://docs.expo.dev/develop/development-builds/introduction/)
 - [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
 - [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
@@ -86,14 +88,15 @@ When using this template for a new project, you **must** configure the following
 
 Create a `.env` file with the following variables:
 
-| Variable | Description |
-|----------|-------------|
-| `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY` | Clerk authentication publishable key |
-| `SENTRY_AUTH_TOKEN` | Sentry authentication token for error tracking |
+| Variable                            | Description                                    |
+| ----------------------------------- | ---------------------------------------------- |
+| `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY` | Clerk authentication publishable key           |
+| `SENTRY_AUTH_TOKEN`                 | Sentry authentication token for error tracking |
 
 ### Dynamic App Configuration
 
 This project uses **dynamic configuration** via `app.config.ts` instead of a static `app.json`. This allows for:
+
 - Environment-based configuration
 - Computed values (like build numbers from version)
 - TypeScript type safety
@@ -104,11 +107,11 @@ Update these fields in `app.config.ts` before starting development:
 
 ```typescript
 // App configuration
-const APP_NAME = "your-app-name";           // Display name of your app
-const SLUG = "your-app-slug";               // URL-friendly identifier
-const SCHEME = "your-app-scheme";           // Deep linking scheme
-const BUNDLE_IDENTIFIER = "com.your.app";   // iOS bundle identifier
-const PACKAGE_NAME = "com.your.app";        // Android package name
+const APP_NAME = "your-app-name"; // Display name of your app
+const SLUG = "your-app-slug"; // URL-friendly identifier
+const SCHEME = "your-app-scheme"; // Deep linking scheme
+const BUNDLE_IDENTIFIER = "com.your.app"; // iOS bundle identifier
+const PACKAGE_NAME = "com.your.app"; // Android package name
 
 // SENTRY configuration
 const SENTRY_PROJECT = "your-sentry-project";
@@ -122,7 +125,7 @@ These can be configured when you're ready to deploy:
 ```typescript
 // EAS configuration
 const EAS_PROJECT_ID = "your-eas-project-id";
-const EAS_PROJECT_OWNER = "your-eas-owner";  // For EAS Organization only
+const EAS_PROJECT_OWNER = "your-eas-owner"; // For EAS Organization only
 ```
 
 ---
@@ -138,17 +141,17 @@ This project uses [semantic-release](https://github.com/semantic-release/semanti
 
 ### Commit Message Rules
 
-| Commit Type | Description | Version Bump |
-|-------------|-------------|--------------|
-| `feat:` | New feature | Minor (`1.0.0` → `1.1.0`) |
-| `fix:` | Bug fix | Patch (`1.0.0` → `1.0.1`) |
-| `perf:` | Performance improvement | Patch |
-| `refactor:` | Code refactoring | Patch |
-| `feat!:` or `BREAKING CHANGE:` | Breaking change | Major (`1.0.0` → `2.0.0`) |
-| `docs:` | Documentation only | No release |
-| `chore:` | Maintenance tasks | No release |
-| `style:` | Code style changes | No release |
-| `test:` | Test changes | No release |
+| Commit Type                    | Description             | Version Bump              |
+| ------------------------------ | ----------------------- | ------------------------- |
+| `feat:`                        | New feature             | Minor (`1.0.0` → `1.1.0`) |
+| `fix:`                         | Bug fix                 | Patch (`1.0.0` → `1.0.1`) |
+| `perf:`                        | Performance improvement | Patch                     |
+| `refactor:`                    | Code refactoring        | Patch                     |
+| `feat!:` or `BREAKING CHANGE:` | Breaking change         | Major (`1.0.0` → `2.0.0`) |
+| `docs:`                        | Documentation only      | No release                |
+| `chore:`                       | Maintenance tasks       | No release                |
+| `style:`                       | Code style changes      | No release                |
+| `test:`                        | Test changes            | No release                |
 
 ### Branch Strategy & Workflow
 
@@ -203,54 +206,54 @@ Here's a detailed walkthrough of how versions evolve through the development lif
 
 #### Phase 1: Initial Development
 
-| Step | Branch | Commit | Resulting Version | Notes |
-|------|--------|--------|-------------------|-------|
-| 1 | `main` | `feat: add authentication` | `1.0.0-alpha.1` | First feature, alpha release |
-| 2 | `main` | `fix: login validation` | `1.0.0-alpha.2` | Patch doesn't bump minor |
-| 3 | `main` | `feat: add home screen` | `1.1.0-alpha.1` | New feature bumps minor |
-| 4 | `main` | `fix: home screen layout` | `1.1.0-alpha.2` | Another alpha iteration |
-| 5 | `main` | `docs: update readme` | — | No release (docs) |
+| Step | Branch | Commit                     | Resulting Version | Notes                        |
+| ---- | ------ | -------------------------- | ----------------- | ---------------------------- |
+| 1    | `main` | `feat: add authentication` | `1.0.0-alpha.1`   | First feature, alpha release |
+| 2    | `main` | `fix: login validation`    | `1.0.0-alpha.2`   | Patch doesn't bump minor     |
+| 3    | `main` | `feat: add home screen`    | `1.1.0-alpha.1`   | New feature bumps minor      |
+| 4    | `main` | `fix: home screen layout`  | `1.1.0-alpha.2`   | Another alpha iteration      |
+| 5    | `main` | `docs: update readme`      | —                 | No release (docs)            |
 
 #### Phase 2: First Production Release
 
-| Step | Action | Result |
-|------|--------|--------|
-| 6 | Create PR: `main` → `production` | — |
-| 7 | Merge PR | `production` releases **1.1.0** |
-| 8 | Merge `production` → `main` | Sync stable version back to `main` |
-| 9 | `git pull` on local `main` | Sync version to local |
+| Step | Action                           | Result                             |
+| ---- | -------------------------------- | ---------------------------------- |
+| 6    | Create PR: `main` → `production` | —                                  |
+| 7    | Merge PR                         | `production` releases **1.1.0**    |
+| 8    | Merge `production` → `main`      | Sync stable version back to `main` |
+| 9    | `git pull` on local `main`       | Sync version to local              |
 
 #### Phase 3: Continued Development
 
-| Step | Branch | Commit | Resulting Version | Notes |
-|------|--------|--------|-------------------|-------|
-| 10 | `main` | `fix: critical bug` | `1.1.1-alpha.1` | Patch version for fix |
-| 11 | `main` | `perf: optimize queries` | `1.1.2-alpha.1` | Performance = patch |
-| 12 | `main` | `feat: user settings` | `1.2.0-alpha.1` | Feature bumps minor |
-| 13 | `main` | `refactor: clean code` | `1.2.1-alpha.1` | Refactor = patch |
+| Step | Branch | Commit                   | Resulting Version | Notes                 |
+| ---- | ------ | ------------------------ | ----------------- | --------------------- |
+| 10   | `main` | `fix: critical bug`      | `1.1.1-alpha.1`   | Patch version for fix |
+| 11   | `main` | `perf: optimize queries` | `1.1.2-alpha.1`   | Performance = patch   |
+| 12   | `main` | `feat: user settings`    | `1.2.0-alpha.1`   | Feature bumps minor   |
+| 13   | `main` | `refactor: clean code`   | `1.2.1-alpha.1`   | Refactor = patch      |
 
 #### Phase 4: Second Production Release
 
-| Step | Action | Result |
-|------|--------|--------|
-| 14 | Merge PR to `production` | `production` releases **1.2.1** |
-| 15 | Merge `production` → `main` | Sync stable version back to `main` |
-| 16 | `git pull` on local `main` | Sync version to local |
+| Step | Action                      | Result                             |
+| ---- | --------------------------- | ---------------------------------- |
+| 14   | Merge PR to `production`    | `production` releases **1.2.1**    |
+| 15   | Merge `production` → `main` | Sync stable version back to `main` |
+| 16   | `git pull` on local `main`  | Sync version to local              |
 
 #### Phase 5: Breaking Change
 
-| Step | Branch | Commit | Resulting Version | Notes |
-|------|--------|--------|-------------------|-------|
-| 17 | `main` | `feat!: new API structure` | `2.0.0-alpha.1` | Breaking change = major |
-| 18 | `main` | `feat: dark mode` | `2.1.0-alpha.1` | Feature bumps minor |
-| 19 | `main` | `fix: theme toggle` | `2.1.0-alpha.2` | Patch in alpha |
+| Step | Branch | Commit                     | Resulting Version | Notes                   |
+| ---- | ------ | -------------------------- | ----------------- | ----------------------- |
+| 17   | `main` | `feat!: new API structure` | `2.0.0-alpha.1`   | Breaking change = major |
+| 18   | `main` | `feat: dark mode`          | `2.1.0-alpha.1`   | Feature bumps minor     |
+| 19   | `main` | `fix: theme toggle`        | `2.1.0-alpha.2`   | Patch in alpha          |
 
 #### Phase 6: Major Production Release
 
-| Step | Action | Result |
-|------|--------|--------|
-| 20 | Merge PR to `production` | `production` releases **2.1.0** |
-| 21 | Merge `production` → `main` | Sync stable version back to `main` |
+| Step | Action                      | Result                             |
+| ---- | --------------------------- | ---------------------------------- |
+| 20   | Merge PR to `production`    | `production` releases **2.1.0**    |
+| 21   | Merge `production` → `main` | Sync stable version back to `main` |
 
 ### Workflow Details
 
@@ -274,6 +277,7 @@ When ready to release:
 5. A GitHub release is created with changelog
 
 **Production workflow supports:**
+
 - **OTA updates**: For code-only changes (use "OTA" label on PR)
 - **Full builds**: For native changes (use "BUILD" label or default)
 - **Manual trigger**: Via workflow_dispatch
@@ -308,10 +312,10 @@ After syncing:
 
 ### Syncing After Releases (Summary)
 
-| Event | Action Required |
-|-------|-----------------|
-| Push to `main` | `git pull origin main` (semantic-release creates alpha version commit) |
-| Merge to `production` | Merge `production` → `main` (sync stable version back) |
+| Event                 | Action Required                                                        |
+| --------------------- | ---------------------------------------------------------------------- |
+| Push to `main`        | `git pull origin main` (semantic-release creates alpha version commit) |
+| Merge to `production` | Merge `production` → `main` (sync stable version back)                 |
 
 **After pushing to `main`:**
 
@@ -335,11 +339,13 @@ This ensures your local repository and `main` branch stay in sync with all versi
 ### Build Number Calculation
 
 Build numbers are automatically calculated from the version using the format `MMNNPP0000`:
+
 - `M` = Major version (2 digits)
 - `N` = Minor version (2 digits)
 - `P` = Patch version (2 digits)
 
 Examples:
+
 - `1.2.3` → `102030000`
 - `7.17.10` → `717100000`
 
@@ -362,58 +368,130 @@ This project follows the **Modular Monolith** design pattern - an all-in-one pro
 ### Directory Structure
 
 ```
-├── app/                    # Routing layer only (Expo Router)
-│   ├── _layout.tsx
-│   ├── (auth)/
-│   │   ├── login/
-│   │   ├── signup/
-│   │   ├── forgotPassword/
-│   │   └── ...
-│   ├── (tabs)/
-│   │   ├── (settings)/
-│   │   └── ...
-│   └── (legal)/
-│
-├── modules/                # Feature modules (business logic)
+├── app/              # Expo Router (routing only)
+├── assets/
+│   ├── icons/
+│   ├── images/
+│   └── svgs/
+├── components/       # Shared UI components
+├── features/         # Feature modules (business logic)
 │   ├── auth/
-│   │   ├── screens/        # Screen components
-│   │   ├── components/     # UI components
-│   │   ├── hooks/          # Custom hooks
-│   │   ├── config/         # Configuration
-│   │   ├── schemas/        # Validation schemas
-│   │   ├── types.ts        # TypeScript types
-│   │   └── index.ts        # Public exports
-│   ├── settings/
-│   ├── chat/
-│   ├── notifications/
-│   ├── legal/
-│   ├── splash/
-│   ├── sentry/
-│   └── commons/            # Shared components across modules
+│   ├── quran/
+│   ├── namaz/
+│   └── dua/
+├── hooks/
+├── services/
+├── store/
+├── theme/
+└── utils/
+```
+
+Each feature folder must follow this exact structure:
+
+```
+features/[feature]/
+├── screens/
+├── components/
+├── hooks/
+└── services/
 ```
 
 ### Key Principles
 
-| Directory | Responsibility |
-|-----------|----------------|
-| `app/` | **Routing only** - File-based routing with Expo Router. Minimal logic, just imports screens from modules. |
-| `modules/` | **Feature logic** - Each module contains its own screens, components, hooks, configs, and types. Modules are self-contained and don't share internal logic. |
-| `modules/commons/` | **Shared utilities** - Components or logic needed across multiple modules. |
+| Directory     | Responsibility                                                                                                           |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `app/`        | **Routing only** - File-based routing with Expo Router. Minimal logic, just imports screens from features.               |
+| `components/` | **Shared UI** - Reusable components used across features.                                                                |
+| `features/`   | **Feature logic** - Each feature contains its own screens, components, hooks, and services. Features are self-contained. |
+| `hooks/`      | **Shared custom React hooks** used across features.                                                                      |
+| `store/`      | **Global state management**.                                                                                             |
+| `theme/`      | **Design tokens** - Colors, typography, spacing.                                                                         |
+| `utils/`      | **Pure utility/helper functions**.                                                                                       |
 
-### Module Structure
+---
 
-Each module follows a consistent structure:
+## API & Data Layer
+
+- All API calls live inside `src/services/`.
+- Never call API directly from UI components.
+- Use Axios or Fetch wrapper.
+- All responses must be typed.
+
+**Service file naming:**
 
 ```
-modules/[feature]/
-├── screens/          # Screen components (imported by app/ routes)
-├── components/       # Feature-specific UI components
-├── hooks/            # Custom React hooks
-├── config/           # Feature configuration
-├── schemas/          # Zod/Yup validation schemas
-├── types.ts          # TypeScript interfaces/types
-└── index.ts          # Public API exports
+services/
+├── auth.service.ts
+├── namaz.service.ts
+└── quran.service.ts
 ```
+
+**Example pattern:**
+
+```typescript
+export const getNamazTimes = async () => {
+  const res = await api.get("/namaz/times");
+  return res.data;
+};
+```
+
+**Error handling rules:**
+
+- Never swallow errors.
+- Normalize error responses.
+- Use try/catch in the service layer.
+- UI handles only: loading, error, success states.
+
+**TanStack Query rules:**
+
+- Standardized query keys.
+- Queries only inside hooks.
+- No query logic inside UI components.
+
+---
+
+## TODO Management
+
+- A `todo.md` file must exist at the root of the project.
+- It must stay updated after every major change.
+- Use `[ ]` for pending and `[x]` for completed tasks.
+- Break large tasks into subtasks.
+- Reorder tasks logically.
+
+---
+
+## Code Quality Standards
+
+- ESLint is mandatory.
+- No `console.log` statements in production.
+- Components must not exceed 150 lines.
+- No duplicated logic.
+- No magic numbers.
+- Clear and consistent naming conventions.
+- No inline styles.
+- No dead code.
+
+---
+
+## Naming Conventions
+
+| Item       | Convention          | Example                         |
+| ---------- | ------------------- | ------------------------------- |
+| Folders    | kebab-case          | `auth/`, `forgot-password/`     |
+| Files      | camelCase.tsx / .ts | `useAuth.ts`, `auth.service.ts` |
+| Components | PascalCase.tsx      | `AuthScreen.tsx`, `Button.tsx`  |
+
+---
+
+## Pull Request Template
+
+All pull requests must use the following structure (see `.github/PULL_REQUEST_TEMPLATE.md`):
+
+- **What** – Summary of changes
+- **Why** – Reason for the change
+- **How** – Implementation details
+- **Screenshots** – When UI changes
+- **Checklist** – Tested, ESLint passed, no console logs, todo updated
 
 ---
 
