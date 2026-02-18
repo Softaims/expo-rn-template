@@ -374,124 +374,131 @@ This project follows the **Modular Monolith** design pattern - an all-in-one pro
 │   ├── images/
 │   └── svgs/
 ├── components/       # Shared UI components
-├── features/         # Feature modules (business logic)
+├── features/         # Feature modules (rename modules/ to features/)
 │   ├── auth/
-│   ├── quran/
-│   ├── namaz/
-│   └── dua/
-├── hooks/
-├── services/
-├── store/
-├── theme/
-└── utils/
-```
-
-Each feature folder must follow this exact structure:
-
-```
-features/[feature]/
-├── screens/
-├── components/
-├── hooks/
-└── services/
+│   ├── [feature-name]/
+│   └── [feature-name]/
+├── hooks/            # Shared custom React hooks
+├── services/         # All API/data layer logic
+├── store/            # Global state management
+├── theme/            # Design tokens, colors, typography, spacing
+└── utils/            # Pure utility/helper functions
 ```
 
 ### Key Principles
 
-| Directory     | Responsibility                                                                                                           |
-| ------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| `app/`        | **Routing only** - File-based routing with Expo Router. Minimal logic, just imports screens from features.               |
-| `components/` | **Shared UI** - Reusable components used across features.                                                                |
-| `features/`   | **Feature logic** - Each feature contains its own screens, components, hooks, and services. Features are self-contained. |
-| `hooks/`      | **Shared custom React hooks** used across features.                                                                      |
-| `store/`      | **Global state management**.                                                                                             |
-| `theme/`      | **Design tokens** - Colors, typography, spacing.                                                                         |
-| `utils/`      | **Pure utility/helper functions**.                                                                                       |
+| Directory   | Responsibility                                                     |
+| ----------- | ------------------------------------------------------------------ |
+| app/        | Routing only — Expo Router file-based routing, no logic            |
+| features/   | Feature modules — screens, components, hooks, services per feature |
+| components/ | Shared atomic UI components used across features                   |
+| services/   | All API calls and data-fetching logic                              |
+| hooks/      | Shared custom React hooks                                          |
+| store/      | Global state management                                            |
+| theme/      | Design tokens, colors, spacing, typography                         |
+| utils/      | Pure helper/utility functions                                      |
 
----
+### Feature Module Structure
 
-## API & Data Layer
-
-- All API calls live inside `src/services/`.
-- Never call API directly from UI components.
-- Use Axios or Fetch wrapper.
-- All responses must be typed.
-
-**Service file naming:**
+Each feature folder must follow this exact internal structure:
 
 ```
-services/
-├── auth.service.ts
-├── namaz.service.ts
-└── quran.service.ts
+features/[feature]/
+├── screens/          # Screen components (imported by app/ routes)
+├── components/       # Feature-specific UI components
+├── hooks/            # Custom React hooks
+└── services/         # Feature-specific API calls
 ```
-
-**Example pattern:**
-
-```typescript
-export const getNamazTimes = async () => {
-  const res = await api.get("/namaz/times");
-  return res.data;
-};
-```
-
-**Error handling rules:**
-
-- Never swallow errors.
-- Normalize error responses.
-- Use try/catch in the service layer.
-- UI handles only: loading, error, success states.
-
-**TanStack Query rules:**
-
-- Standardized query keys.
-- Queries only inside hooks.
-- No query logic inside UI components.
-
----
-
-## TODO Management
-
-- A `todo.md` file must exist at the root of the project.
-- It must stay updated after every major change.
-- Use `[ ]` for pending and `[x]` for completed tasks.
-- Break large tasks into subtasks.
-- Reorder tasks logically.
-
----
-
-## Code Quality Standards
-
-- ESLint is mandatory.
-- No `console.log` statements in production.
-- Components must not exceed 150 lines.
-- No duplicated logic.
-- No magic numbers.
-- Clear and consistent naming conventions.
-- No inline styles.
-- No dead code.
 
 ---
 
 ## Naming Conventions
 
-| Item       | Convention          | Example                         |
-| ---------- | ------------------- | ------------------------------- |
-| Folders    | kebab-case          | `auth/`, `forgot-password/`     |
-| Files      | camelCase.tsx / .ts | `useAuth.ts`, `auth.service.ts` |
-| Components | PascalCase.tsx      | `AuthScreen.tsx`, `Button.tsx`  |
+- Folders → kebab-case
+- Files → camelCase.tsx
+- Components → PascalCase.tsx
+- Feature folders must always contain: screens/, components/, hooks/, services/
 
 ---
 
-## Pull Request Template
+## API & Data Layer
 
-All pull requests must use the following structure (see `.github/PULL_REQUEST_TEMPLATE.md`):
+Rules:
 
-- **What** – Summary of changes
-- **Why** – Reason for the change
-- **How** – Implementation details
-- **Screenshots** – When UI changes
-- **Checklist** – Tested, ESLint passed, no console logs, todo updated
+- All API calls must live inside services/ (root level or feature-level)
+- Never call an API directly from a UI component
+- Use Axios or Fetch wrapper
+- All API responses must be typed
+
+Service file naming convention:
+
+```
+services/
+├── auth.service.ts
+├── [feature].service.ts
+```
+
+Example service pattern:
+
+```ts
+export const getFeatureData = async () => {
+  const res = await api.get("/feature/endpoint");
+  return res.data;
+};
+```
+
+Error handling rules:
+
+- Never swallow errors silently
+- Normalize error responses
+- Use try/catch in the service layer only
+- UI components handle only: loading, error, and success states
+
+TanStack Query rules:
+
+- Use standardized query keys
+- All queries must live inside hooks only
+- No query logic inside UI components
+
+---
+
+## Code Quality Standards
+
+- ESLint is mandatory across the project
+- No console.log statements in production code
+- Components must not exceed 150 lines
+- No duplicated logic across files
+- No magic numbers — use named constants
+- No inline styles
+- No dead code
+- Memoize heavy components where needed
+- No inline functions inside render/return
+
+---
+
+## PR Template
+
+## What
+
+- Summary of changes
+
+## Why
+
+- Reason for the change
+
+## How
+
+- Implementation details
+
+## Screenshots
+
+– When UI changes
+
+## Checklist
+
+- [ ] Tested
+- [ ] ESLint passed
+- [ ] No console logs
 
 ---
 
