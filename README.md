@@ -20,14 +20,20 @@ Run the reset script to configure the project with your app name. This will:
 - Reset `CHANGELOG.md`
 
 ```bash
-cd your-app-name
 npm run reset -- your-app-name
 ```
 
 Or directly:
 
 ```bash
-npx ts-node scripts/reset.ts your-app-name
+npx tsx scripts/reset.ts your-app-name
+```
+
+After running the reset script, manually update these fields in `app.config.ts`:
+
+```typescript
+const BUNDLE_IDENTIFIER = "com.yourcompany.yourapp";  // iOS bundle identifier
+const PACKAGE_NAME = "com.yourcompany.yourapp";       // Android package name
 ```
 
 ### 3. Install Dependencies

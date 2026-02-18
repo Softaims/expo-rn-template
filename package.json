@@ -9,7 +9,7 @@
     "web": "expo start --web",
     "lint": "expo lint",
     "storybook-generate": "sb-rn-get-stories",
-    "reset": "ts-node scripts/reset.ts"
+    "reset": "npx tsx scripts/reset.ts"
   },
   "dependencies": {
     "@babel/core": "^7.28.6",
@@ -78,7 +78,7 @@
     "@types/react": "~19.1.0",
     "eslint": "^9.25.0",
     "eslint-config-expo": "~10.0.0",
-    "ts-node": "^10.9.2",
+    "tsx": "^4.19.0",
     "typescript": "~5.9.2",
     "@semantic-release/changelog": "6.0.3",
     "@semantic-release/commit-analyzer": "13.0.1",

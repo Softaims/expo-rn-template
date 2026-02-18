@@ -1,5 +1,3 @@
-#!/usr/bin/env npx ts-node
-
 import * as fs from "fs";
 import * as path from "path";
 
@@ -7,8 +5,8 @@ const APP_NAME_ARG = process.argv[2];
 
 if (!APP_NAME_ARG) {
     console.error("❌ Error: App name is required");
-    console.error("Usage: npx ts-node scripts/reset.ts <app-name>");
-    console.error("Example: npx ts-node scripts/reset.ts my-awesome-app");
+    console.error("Usage: npm run reset -- <app-name>");
+    console.error("Example: npm run reset -- my-awesome-app");
     process.exit(1);
 }
 
@@ -23,6 +21,28 @@ function updatePackageJson(appName: string): void {
 
     fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2) + "\n");
     console.log(`✅ Updated package.json: name="${appName}", version="1.0.0"`);
+}
+
+function updatePackageLockJson(appName: string): void {
+    const packageLockPath = path.join(ROOT_DIR, "package-lock.json");
+    
+    if (!fs.existsSync(packageLockPath)) {
+        console.log("⚠️  package-lock.json not found, skipping...");
+        return;
+    }
+
+    const packageLock = JSON.parse(fs.readFileSync(packageLockPath, "utf-8"));
+
+    packageLock.name = appName;
+    packageLock.version = "1.0.0";
+    
+    if (packageLock.packages && packageLock.packages[""]) {
+        packageLock.packages[""].name = appName;
+        packageLock.packages[""].version = "1.0.0";
+    }
+
+    fs.writeFileSync(packageLockPath, JSON.stringify(packageLock, null, 2) + "\n");
+    console.log(`✅ Updated package-lock.json: name="${appName}", version="1.0.0"`);
 }
 
 function updateAppConfig(appName: string): void {
@@ -63,6 +83,7 @@ function main(): void {
     console.log(`\n🚀 Resetting project for: ${APP_NAME_ARG}\n`);
 
     updatePackageJson(APP_NAME_ARG);
+    updatePackageLockJson(APP_NAME_ARG);
     updateAppConfig(APP_NAME_ARG);
     clearChangelog();
 
