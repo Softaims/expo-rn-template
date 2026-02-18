@@ -414,7 +414,7 @@ features/[feature]/
 
 ## Naming Conventions
 
-- Folders → kebab-case
+- Folders → camelCase
 - Files → camelCase.tsx
 - Components → PascalCase.tsx
 - Feature folders must always contain: screens/, components/, hooks/, services/
