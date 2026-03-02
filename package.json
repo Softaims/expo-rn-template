@@ -29,6 +29,8 @@
     "@storybook/addon-ondevice-actions": "^10.1.11",
     "@storybook/addon-ondevice-controls": "^10.1.11",
     "@storybook/react-native": "^10.1.11",
+    "@tanstack/react-query": "5.90.21",
+    "axios": "1.13.6",
     "babel-loader": "^8.4.1",
     "clsx": "^2.1.1",
     "date-fns": "4.1.0",
@@ -74,18 +76,18 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
-    "@types/node": "^22.15.0",
-    "@types/react": "~19.1.0",
-    "eslint": "^9.25.0",
-    "eslint-config-expo": "~10.0.0",
-    "tsx": "^4.19.0",
-    "typescript": "~5.9.2",
     "@semantic-release/changelog": "6.0.3",
     "@semantic-release/commit-analyzer": "13.0.1",
     "@semantic-release/git": "10.0.1",
     "@semantic-release/github": "12.0.2",
     "@semantic-release/release-notes-generator": "14.1.0",
+    "@types/node": "^22.15.0",
+    "@types/react": "~19.1.0",
     "conventional-changelog-conventionalcommits": "8.0.0",
-    "semantic-release": "25.0.2"
+    "eslint": "^9.25.0",
+    "eslint-config-expo": "~10.0.0",
+    "semantic-release": "25.0.2",
+    "tsx": "^4.19.0",
+    "typescript": "~5.9.2"
   }
 }

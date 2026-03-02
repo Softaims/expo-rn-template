@@ -9,6 +9,9 @@ import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useEffect, useState } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 // Initialize Sentry
 initSentry();
@@ -52,9 +55,9 @@ function RootLayoutContent() {
   }
 
   return (
-    <Stack screenOptions={{ headerShown: false}} >
+    <Stack screenOptions={{ headerShown: false }} >
       <Stack.Protected guard={isSignedIn}>
-        <Stack.Screen name="(tabs)" options={{animation: "none"}} />
+        <Stack.Screen name="(tabs)" options={{ animation: "none" }} />
       </Stack.Protected>
 
       <Stack.Protected guard={!isSignedIn && !hasSeenOnboarding}>
@@ -77,13 +80,15 @@ function RootLayoutContent() {
 function RootLayout() {
   return (
     <GestureHandlerRootView>
-      <AuthProvider>
-        <BottomSheetModalProvider>
-          <AlertProvider>
-            <RootLayoutContent />
-          </AlertProvider>
-        </BottomSheetModalProvider>
-      </AuthProvider>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <BottomSheetModalProvider>
+            <AlertProvider>
+              <RootLayoutContent />
+            </AlertProvider>
+          </BottomSheetModalProvider>
+        </AuthProvider>
+      </QueryClientProvider>
     </GestureHandlerRootView>
   );
 }
