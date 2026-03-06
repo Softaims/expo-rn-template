@@ -1,9 +1,8 @@
 import { AlertProvider } from "@/components/alerts";
 import { useFonts } from "@/hooks/useFonts";
 import { initSentry, wrapWithSentry, setSentryUser } from "@/modules/sentry";
-import { AuthProvider, useAuth } from "@/modules/auth";
-import { storage } from "@/lib/storage";
-import { STORAGE_KEYS } from "@/lib/storageKeys";
+import { AuthProvider, useAuth, useMockAuth } from "@/modules/auth";
+import { useOnboardingStore } from "@/modules/appState";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
@@ -20,21 +19,21 @@ SplashScreen.preventAutoHideAsync();
 
 function RootLayoutContent() {
   const { loaded: isFontsLoaded } = useFonts();
+  const mockAuth = useMockAuth();
   const { user, isSignedIn, isLoaded: isAuthLoaded } = useAuth();
-  const [hasSeenOnboarding, setHasSeenOnboarding] = useState<boolean | null>(null);
+  const hasSeenOnboarding = useOnboardingStore(
+    (state) => state.hasSeenOnboarding
+  );
 
-  useEffect(() => {
-    storage.get(STORAGE_KEYS.HAS_SEEN_ONBOARDING).then((value) => {
-      setHasSeenOnboarding(value === "true");
-    });
-  }, []);
+  // When EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY is not set, skip auth/splash and show tabs so you can test without a key
+  const skipAuth = !!mockAuth;
 
   // Hide splash screen when fonts, auth and storage are all ready
   useEffect(() => {
-    if (isFontsLoaded && isAuthLoaded && hasSeenOnboarding !== null) {
+    if (isFontsLoaded && isAuthLoaded) {
       SplashScreen.hideAsync();
     }
-  }, [isFontsLoaded, isAuthLoaded, hasSeenOnboarding]);
+  }, [isFontsLoaded, isAuthLoaded]);
 
   useEffect(() => {
     if (!isAuthLoaded) return;
@@ -50,21 +49,21 @@ function RootLayoutContent() {
     }
   }, [user, isAuthLoaded, isSignedIn]);
 
-  if (!isFontsLoaded || !isAuthLoaded || hasSeenOnboarding === null) {
+  if (!isFontsLoaded || !isAuthLoaded) {
     return null;
   }
 
   return (
     <Stack screenOptions={{ headerShown: false }} >
-      <Stack.Protected guard={isSignedIn}>
+      <Stack.Protected guard={isSignedIn || skipAuth}>
         <Stack.Screen name="(tabs)" options={{ animation: "none" }} />
       </Stack.Protected>
 
-      <Stack.Protected guard={!isSignedIn && !hasSeenOnboarding}>
+      <Stack.Protected guard={!skipAuth && !isSignedIn && !hasSeenOnboarding}>
         <Stack.Screen name="(splash)" options={{ animation: "none" }} />
       </Stack.Protected>
 
-      <Stack.Protected guard={!isSignedIn}>
+      <Stack.Protected guard={!skipAuth && !isSignedIn}>
         <Stack.Screen name="(auth)" options={{ animation: "none" }} />
       </Stack.Protected>
 

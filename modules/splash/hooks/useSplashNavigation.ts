@@ -3,9 +3,9 @@ import { storage } from "@/lib/storage";
 import { STORAGE_KEYS } from "@/lib/storageKeys";
 import { SPLASH_SCREENS, TOTAL_STEPS } from "@/modules/splash/config";
 import type {
-  ButtonConfig,
-  UseSplashNavigationProps,
-  UseSplashNavigationReturn,
+    ButtonConfig,
+    UseSplashNavigationProps,
+    UseSplashNavigationReturn,
 } from "@/modules/splash/types";
 
 export const useSplashNavigation = ({

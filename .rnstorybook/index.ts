@@ -1,10 +1,12 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { createMMKV } from "react-native-mmkv";
 import { view } from './storybook.requires';
+
+const storybookStorage = createMMKV({ id: "storybook" });
 
 const StorybookUIRoot = view.getStorybookUI({
   storage: {
-    getItem: AsyncStorage.getItem,
-    setItem: AsyncStorage.setItem,
+    getItem: (key: string) => storybookStorage.getString(key) ?? null,
+    setItem: (key: string, value: string) => storybookStorage.set(key, value),
   },
 });
 
