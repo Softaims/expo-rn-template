@@ -64,17 +64,28 @@ git push -u origin main
 
 > **Important**: The `production` branch must exist before pushing to `main`, otherwise semantic-release will fail.
 
-### 5. Start the App
+### 5. Start the App (with dev client)
+
+This template uses native modules like **`react-native-mmkv`**, which are **not supported in Expo Go**.  
+You should run it using a **development build (dev client)**:
 
 ```bash
-npx expo start
+# 1. (First time / after native changes) generate native projects
+npx expo prebuild --clean
+
+# 2. Run on iOS simulator or device
+npx expo run:ios
+
+# 3. In another terminal, start Metro for the dev client
+npx expo start --dev-client
 ```
 
-You can open the app in:
-- [Development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go)
+For Android, use:
+
+```bash
+npx expo run:android
+npx expo start --dev-client
+```
 
 ---
 
@@ -84,12 +95,20 @@ When using this template for a new project, you **must** configure the following
 
 ### Environment Variables
 
-Create a `.env` file with the following variables:
+Create a `.env` file with at least:
 
 | Variable | Description |
 |----------|-------------|
-| `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY` | Clerk authentication publishable key |
-| `SENTRY_AUTH_TOKEN` | Sentry authentication token for error tracking |
+| `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY` | Clerk authentication publishable key (optional in local dev, required for real auth) |
+| `SENTRY_AUTH_TOKEN` | Sentry authentication token for error tracking (used in CI/CD) |
+
+Local development notes:
+
+- If `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY` is **not set**, the template falls back to a **mock auth mode**:
+  - `AuthProvider` does **not** connect to Clerk.
+  - `useAuth` and related hooks report `isSignedIn = false`, `isLoaded = true`.
+  - The root layout skips auth/onboarding and opens the main tabs so you can work on the app without backend auth.
+- In staging/production, set `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY` and restart the dev client to use real Clerk flows.
 
 ### Dynamic App Configuration
 
@@ -342,6 +361,210 @@ Build numbers are automatically calculated from the version using the format `MM
 Examples:
 - `1.2.3` → `102030000`
 - `7.17.10` → `717100000`
+
+---
+
+## Storage & Client State
+
+### MMKV-based storage (`lib/storage.ts`)
+
+This template uses **[react-native-mmkv](https://github.com/mrousavy/react-native-mmkv)** as the default key–value store instead of AsyncStorage.
+
+- Synchronous API, no bridge round-trips
+- Backed by a single `MMKV` instance with a simple wrapper:
+  - `storage.get(key): string | null`
+  - `storage.set(key, value: string): void`
+  - `storage.getObject<T>(key): T | null`
+  - `storage.setObject<T>(key, value: T): void`
+  - `storage.remove(key): void`
+  - `storage.clear(): void`
+- All operations are safe-wrapped (`try/catch`) so failures don’t crash the app.
+
+Use it for small app-level flags and simple objects. For more complex app state, use the Zustand stores below.
+
+### Zustand + MMKV (`modules/appState/stores`)
+
+Global client state is managed with [Zustand](https://github.com/pmndrs/zustand) + its `persist` middleware, using MMKV as the backend (`lib/mmkvStorage.ts`).
+
+Out of the box, the template ships with:
+
+- `useOnboardingStore` (`modules/appState/stores/onboardingStore.ts`)
+  - Shape: `{ hasSeenOnboarding, setHasSeenOnboarding, reset }`
+  - Persists to MMKV under `STORAGE_KEYS.HAS_SEEN_ONBOARDING`
+  - Used by `app/_layout.tsx` to decide whether to show splash/onboarding.
+- `usePreferencesStore` (`modules/appState/stores/preferencesStore.ts`)
+  - Shape: `{ theme: "light" | "dark" | "system", hapticsEnabled, setTheme, setHapticsEnabled, reset }`
+  - Persists to MMKV under `"preferences"`.
+
+Pattern for new persisted stores:
+
+```ts
+import { mmkvZustandStorage } from "@/lib/mmkvStorage";
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
+
+type MyState = { /* ... */ };
+
+export const useMyStore = create<MyState>()(
+  persist(
+    (set) => ({ /* state + actions */ }),
+    {
+      name: "my-store-key",
+      storage: mmkvZustandStorage,
+      partialize: (state) => ({ /* choose fields to persist */ }),
+    },
+  ),
+);
+```
+
+> **Note:** Because MMKV requires a dev client, you cannot rely on these stores when running in Expo Go.
+
+---
+
+## Styling & Theming
+
+### Tailwind + NativeWind + CSS variables
+
+Styling is based on:
+
+- **Tailwind CSS tokens** defined in `global.css` (`:root` and `.dark`) and wired into `tailwind.config.js`.
+- **NativeWind** for `className` support in React Native.
+
+Key pieces:
+
+- `global.css` – light/dark theme color tokens:
+  - `--color-primary`, `--color-background`, `--color-border`, `--color-chat-message`, etc.
+- `tailwind.config.js` – maps CSS variables to Tailwind color tokens:
+  - `bg-background`, `text-primary`, `border-border`, `bg-chat-message`, …
+- Use **`className`** whenever possible:
+  - Layout and spacing: `className="flex-1 px-4 pt-6"`
+  - Colors: `className="bg-background text-primary border-border"`
+
+### Theme module (`lib/theme`)
+
+For places where you need **JS-based theme objects** (e.g. `style={...}` or logic that depends on colors/typography), use the theme module:
+
+- `lib/theme/colors.ts`
+  - `lightColors` / `darkColors` + `themeColors` map, aligned with `global.css`.
+- `lib/theme/fonts.ts`
+  - `typography` object with Figma-style text tokens:
+
+    ```ts
+    typography.heading1 // { fontFamily, fontSize, lineHeight, ... }
+    typography.body
+    typography.caption
+    typography.label
+    ```
+
+- `lib/theme/ThemeProvider.tsx`
+  - Optional context; **not wired into `_layout` by default**.
+  - Usage:
+
+    ```tsx
+    import { ThemeProvider, useTheme } from "@/lib/theme";
+
+    // Wrap part of your tree
+    <ThemeProvider>
+      <App />
+    </ThemeProvider>
+
+    // Consume in components
+    const { colors, typography, isDark, mode, setMode } = useTheme();
+    ```
+
+You can use `typography` directly without the provider:
+
+```tsx
+import { typography } from "@/lib/theme";
+
+<Text style={typography.heading1}>Title</Text>
+<Text style={[typography.body, { color: "#6B7280" }]}>Body</Text>
+```
+
+### Component-level style helpers
+
+- `lib/utils.ts` – `cn(...)` helper for className merging.
+- `lib/component-styles.ts` – typed helpers for components that accept `classes` + `styles` overrides (see file docs).
+
+Use these to keep components themeable and avoid duplicated style logic.
+
+---
+
+## Authentication & Environment
+
+### Clerk integration (`modules/auth`)
+
+Auth is implemented with **Clerk**:
+
+- `modules/auth/providers/AuthProvider.tsx`
+  - Wraps `ClerkProvider` with a `tokenCache`.
+  - Reads `process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY`.
+  - If the key is **present**, real Clerk auth is used.
+  - If the key is **missing**, a **mock auth context** is provided:
+    - `useAuth` returns a safe mock value.
+    - Screen hooks still work, but login/signup flows are effectively no-ops.
+- `modules/auth/hooks/useClerkAuth.ts`
+  - Thin wrappers around Clerk hooks (`useLogin`, `useRegister`, `useForgotPassword`, `useResetPassword`, `useGoogleOAuth`, `useAppleOAuth`, `useSignOut`, `useDeleteAccount`).
+  - All hooks **respect mock mode** to avoid crashes when the Clerk key is not configured.
+
+### Auth screen hooks (`modules/auth/hooks`)
+
+Screen-specific hooks (used by `modules/auth/screens/*`) follow a consistent pattern:
+
+- `useLoginScreen`
+- `useSignupScreen`
+- `useForgotPasswordScreen`
+- `useOTPVerificationScreen`
+- `useResetPasswordScreen`
+
+Each:
+
+- Owns its own `isLoading` / `isSubmitting` flag.
+- Wraps async auth calls in `try { ... } finally { setIsLoading(false) }` so the UI never gets stuck in a loading state if an error occurs.
+- Uses routing helpers from `lib/routingUtils.ts` for navigation and shared alert helpers from `components/alerts`.
+
+---
+
+## Fonts & `useFonts`
+
+### Where fonts live
+
+- Font files belong in: `assets/fonts/`
+- The template expects the **SharpSans** family with specific file names, wired in `hooks/useFonts.ts`.
+
+If you replace fonts:
+
+1. Put your `.ttf` / `.otf` files into `assets/fonts/`.
+2. Update `hooks/useFonts.ts` `require(...)` calls.
+3. Update `typography` in `lib/theme/fonts.ts` to use your family names.
+
+### Font loading (`hooks/useFonts.ts`)
+
+`useFonts` is a thin wrapper around `expo-font`:
+
+```ts
+import { useFonts as useExpoFonts } from "expo-font";
+
+export function useFonts() {
+  const [loaded, error] = useExpoFonts({
+    /* familyName: require("../assets/fonts/YourFont.ttf") */
+  });
+
+  if (error) {
+    console.warn(
+      "[fonts] Failed to load custom fonts. Falling back to system fonts.",
+      error
+    );
+    return { loaded: true, error }; // avoid blocking app on font failures
+  }
+
+  return { loaded, error };
+}
+```
+
+In `app/_layout.tsx`, the app waits for `loaded` before rendering; if there is a load error, it logs a warning and **falls back to system fonts** instead of blocking on the splash screen.
+
+Use `typography` (JS) and Tailwind `font-*` classes together to keep font usage consistent.
 
 ---
 

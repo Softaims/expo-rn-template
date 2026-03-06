@@ -1,7 +1,7 @@
 import { TextInput } from "@/components/inputs/TextInput";
 import { Text } from "@/components/text";
-import { fontFamilies } from "@/hooks/useFonts";
 import { cn } from "@/lib/utils";
+import { typography } from "@/lib/theme";
 import * as Clipboard from 'expo-clipboard';
 import { useCallback, useState } from 'react';
 import { StyleSheet, View } from "react-native";
@@ -151,9 +151,12 @@ export function ChatFeed({
         }
 
         return (
-            <View style={[styles.inputContainer, { paddingBottom: insets.bottom + 8 }]}>
+            <View
+                style={[styles.inputContainer, { paddingBottom: insets.bottom + 8 }]}
+                className="bg-background border-t-0"
+            >
                 {replyMessage && (
-                    <View style={styles.replyPreview}>
+                    <View style={styles.replyPreview} className="bg-muted border-l-4 border-primary">
                         <View style={styles.replyPreviewContent}>
                             <Text className="text-[12px] text-primary font-semibold">
                                 Replying to {replyMessage.user.name}
@@ -243,33 +246,26 @@ const styles = StyleSheet.create({
         marginVertical: 6
     },
     rightBubbleText: {
+        ...typography.body,
         color: '#FFFFFF',
-        fontSize: 14,
-        lineHeight: 20,
-        fontFamily: fontFamilies.medium,
     },
     leftBubbleText: {
+        ...typography.body,
         color: '#1F2937',
-        fontSize: 14,
-        lineHeight: 20,
-        fontFamily: fontFamilies.medium,
     },
     inputContainer: {
         paddingHorizontal: 16,
         paddingTop: 12,
-        backgroundColor: '#FFFFFF',
         borderTopWidth: 0,
     },
     replyPreview: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: '#F3F4F6',
         borderRadius: 12,
         paddingHorizontal: 12,
         paddingVertical: 8,
         marginBottom: 8,
         borderLeftWidth: 3,
-        borderLeftColor: '#1F2937',
     },
     replyPreviewContent: {
         flex: 1,

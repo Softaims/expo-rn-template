@@ -17,8 +17,8 @@ const calculateBuildNumber = (ver: string): number => {
 const APP_NAME = "expo-rn-template";
 const SLUG = "expo-rn-template";
 const SCHEME = "expo-rn-template";
-const BUNDLE_IDENTIFIER = "";
-const PACKAGE_NAME = "";
+const BUNDLE_IDENTIFIER = "com.softaims.expo-rn-template";
+const PACKAGE_NAME = "com.softaims.expo-rn-template";
 
 // SENTRY configuration
 const SENTRY_PROJECT = "";

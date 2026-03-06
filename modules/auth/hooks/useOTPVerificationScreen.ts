@@ -35,36 +35,36 @@ export function useOTPVerificationScreen() {
 
     setIsLoading(true);
 
-    if (flow === "signup") {
-      const { error } = await verifyEmail(otp);
-      setIsLoading(false);
+    try {
+      if (flow === "signup") {
+        const { error } = await verifyEmail(otp);
 
-      if (error) {
-        showErrorAlert(error);
-        return;
+        if (error) {
+          showErrorAlert(error);
+          return;
+        }
+
+        showSuccessAlert({
+          title: "Email Verified!",
+          message:
+            "Your email has been verified successfully. You can now login to your account",
+          buttonText: "Login Now",
+          onPress: () => replace("/(auth)/login"),
+        });
+      } else if (flow === "reset-password") {
+        const { error } = await verifyResetCode(otp);
+
+        if (error) {
+          showErrorAlert(error);
+          return;
+        }
+
+        replace({
+          pathname: "/(auth)/resetPassword",
+          params: { email },
+        });
       }
-
-      showSuccessAlert({
-        title: "Email Verified!",
-        message:
-          "Your email has been verified successfully. You can now login to your account",
-        buttonText: "Login Now",
-        onPress: () => replace("/(auth)/login"),
-      });
-    } else if (flow === "reset-password") {
-      const { error } = await verifyResetCode(otp);
-      setIsLoading(false);
-
-      if (error) {
-        showErrorAlert(error);
-        return;
-      }
-
-      replace({
-        pathname: "/(auth)/resetPassword",
-        params: { email },
-      });
-    } else {
+    } finally {
       setIsLoading(false);
     }
   };

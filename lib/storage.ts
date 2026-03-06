@@ -1,24 +1,57 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { createMMKV } from "react-native-mmkv";
+
+const defaultStorage = createMMKV({ id: "default" });
 
 export const storage = {
-  get: (key: string): Promise<string | null> =>
-    AsyncStorage.getItem(key),
-
-  set: (key: string, value: string): Promise<void> =>
-    AsyncStorage.setItem(key, value),
-
-  getObject: async <T>(key: string): Promise<T | null> => {
-    const value = await AsyncStorage.getItem(key);
-    if (!value) return null;
-    return JSON.parse(value) as T;
+  get: (key: string): string | null => {
+    try {
+      if (!defaultStorage.contains(key)) return null;
+      return defaultStorage.getString(key) ?? null;
+    } catch {
+      return null;
+    }
   },
 
-  setObject: <T>(key: string, value: T): Promise<void> =>
-    AsyncStorage.setItem(key, JSON.stringify(value)),
+  set: (key: string, value: string): void => {
+    try {
+      defaultStorage.set(key, value);
+    } catch {
+      // ignore write errors – callers should assume best-effort persistence
+    }
+  },
 
-  remove: (key: string): Promise<void> =>
-    AsyncStorage.removeItem(key),
+  getObject: <T>(key: string): T | null => {
+    try {
+      if (!defaultStorage.contains(key)) return null;
+      const value = defaultStorage.getString(key);
+      if (!value) return null;
+      return JSON.parse(value) as T;
+    } catch {
+      return null;
+    }
+  },
 
-  clear: (): Promise<void> =>
-    AsyncStorage.clear(),
+  setObject: <T>(key: string, value: T): void => {
+    try {
+      defaultStorage.set(key, JSON.stringify(value));
+    } catch {
+      // ignore write errors
+    }
+  },
+
+  remove: (key: string): void => {
+    try {
+      defaultStorage.remove(key);
+    } catch {
+      // ignore remove errors
+    }
+  },
+
+  clear: (): void => {
+    try {
+      defaultStorage.clearAll();
+    } catch {
+      // ignore clear errors
+    }
+  },
 };
