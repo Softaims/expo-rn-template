@@ -151,9 +151,12 @@ export function ChatFeed({
         }
 
         return (
-            <View style={[styles.inputContainer, { paddingBottom: insets.bottom + 8 }]}>
+            <View
+                style={[styles.inputContainer, { paddingBottom: insets.bottom + 8 }]}
+                className="bg-background border-t-0"
+            >
                 {replyMessage && (
-                    <View style={styles.replyPreview}>
+                    <View style={styles.replyPreview} className="bg-muted border-l-4 border-primary">
                         <View style={styles.replyPreviewContent}>
                             <Text className="text-[12px] text-primary font-semibold">
                                 Replying to {replyMessage.user.name}
@@ -253,19 +256,16 @@ const styles = StyleSheet.create({
     inputContainer: {
         paddingHorizontal: 16,
         paddingTop: 12,
-        backgroundColor: '#FFFFFF',
         borderTopWidth: 0,
     },
     replyPreview: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: '#F3F4F6',
         borderRadius: 12,
         paddingHorizontal: 12,
         paddingVertical: 8,
         marginBottom: 8,
         borderLeftWidth: 3,
-        borderLeftColor: '#1F2937',
     },
     replyPreviewContent: {
         flex: 1,
