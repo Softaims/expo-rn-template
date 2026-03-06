@@ -21,14 +21,17 @@ export function useLoginScreen() {
 
   const handleSubmit = async (data: LoginFormData) => {
     setIsLoading(true);
-    const { error } = await signIn({
-      identifier: data.email,
-      password: data.password,
-    });
-    setIsLoading(false);
+    try {
+      const { error } = await signIn({
+        identifier: data.email,
+        password: data.password,
+      });
 
-    if (error) {
-      showErrorAlert(error);
+      if (error) {
+        showErrorAlert(error);
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 

@@ -11,20 +11,23 @@ export function useResetPasswordScreen() {
 
   const handleSubmit = async (data: ResetPasswordFormData) => {
     setIsSubmitting(true);
-    const { error } = await resetPassword(data.newPassword);
-    setIsSubmitting(false);
+    try {
+      const { error } = await resetPassword(data.newPassword);
 
-    if (error) {
-      showErrorAlert(error);
-      return;
+      if (error) {
+        showErrorAlert(error);
+        return;
+      }
+
+      showSuccessAlert({
+        title: "Password Updated!",
+        message: "You can now login.",
+        buttonText: "Login Now",
+      });
+      dismissAll();
+    } finally {
+      setIsSubmitting(false);
     }
-
-    showSuccessAlert({
-      title: "Password Updated!",
-      message: "You can now login.",
-      buttonText: "Login Now",
-    });
-    dismissAll();
   };
 
   const handleGoBack = () => {

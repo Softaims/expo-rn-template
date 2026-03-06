@@ -21,30 +21,33 @@ export function useSignupScreen() {
 
   const handleSubmit = async (data: SignupFormData) => {
     setIsLoading(true);
-    const { data: result, error } = await signUp({
-      emailAddress: data.email,
-      password: data.password,
-    });
-    setIsLoading(false);
-
-    if (error) {
-      showErrorAlert(error);
-      return;
-    }
-
-    if (result?.status === "missing_requirements") {
-      setIsBottomSheetVisible(false);
-      push({
-        pathname: "/(auth)/otpVerification",
-        params: { email: data.email, flow: "signup" },
+    try {
+      const { data: result, error } = await signUp({
+        emailAddress: data.email,
+        password: data.password,
       });
-    } else if (result?.status === "complete") {
-      showSuccessAlert({
-        title: "Account Created!",
-        message:
-          "Your account has been created successfully. You can now login to your account",
-        buttonText: "Login Now",
-      });
+
+      if (error) {
+        showErrorAlert(error);
+        return;
+      }
+
+      if (result?.status === "missing_requirements") {
+        setIsBottomSheetVisible(false);
+        push({
+          pathname: "/(auth)/otpVerification",
+          params: { email: data.email, flow: "signup" },
+        });
+      } else if (result?.status === "complete") {
+        showSuccessAlert({
+          title: "Account Created!",
+          message:
+            "Your account has been created successfully. You can now login to your account",
+          buttonText: "Login Now",
+        });
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
