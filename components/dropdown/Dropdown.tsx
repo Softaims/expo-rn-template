@@ -1,6 +1,6 @@
 import { View, StyleSheet, TextStyle, Text as RNText, TouchableOpacity, TextInput, ScrollView } from "react-native";
 import { Dropdown as ElementDropdown, MultiSelect } from "react-native-element-dropdown";
-import { fontFamilies } from "@/hooks/useFonts";
+import { typography } from "@/lib/theme";
 import { useState, useRef, useEffect } from "react";
 
 export interface DropdownOption {
@@ -308,22 +308,19 @@ const styles = StyleSheet.create({
     backgroundColor: "#FAFAFA",
   },
   placeholderStyle: {
-    fontSize: 14,
+    ...typography.label,
     color: "#929292",
-    fontFamily: fontFamilies.medium,
   },
   selectedTextStyle: {
-    fontSize: 14,
+    ...typography.label,
     color: "#000000",
-    fontFamily: fontFamilies.medium,
   },
   inputSearchStyle: {
     height: 40,
-    fontSize: 14,
     marginHorizontal: 14,
     borderRadius: 8,
-    backgroundColor:"#FAFAFA",
-    fontFamily: fontFamilies.medium,
+    backgroundColor: "#FAFAFA",
+    ...typography.label,
   },
   itemContainerStyle: {
     paddingHorizontal: 16,
@@ -332,9 +329,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   itemTextStyle: {
-    fontSize: 14,
+    ...typography.label,
     color: "#000000",
-    fontFamily: fontFamilies.medium,
   },
   selectedStyle: {
     borderRadius: 6,
@@ -347,9 +343,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   selectedTextStylePill: {
-    fontSize: 14,
+    ...typography.label,
     color: "#929292",
-    fontFamily: fontFamilies.medium,
     marginRight: 8,
   },
   iconContainer: {
@@ -374,9 +369,8 @@ const styles = StyleSheet.create({
     zIndex: 1000,
   },
   autocompleteInput: {
-    fontSize: 14,
+    ...typography.label,
     color: "#000000",
-    fontFamily: fontFamilies.medium,
   },
   suggestionsContainer: {
     position: "absolute",

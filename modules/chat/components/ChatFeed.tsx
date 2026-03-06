@@ -1,7 +1,7 @@
 import { TextInput } from "@/components/inputs/TextInput";
 import { Text } from "@/components/text";
-import { fontFamilies } from "@/hooks/useFonts";
 import { cn } from "@/lib/utils";
+import { typography } from "@/lib/theme";
 import * as Clipboard from 'expo-clipboard';
 import { useCallback, useState } from 'react';
 import { StyleSheet, View } from "react-native";
@@ -243,16 +243,12 @@ const styles = StyleSheet.create({
         marginVertical: 6
     },
     rightBubbleText: {
+        ...typography.body,
         color: '#FFFFFF',
-        fontSize: 14,
-        lineHeight: 20,
-        fontFamily: fontFamilies.medium,
     },
     leftBubbleText: {
+        ...typography.body,
         color: '#1F2937',
-        fontSize: 14,
-        lineHeight: 20,
-        fontFamily: fontFamilies.medium,
     },
     inputContainer: {
         paddingHorizontal: 16,
