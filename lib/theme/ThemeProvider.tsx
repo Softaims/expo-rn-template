@@ -2,7 +2,8 @@ import type { ReactNode } from "react";
 import { createContext, useContext, useMemo, useState } from "react";
 import { useColorScheme } from "react-native";
 import { themeColors, type ThemeColors } from "./colors";
-import { typography } from "./fonts";
+import { typography, type Typography } from "./fonts";
+import { spacing } from "./spacing";
 
 export type ThemeMode = "light" | "dark" | "system";
 
@@ -11,7 +12,8 @@ type ThemeContextValue = {
   resolvedMode: "light" | "dark";
   isDark: boolean;
   colors: ThemeColors;
-  typography: typeof typography;
+  typography: Typography;
+  spacing: typeof spacing;
   setMode: (mode: ThemeMode) => void;
   toggleMode: () => void;
 };
@@ -32,7 +34,7 @@ export function ThemeProvider({
 
   const resolvedMode: "light" | "dark" =
     mode === "system"
-      ? systemScheme === "dark"
+      ? (systemScheme ?? "light") === "dark"
         ? "dark"
         : "light"
       : mode;
@@ -46,6 +48,7 @@ export function ThemeProvider({
       isDark,
       colors: themeColors[resolvedMode],
       typography,
+      spacing,
       setMode,
       toggleMode: () =>
         setMode((prev) => (prev === "dark" ? "light" : "dark")),

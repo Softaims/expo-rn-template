@@ -5,9 +5,9 @@ import SocialAuthButtons from "@/modules/auth/components/SocialAuthButtons";
 import AuthFooter from "@/modules/auth/components/AuthFooter";
 import AuthHeader from "@/modules/auth/components/AuthHeader";
 import AuthTitlesSection from "@/modules/auth/components/AuthTitlesSection";
-import { cn } from "@/lib/utils";
 
 import type { AuthContentProps } from "@/modules/auth/types";
+import { styles } from "./AuthContent.styles";
 
 export default function AuthContent({
   variant = "default",
@@ -18,7 +18,7 @@ export default function AuthContent({
   image,
   imageStyles,
   isBottomSheetVisible = false,
-  setIsBottomSheetVisible = () => { },
+  setIsBottomSheetVisible = () => {},
   enableBackdropDismiss = false,
   fields,
   schema,
@@ -26,21 +26,28 @@ export default function AuthContent({
   showForgotPassword = false,
   onForgotPasswordPress,
   onSubmit,
-  formContainerStyles,
+  formContainerStyle,
+  formContainerClassName,
   footerText = "",
   footerLinkText = "",
-  onFooterNavigate = () => { },
+  onFooterNavigate = () => {},
   showHeader = true,
   showFooter = true,
   showSocialAuthButtons = true,
   isLoading = false,
 }: AuthContentProps) {
   const content = (
-    <View className="flex-1 justify-between">
-      <View className="flex-1">
+    <View style={styles.root}>
+      <View style={styles.upper}>
         {showHeader && <AuthHeader />}
 
-        {image && <Image source={image} className={cn("w-[100px] h-[100px] object-contain self-center mb-[20px] mt-[15%]", imageStyles)} />}
+        {image && (
+          <Image
+            source={image}
+            style={styles.heroImage}
+            className={imageStyles}
+          />
+        )}
 
         <AuthTitlesSection
           title={title}
@@ -56,18 +63,21 @@ export default function AuthContent({
           showForgotPassword={showForgotPassword}
           onForgotPasswordPress={onForgotPasswordPress}
           onSubmit={onSubmit}
-          className={formContainerStyles}
+          containerStyle={formContainerStyle}
+          className={formContainerClassName}
           isLoading={isLoading}
         />
 
         {showSocialAuthButtons && <SocialAuthButtons />}
       </View>
 
-      {showFooter && <AuthFooter
-        text={footerText}
-        linkText={footerLinkText}
-        onNavigate={onFooterNavigate}
-      />}
+      {showFooter && (
+        <AuthFooter
+          text={footerText}
+          linkText={footerLinkText}
+          onNavigate={onFooterNavigate}
+        />
+      )}
     </View>
   );
 

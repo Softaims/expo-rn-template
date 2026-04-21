@@ -1,0 +1,35 @@
+---
+description: Theme colors, typography, default text token, navigation backgrounds, StyleSheet layout, and responsive sizing
+alwaysApply: true
+---
+
+# Styling and theme
+
+## Colors and default text
+
+- Use `useTheme()` → `colors` for all UI colors. **Never rely on RN’s system `labelColor` / default text or transparent roots that flash wrong in dark mode.**
+- **Surfaces** use white-shaded backgrounds (`colors.background`, `colors.muted`, `colors.input`); **primary copy** uses near-black `colors.text` / `colors.foreground`. Light and dark *resolved* modes share this paper palette unless you intentionally split tokens again.
+- **Primary body copy** uses `colors.text` (canonical). `colors.foreground` matches it for contrast-on-canvas semantics; prefer `colors.text` for typography and labels.
+- **`mainTextColor(colors)`** from `@/lib/theme/fonts` returns `colors.text` — use in style factories that receive `ThemeColors`.
+- Merge in the component: `[styles.foo, { backgroundColor: colors.input, borderColor: colors.border, color: colors.text }]`.
+
+## Surfaces and navigation
+
+- Root and every navigator screen must use **theme background**, not hardcoded `#fff` / system: wrap the app in a themed shell with `backgroundColor: colors.background` (see `app/_layout.tsx`).
+- Use **`useThemedStackScreenOptions()`** / **`useThemedTabsScreenOptions()`** from `@/lib/theme` so Stack `contentStyle` and Tabs `sceneStyle` always get `colors.background`.
+- Prefer **`StatusBar`** from `expo-status-bar` with `style={isDark ? "light" : "dark"}` next to the themed root (already in root layout).
+
+## Typography and fonts
+
+- Prefer `<Text variant="…" />` from `@/components/text` (applies `colors.text` automatically).
+- **`TextInput`** from `@/components/inputs` sets **`color: colors.text`** and **`placeholderTextColor: colors.mutedForeground`** — do not omit when adding raw `RNTextInput` elsewhere.
+- In `StyleSheet` or raw `TextStyle`, spread `typography.textVariants.*` or `typography.*` — never hardcode `fontFamily: "SharpSans-…"`.
+- For one-off weight, use **`fontFamily`** from `@/lib/theme/fonts`. Do not use `fontWeight` to simulate Sharp Sans weights.
+
+## Layout styles
+
+- Colocate styles in `*.styles.ts` or `styles.ts`. Use `export const styles = StyleSheet.create({ … })` for static layout; use `createStyles(colors)` when the sheet is theme-driven, memoized in the component.
+
+## Responsive
+
+- Use **`wp`** / **`hp`** from `@/lib/responsive` (or `@/lib/theme`) and **`useTheme().spacing`** where appropriate.

@@ -1,16 +1,26 @@
-import { View, Pressable } from 'react-native';
-import { Text } from '@/components';
+import { View, Pressable } from "react-native";
+import { Text } from "@/components";
+import { useTheme } from "@/lib/theme";
 
 import type { AuthFooterProps } from "@/modules/auth/types";
+import { styles } from "./AuthFooter.styles";
 
 export default function AuthFooter({ text, linkText, onNavigate }: AuthFooterProps) {
+  const { colors } = useTheme();
+
   return (
-    <View className="px-6 py-4 flex-row justify-center items-center gap-1">
-      <Text variant="bodyText2" className="text-muted-foreground">
+    <View style={styles.row}>
+      <Text variant="bodyText2" style={{ color: colors.mutedForeground }}>
         {text}
       </Text>
       <Pressable onPress={onNavigate}>
-        <Text variant="bodyText2" className="text-foreground font-semibold underline">
+        <Text
+          variant="bodyText2"
+          style={[
+            styles.link,
+            { color: colors.text },
+          ]}
+        >
           {linkText}
         </Text>
       </Pressable>

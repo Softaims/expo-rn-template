@@ -1,10 +1,20 @@
+import { useMemo } from "react";
 import { View } from "react-native";
 import { Button } from "@/components";
+import { useTheme } from "@/lib/theme";
 import type { SplashButtonsProps } from "@/modules/splash/types";
+import { createStyles } from "./SplashButtons.styles";
 
 export default function SplashButtons({ buttons }: SplashButtonsProps) {
+  const { spacing } = useTheme();
+
+  const styles = useMemo(
+    () => createStyles(spacing.gap.lg, spacing.page),
+    [spacing.gap.lg, spacing.page]
+  );
+
   return (
-    <View className="gap-4 px-4">
+    <View style={styles.row}>
       {buttons.map((button, index) => (
         <Button
           key={index}
@@ -12,7 +22,10 @@ export default function SplashButtons({ buttons }: SplashButtonsProps) {
           size="lg"
           title={button.label}
           onPress={button.onPress}
-          containerStyles={button.containerStyles ?? (button.type === 'secondary' ? 'border-1 border-border' : 'w-full')}
+          containerStyles={
+            button.containerStyles ??
+            (button.type === "secondary" ? "border border-border" : "w-full")
+          }
           textStyles={button.textStyles}
         />
       ))}

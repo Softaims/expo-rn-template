@@ -15,6 +15,8 @@ import {
   ListRenderItem,
 } from '@shopify/flash-list';
 
+import { useTheme } from '@/lib/theme';
+import { typography } from '@/lib/theme/fonts';
 import { RulerPickerItem, RulerPickerItemProps } from './RulerPickerItem';
 import { calculateCurrentValue } from '../utils/';
 
@@ -142,6 +144,7 @@ export const RulerPicker = ({
   onValueChange,
   onValueChangeEnd,
 }: RulerPickerProps) => {
+  const { colors } = useTheme();
   const itemAmount = (max - min) / step;
   const arrData = Array.from({ length: itemAmount + 1 }, (_, index) => index);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -338,6 +341,7 @@ export const RulerPicker = ({
                 textAlign: 'center',
               },
               styles.valueText,
+              { color: colors.text },
               valueTextStyle,
             ]}
           />
@@ -349,6 +353,7 @@ export const RulerPicker = ({
                     unitTextStyle?.fontSize ?? styles.unitText.fontSize,
                 },
                 styles.unitText,
+                { color: colors.text },
                 unitTextStyle,
               ]}
             >
@@ -384,16 +389,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   valueText: {
-    color: 'black',
-    fontSize: 32,
-    fontWeight: '800',
+    ...typography.heading1,
     margin: 0,
     padding: 0,
   },
   unitText: {
-    color: 'black',
-    fontSize: 24,
-    fontWeight: '400',
+    ...typography.heading2,
     marginLeft: 6,
   },
 });

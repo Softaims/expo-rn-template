@@ -1,4 +1,4 @@
-import type { ImageSourcePropType } from "react-native";
+import type { ImageSourcePropType, StyleProp, ViewStyle } from "react-native";
 import type { ZodType } from "zod";
 import type { ReactNode } from "react";
 
@@ -46,6 +46,8 @@ export interface AuthFormProps {
   onForgotPasswordPress?: () => void;
   onSubmit: (data: any) => void;
   isLoading?: boolean;
+  containerStyle?: StyleProp<ViewStyle>;
+  /** Optional NativeWind classes on the form root. */
   className?: string;
 }
 
@@ -64,7 +66,8 @@ export interface AuthContentProps {
   schema: ZodType<any>;
   buttonText: string;
   onSubmit: (data: any) => Promise<void>;
-  formContainerStyles?: string;
+  formContainerStyle?: StyleProp<ViewStyle>;
+  formContainerClassName?: string;
   showForgotPassword?: boolean;
   onForgotPasswordPress?: () => void;
   footerText?: string;

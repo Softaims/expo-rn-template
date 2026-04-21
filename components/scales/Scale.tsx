@@ -1,6 +1,7 @@
 import { Pressable, StyleSheet, View } from 'react-native';
 import { Text } from '../text';
 import { useEffect, useMemo, useState } from 'react';
+import { typography } from '@/lib/theme/fonts';
 import { cn } from '@/lib/utils';
 import { RulerPicker, RulerPickerProps } from './components/RulerPicker';
 import WheelPicker from '@quidone/react-native-wheel-picker';
@@ -152,7 +153,7 @@ const styles = StyleSheet.create({
         borderColor: 'red',
     },
     itemTextStyle: {
-        fontSize: 24,
+        ...typography.textVariants.heading2,
     },
     overlayContainer: {
         ...StyleSheet.absoluteFillObject,

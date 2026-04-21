@@ -11,6 +11,7 @@ import {
   PhoneIcon,
   PlaneIcon,
 } from "@/assets/icons";
+import { useTheme } from "@/lib/theme";
 import { cn } from "@/lib/utils";
 import { useCallback, useState } from "react";
 import {
@@ -68,6 +69,7 @@ export interface InputProps extends TextInputProps {
 }
 
 export function TextInput(props: InputProps) {
+  const { colors } = useTheme();
   const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
   const [isFocused, setIsFocused] = useState<boolean>(false);
 
@@ -214,6 +216,10 @@ export function TextInput(props: InputProps) {
             )}
             {...props}
             {...additionalProps}
+            placeholderTextColor={
+              props.placeholderTextColor ?? colors.mutedForeground
+            }
+            style={[{ color: colors.text }, props.style]}
           />
         </View>
         {rightIcon && (

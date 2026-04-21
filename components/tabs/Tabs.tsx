@@ -1,7 +1,14 @@
 import { Pressable, View } from "react-native";
-import { cn } from "@/lib/utils";
 import { Text } from "@/components/text";
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import { useTheme } from "@/lib/theme";
+import type { StyleProp, ViewStyle, TextStyle } from "react-native";
+import {
+  type TabVariant,
+  tabsContainer,
+  tabVisual,
+  tabLabelStyle,
+} from "./styles";
 
 export type TabItem = {
   label: string;
@@ -9,81 +16,12 @@ export type TabItem = {
   icon?: (isActive: boolean) => React.ReactNode;
 };
 
-const tabVariants = {
-  underline: {
-    container: "flex-row border-b border-border",
-    tab: {
-      base: "flex-1 px-4 py-3 border-b-2 items-center justify-center",
-      active: "border-primary",
-      inactive: "border-transparent",
-    },
-    text: {
-      base: "",
-      active: "text-foreground",
-      inactive: "text-muted-foreground",
-    },
-  },
-  filled: {
-    container: "flex-row gap-2",
-    tab: {
-      base: "flex-1 px-4 py-2 rounded-lg items-center justify-center",
-      active: "bg-primary",
-      inactive: "bg-transparent",
-    },
-    text: {
-      base: "",
-      active: "text-primary-foreground",
-      inactive: "text-muted-foreground",
-    },
-  },
-  "filled-rounded": {
-    container: "flex-row gap-2",
-    tab: {
-      base: "flex-1 px-4 py-2 rounded-lg items-center justify-center",
-      active: "bg-primary",
-      inactive: "bg-muted",
-    },
-    text: {
-      base: "",
-      active: "text-primary-foreground",
-      inactive: "text-muted-foreground",
-    },
-  },
-  pill: {
-    container: "flex-row gap-2",
-    tab: {
-      base: "flex-1 px-4 py-2 rounded-full items-center justify-center",
-      active: "bg-primary",
-      inactive: "bg-transparent",
-    },
-    text: {
-      base: "",
-      active: "text-primary-foreground",
-      inactive: "text-muted-foreground",
-    },
-  },
-  icon: {
-    container: "flex-row border-b border-border",
-    tab: {
-      base: "flex-1 px-6 py-3 flex-row items-center justify-center gap-2 border-b-2",
-      active: "border-primary",
-      inactive: "border-transparent",
-    },
-    text: {
-      base: "",
-      active: "text-foreground",
-      inactive: "text-muted-foreground",
-    },
-  },
-} as const;
-
 export interface TabsProps {
-  variant?: keyof typeof tabVariants;
+  variant?: TabVariant;
   tabs: TabItem[];
   defaultValue?: string;
   onValueChange?: (value: string) => void;
 
-  // Styling props
   containerStyles?: string;
   activeTabStyle?: string;
   inactiveTabStyle?: string;
@@ -102,6 +40,7 @@ export function Tabs({
   activeTextStyle,
   inactiveTextStyle,
 }: TabsProps) {
+  const { colors } = useTheme();
   const [activeTab, setActiveTab] = useState(defaultValue || tabs[0]?.value);
 
   const handleTabPress = (value: string) => {
@@ -109,32 +48,36 @@ export function Tabs({
     onValueChange?.(value);
   };
 
-  const variantStyles = tabVariants[variant];
+  const containerStyle = useMemo(
+    (): StyleProp<ViewStyle> => tabsContainer(variant, colors),
+    [colors, variant]
+  );
+
+  const getTabStyle = (isActive: boolean): StyleProp<ViewStyle> => {
+    return tabVisual(variant, isActive, colors);
+  };
+
+  const getTextStyle = (isActive: boolean): TextStyle => {
+    return tabLabelStyle(variant, isActive, colors);
+  };
 
   return (
-    <View className={cn(variantStyles.container, containerStyles)}>
+    <View style={containerStyle} className={containerStyles}>
       {tabs.map((tab) => {
         const isActive = activeTab === tab.value;
         return (
           <Pressable
             key={tab.value}
             onPress={() => handleTabPress(tab.value)}
-            className={cn(
-              variantStyles.tab.base,
-              isActive
-                ? cn(variantStyles.tab.active, activeTabStyle)
-                : cn(variantStyles.tab.inactive, inactiveTabStyle)
-            )}
+            style={getTabStyle(isActive)}
+            className={isActive ? activeTabStyle : inactiveTabStyle}
           >
-          {tab.icon?.(isActive)}
+            {tab.icon?.(isActive)}
 
             <Text
-              className={cn(
-                variantStyles.text.base,
-                isActive
-                  ? cn(variantStyles.text.active, activeTextStyle)
-                  : cn(variantStyles.text.inactive, inactiveTextStyle)
-              )}
+              variant="bodyText1"
+              style={getTextStyle(isActive)}
+              className={isActive ? activeTextStyle : inactiveTextStyle}
             >
               {tab.label}
             </Text>

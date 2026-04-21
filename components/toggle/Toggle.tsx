@@ -1,25 +1,15 @@
 import { Pressable, View, Animated } from "react-native";
-import { cn } from "@/lib/utils";
 import { Text } from "@/components/text";
-import { useState, useEffect, useRef } from "react";
-
-const toggleVariants = {
-  container: "flex-row items-center gap-3",
-  track: {
-    base: "w-11 h-6 rounded-full justify-center",
-    inactive: "bg-border",
-    active: "bg-foreground",
-    disabled: "bg-muted opacity-50",
-  },
-  thumb: {
-    base: "w-5 h-5 rounded-full bg-background",
-  },
-  label: {
-    base: "text-base",
-    normal: "text-foreground",
-    disabled: "text-muted-foreground opacity-50",
-  },
-} as const;
+import { useState, useEffect, useRef, useMemo } from "react";
+import { useTheme } from "@/lib/theme";
+import { cn } from "@/lib/utils";
+import type { StyleProp, ViewStyle } from "react-native";
+import {
+  styles,
+  toggleThumbSpring,
+  toggleTrackColors,
+  toggleLabelStyle,
+} from "./styles";
 
 export interface ToggleProps {
   label?: string;
@@ -27,7 +17,6 @@ export interface ToggleProps {
   disabled?: boolean;
   onValueChange?: (value: boolean) => void;
 
-  // Styling props
   containerStyles?: string;
   activeTrackStyle?: string;
   inactiveTrackStyle?: string;
@@ -58,13 +47,16 @@ export function Toggle({
   labelStyle,
   disabledLabelStyle,
 }: ToggleProps) {
+  const { colors, typography } = useTheme();
   const [isActive, setIsActive] = useState(value);
-  const translateX = useRef(new Animated.Value(value ? 20 : 2)).current;
+  const translateX = useRef(
+    new Animated.Value(value ? toggleThumbSpring.on : toggleThumbSpring.off)
+  ).current;
 
   useEffect(() => {
     setIsActive(value);
     Animated.spring(translateX, {
-      toValue: value ? 20 : 2,
+      toValue: value ? toggleThumbSpring.on : toggleThumbSpring.off,
       useNativeDriver: true,
     }).start();
   }, [value, translateX]);
@@ -74,56 +66,59 @@ export function Toggle({
     const newValue = !isActive;
     setIsActive(newValue);
     Animated.spring(translateX, {
-      toValue: newValue ? 20 : 2,
+      toValue: newValue ? toggleThumbSpring.on : toggleThumbSpring.off,
       useNativeDriver: true,
     }).start();
     onValueChange?.(newValue);
   };
 
-  const getTrackStyle = () => {
-    if (disabled && isActive) {
-      return cn(toggleVariants.track.disabled, disabledActiveTrackStyle);
-    } else if (disabled && !isActive) {
-      return cn(toggleVariants.track.disabled, disabledInactiveTrackStyle);
-    } else if (isActive) {
-      return cn(toggleVariants.track.active, activeTrackStyle);
-    }
-    return cn(toggleVariants.track.inactive, inactiveTrackStyle);
-  };
+  const trackStyle = useMemo((): StyleProp<ViewStyle> => {
+    return [styles.track, toggleTrackColors(colors, disabled, isActive)];
+  }, [colors, disabled, isActive]);
 
-  const getThumbStyle = () => {
-    if (disabled && isActive) {
-      return cn(toggleVariants.thumb.base, disabledActiveThumbStyle);
-    } else if (disabled && !isActive) {
-      return cn(toggleVariants.thumb.base, disabledInactiveThumbStyle);
-    } else if (isActive) {
-      return cn(toggleVariants.thumb.base, activeThumbStyle);
-    }
-    return cn(toggleVariants.thumb.base, inactiveThumbStyle);
-  };
+  const trackClassName = cn(
+    disabled && isActive && disabledActiveTrackStyle,
+    disabled && !isActive && disabledInactiveTrackStyle,
+    !disabled && isActive && activeTrackStyle,
+    !disabled && !isActive && inactiveTrackStyle
+  );
+
+  const thumbClassName = cn(
+    disabled && isActive && disabledActiveThumbStyle,
+    disabled && !isActive && disabledInactiveThumbStyle,
+    !disabled && isActive && activeThumbStyle,
+    !disabled && !isActive && inactiveThumbStyle
+  );
+
+  const labelTextStyle = useMemo(
+    () => toggleLabelStyle(colors, typography, disabled),
+    [colors, disabled, typography]
+  );
 
   return (
     <Pressable
       onPress={handlePress}
       disabled={disabled}
-      className={cn(toggleVariants.container, containerStyles)}
+      style={styles.row}
+      className={containerStyles}
     >
-      <View className={cn(toggleVariants.track.base, getTrackStyle())}>
+      <View style={trackStyle} className={trackClassName}>
         <Animated.View
-          className={cn(getThumbStyle())}
-          style={{
-            transform: [{ translateX }],
-          }}
+          style={[
+            styles.thumb,
+            { backgroundColor: colors.background },
+            {
+              transform: [{ translateX }],
+            },
+          ]}
+          className={thumbClassName}
         />
       </View>
       {label && (
         <Text
-          className={cn(
-            toggleVariants.label.base,
-            disabled
-              ? cn(toggleVariants.label.disabled, disabledLabelStyle)
-              : cn(toggleVariants.label.normal, labelStyle)
-          )}
+          variant="subheading3"
+          style={labelTextStyle}
+          className={cn(disabled ? disabledLabelStyle : labelStyle)}
         >
           {label}
         </Text>

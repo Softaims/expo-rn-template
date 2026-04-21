@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { View, Text, StyleSheet, ViewStyle, TextStyle } from "react-native";
 import RangeSliderLib from "react-native-sticky-range-slider";
+import { useTheme } from "@/lib/theme";
 
 const THUMB_RADIUS = 12;
 
@@ -48,11 +49,22 @@ export function RangeSlider({
   renderLowValue,
   renderHighValue,
 }: RangeSliderProps) {
+  const { colors, typography } = useTheme();
+
+  const valueTextResolved = useMemo(
+    (): TextStyle => ({
+      ...typography.textVariants.subheading3,
+      color: colors.text,
+    }),
+    [colors, typography]
+  );
+
   // Default thumb component
   const DefaultThumb = (type: "high" | "low") => (
     <View
       style={[
         styles.thumb,
+        { backgroundColor: colors.foreground, shadowColor: colors.foreground },
         thumbStyle,
         type === "high" ? highThumbStyle : lowThumbStyle,
       ]}
@@ -64,25 +76,26 @@ export function RangeSlider({
   // Single: rail (#e5e7eb fill) visible from min to thumb, railSelected transparent
   // Range:  rail (#e5e7eb background), railSelected (black between thumbs)
   const DefaultRail = () => (
-    <View style={[styles.rail, railStyle]} />
+    <View style={[styles.rail, { backgroundColor: colors.border }, railStyle]} />
   );
 
   const DefaultRailSelected = () => (
     <View
       style={[
-        styles.railSelected 
+        styles.railSelected,
+        { backgroundColor: colors.foreground },
       ]}
     />
   );
 
   // Default value renderers
   const DefaultLowValue = (value: number) => (
-    <Text style={[styles.valueText, valueTextStyle]}>{value}</Text>
+    <Text style={[valueTextResolved, valueTextStyle]}>{value}</Text>
   );
 
   const DefaultHighValue = (value: number) => {
     if (single) return <></>;
-    return <Text style={[styles.valueText, valueTextStyle]}>{value}</Text>;
+    return <Text style={[valueTextResolved, valueTextStyle]}>{value}</Text>;
   };
 
   return (
@@ -108,8 +121,6 @@ const styles = StyleSheet.create({
     width: THUMB_RADIUS * 2,
     height: THUMB_RADIUS * 2,
     borderRadius: THUMB_RADIUS,
-    backgroundColor: "#000",
-    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -122,16 +133,9 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 4,
     borderRadius: 2,
-    backgroundColor: "#e5e7eb",
   },
   railSelected: {
     height: 4,
     borderRadius: 2,
-    backgroundColor: "#000",
-  },
-  valueText: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: "#1f2937",
   },
 });

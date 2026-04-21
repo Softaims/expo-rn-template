@@ -30,7 +30,7 @@ export default function PasswordForm({
         buttonText={buttonText}
         onSubmit={onSubmit}
         isLoading={isLoading}
-        className="flex-1 justify-between"
+        containerStyle={{ flex: 1, justifyContent: "space-between" }}
       />
     </>
   );

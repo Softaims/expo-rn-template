@@ -23,7 +23,10 @@ export default function OTPVerificationScreen() {
   } = useOTPVerificationScreen();
 
   return (
-    <ScreenWrapper scrollEnabled containerStyles="justify-between">
+    <ScreenWrapper
+      scrollEnabled
+      containerStyle={{ flexGrow: 1, justifyContent: "space-between" }}
+    >
       <Stack.Screen
         options={{
           headerShown: true,
@@ -36,16 +39,24 @@ export default function OTPVerificationScreen() {
       <View>
         <Image
           source={require("@/assets/images/email-verification-icon.png")}
-          className="w-[100px] h-[100px] object-contain self-center mb-[20px] mt-[15%]"
+          style={{
+            width: 100,
+            height: 100,
+            resizeMode: "contain",
+            alignSelf: "center",
+            marginBottom: 20,
+            marginTop: "15%",
+          }}
         />
         <AuthTitlesSection title={title} description={description} />
-        <OTPInput
-          length={otpLength}
-          otp={otp}
-          setOtp={setOtp}
-          numericOnly
-          containerStyles="justify-center"
-        />
+        <View style={{ alignItems: "center" }}>
+          <OTPInput
+            length={otpLength}
+            otp={otp}
+            setOtp={setOtp}
+            numericOnly
+          />
+        </View>
       </View>
 
       <View>

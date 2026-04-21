@@ -1,16 +1,9 @@
 import { Text } from "@/components/text";
-import { cn } from "@/lib/utils";
 import { SettingsItemProps } from "@/modules/settings/types";
 import { Pressable, View } from "react-native";
 import { getSettingsIcon } from "../config/settingsConfig";
-
-const settingsItemVariants = {
-  container: "flex-row items-center justify-between bg-input border border-border rounded-[10px] px-[12px] py-[10px] mb-3",
-  leftSection: "flex-row items-center gap-1 flex-1",
-  iconContainer: "w-7 h-7 items-center justify-center",
-  textContainer: "flex-1",
-  rightSection: "items-center justify-center",
-} as const;
+import { useTheme } from "@/lib/theme";
+import { styles } from "./SettingsItem.styles";
 
 export function SettingsItem({
   leftIcon,
@@ -24,37 +17,42 @@ export function SettingsItem({
   rightIconStyles,
   variant = "primary",
 }: SettingsItemProps) {
+  const { colors } = useTheme();
+  const isDisabled = !!(disabled || !onPress);
+
   return (
     <Pressable
       onPress={onPress}
-      disabled={disabled || !onPress}
-      className={cn(
-        settingsItemVariants.container,
-        disabled && "opacity-50",
-        containerStyles,
-        variant === "primary" && "bg-input",
-        variant === "secondary" && "border-0"
-      )}
+      disabled={isDisabled}
+      style={[
+        styles.pressableRow,
+        {
+          backgroundColor: colors.input,
+          borderColor: colors.border,
+          borderWidth: variant === "secondary" ? 0 : 1,
+          opacity: isDisabled ? 0.5 : 1,
+        },
+      ]}
+      className={containerStyles}
     >
-      <View className={settingsItemVariants.leftSection}>
+      <View style={styles.left}>
         {leftIcon && (
-          <View className={cn(settingsItemVariants.iconContainer, leftIconStyles)}>
+          <View style={styles.iconBox} className={leftIconStyles}>
             {getSettingsIcon(leftIcon as string)}
           </View>
         )}
-        <View className={settingsItemVariants.textContainer}>
+        <View style={styles.textCol}>
           <Text
-            className={cn(
-              "text-base font-medium text-foreground",
-              textStyles
-            )}
+            variant="subheading3"
+            style={{ color: colors.text }}
+            className={textStyles}
           >
             {text}
           </Text>
         </View>
       </View>
       {rightIcon && (
-        <View className={cn(settingsItemVariants.rightSection, rightIconStyles)}>
+        <View style={styles.right} className={rightIconStyles}>
           {rightIcon}
         </View>
       )}

@@ -1,113 +1,110 @@
-import { cn } from "@/lib/utils";
 import { useEffect, useRef, useState } from "react";
 import { TextInput, View } from "react-native";
+import { useTheme } from "@/lib/theme";
+import { styles } from "./OTPInput.styles";
 
 interface OTPInputProps {
-    length?: number;
-    disabled?: boolean;
-    otp: string;
-    setOtp: (otp: string) => void;
-    containerStyles?: string;
-    inputStyles?: string;
-    borderActiveColor?: string;
-    borderInactiveColor?: string;
-    numericOnly?: boolean;
+  length?: number;
+  disabled?: boolean;
+  otp: string;
+  setOtp: (otp: string) => void;
+  containerStyles?: string;
+  inputStyles?: string;
+  numericOnly?: boolean;
 }
 
-export function OTPInput({ 
-    length = 4, 
-    disabled = false, 
-    otp, 
-    setOtp, 
-    containerStyles, 
-    inputStyles, 
-    borderActiveColor, 
-    borderInactiveColor,
-    numericOnly = true
+export function OTPInput({
+  length = 4,
+  disabled = false,
+  otp,
+  setOtp,
+  containerStyles,
+  inputStyles,
+  numericOnly = true,
 }: OTPInputProps) {
-    const inputRefs = useRef<(TextInput | null)[]>([]);
-    const [otpArray, setOtpArray] = useState<string[]>(Array.from({ length }, () => ''));
-    const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
+  const { colors } = useTheme();
+  const inputRefs = useRef<(TextInput | null)[]>([]);
+  const [otpArray, setOtpArray] = useState<string[]>(
+    Array.from({ length }, () => "")
+  );
+  const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
 
-    // Sync external otp value with internal state
-    useEffect(() => {
-        const newOtpArray = otp.split('').slice(0, length);
-        while (newOtpArray.length < length) {
-            newOtpArray.push('');
+  useEffect(() => {
+    const newOtpArray = otp.split("").slice(0, length);
+    while (newOtpArray.length < length) {
+      newOtpArray.push("");
+    }
+    setOtpArray(newOtpArray);
+  }, [otp, length]);
+
+  const handleOtpChange = (text: string, index: number) => {
+    const filteredText = numericOnly ? text.replace(/[^0-9]/g, "") : text;
+
+    if (filteredText.length > 1) {
+      const pastedText = filteredText.slice(0, length);
+      const newOtp = [...otpArray];
+
+      for (let i = 0; i < pastedText.length; i++) {
+        if (index + i < length) {
+          newOtp[index + i] = pastedText[i];
         }
-        setOtpArray(newOtpArray);
-    }, [otp, length]);
+      }
 
-    const handleOtpChange = (text: string, index: number) => {
-        // Filter characters based on numericOnly prop
-        const filteredText = numericOnly ? text.replace(/[^0-9]/g, '') : text;
-        
-        // Handle paste event - if text length > 1, distribute across inputs
-        if (filteredText.length > 1) {
-            const pastedText = filteredText.slice(0, length);
-            const newOtp = [...otpArray];
-            
-            for (let i = 0; i < pastedText.length; i++) {
-                if (index + i < length) {
-                    newOtp[index + i] = pastedText[i];
-                }
-            }
-            
-            setOtpArray(newOtp);
-            setOtp(newOtp.join(''));
-            
-            // Focus the next empty input or the last filled input
-            const nextIndex = Math.min(index + pastedText.length, length - 1);
-            inputRefs.current[nextIndex]?.focus();
-            return;
-        }
+      setOtpArray(newOtp);
+      setOtp(newOtp.join(""));
 
-        // Handle single character input
-        const newOtp = [...otpArray];
-        newOtp[index] = filteredText;
-        setOtpArray(newOtp);
-        setOtp(newOtp.join(''));
+      const nextIndex = Math.min(index + pastedText.length, length - 1);
+      inputRefs.current[nextIndex]?.focus();
+      return;
+    }
 
-        // Move to next input if current input has a value
-        if (filteredText && index < length - 1) {
-            inputRefs.current[index + 1]?.focus();
-        }
-    };
+    const newOtp = [...otpArray];
+    newOtp[index] = filteredText;
+    setOtpArray(newOtp);
+    setOtp(newOtp.join(""));
 
-    const handleKeyPress = (e: any, index: number) => {
-        // Handle backspace - move to previous input if current is empty
-        if (e.nativeEvent.key === 'Backspace' && !otpArray[index] && index > 0) {
-            inputRefs.current[index - 1]?.focus();
-        }
-    };
+    if (filteredText && index < length - 1) {
+      inputRefs.current[index + 1]?.focus();
+    }
+  };
 
-    return (
-        <View className={cn("flex-row gap-[10px]", containerStyles)}>
-            {Array.from({ length }).map((_, index) => (
-                <TextInput
-                    key={index}
-                    ref={(ref) => {
-                        inputRefs.current[index] = ref;
-                    }}
-                    keyboardType={numericOnly ? "number-pad" : "default"}
-                    inputMode={numericOnly ? "numeric" : "text"}
-                    value={otpArray[index]}
-                    onChangeText={(text) => handleOtpChange(text, index)}
-                    onKeyPress={(e) => handleKeyPress(e, index)}
-                    maxLength={1}
-                    editable={!disabled}
-                    className={cn(
-                        "border-[1.2px] rounded-[10px] bg-input text-center text-[14px] font-weight-[500] h-[46px] w-[46px]",
-                        focusedIndex === index 
-                            ? borderActiveColor || "border-primary" 
-                            : borderInactiveColor || "border-border",
-                        disabled && "opacity-50",
-                        inputStyles
-                    )}
-                    onFocus={() => setFocusedIndex(index)}
-                    onBlur={() => setFocusedIndex(null)}
-                />
-            ))}
-        </View>
-    );
+  const handleKeyPress = (e: { nativeEvent: { key: string } }, index: number) => {
+    if (e.nativeEvent.key === "Backspace" && !otpArray[index] && index > 0) {
+      inputRefs.current[index - 1]?.focus();
+    }
+  };
+
+  return (
+    <View style={styles.row} className={containerStyles}>
+      {Array.from({ length }).map((_, index) => {
+        const focused = focusedIndex === index;
+        return (
+          <TextInput
+            key={index}
+            ref={(ref) => {
+              inputRefs.current[index] = ref;
+            }}
+            keyboardType={numericOnly ? "number-pad" : "default"}
+            inputMode={numericOnly ? "numeric" : "text"}
+            value={otpArray[index]}
+            onChangeText={(text) => handleOtpChange(text, index)}
+            onKeyPress={(e) => handleKeyPress(e, index)}
+            maxLength={1}
+            editable={!disabled}
+            style={[
+              styles.digit,
+              {
+                backgroundColor: colors.input,
+                borderColor: focused ? colors.primary : colors.border,
+                opacity: disabled ? 0.5 : 1,
+              },
+            ]}
+            className={inputStyles}
+            onFocus={() => setFocusedIndex(index)}
+            onBlur={() => setFocusedIndex(null)}
+          />
+        );
+      })}
+    </View>
+  );
 }

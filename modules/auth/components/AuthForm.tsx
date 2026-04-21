@@ -1,10 +1,11 @@
-import { View, Pressable } from "react-native";
+import { View, Pressable, StyleProp, ViewStyle } from "react-native";
 import { useForm, Controller, FieldError } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TextInput, Button, Text } from "@/components";
-import { cn } from "@/lib/utils";
+import { useTheme } from "@/lib/theme";
 
 import type { AuthFormProps, FieldConfig } from "@/modules/auth/types";
+import { styles } from "./AuthForm.styles";
 
 export default function AuthForm({
   fields,
@@ -14,8 +15,10 @@ export default function AuthForm({
   onForgotPasswordPress,
   onSubmit,
   isLoading,
+  containerStyle,
   className,
 }: AuthFormProps) {
+  const { colors } = useTheme();
   const defaultValues = fields.reduce(
     (acc, field) => {
       acc[field.name] = "";
@@ -58,16 +61,21 @@ export default function AuthForm({
     );
   };
 
+  const rootStyle: StyleProp<ViewStyle> = [styles.rootBase, containerStyle];
+
   return (
-    <View className={cn("", className)}>
-      <View className="gap-4">
+    <View style={rootStyle} className={className}>
+      <View style={styles.fieldStack}>
         {fields.map((field) => renderField(field))}
 
         {showForgotPassword && (
-          <Pressable className="self-end" onPress={onForgotPasswordPress}>
+          <Pressable
+            style={styles.forgotPressable}
+            onPress={onForgotPasswordPress}
+          >
             <Text
               variant="bodyText2"
-              className="text-foreground font-medium underline"
+              style={[styles.forgotText, { color: colors.text }]}
             >
               Forgot Password?
             </Text>
