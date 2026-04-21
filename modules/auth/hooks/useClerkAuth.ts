@@ -9,12 +9,8 @@ import { useCallback, useState } from "react";
 import * as Linking from "expo-linking";
 import { captureException } from "@/modules/sentry";
 import { getAuthError, DEFAULT_AUTH_ERROR, AUTH_ERROR_MESSAGES } from "@/modules/auth/config";
-import { useMockAuth } from "@/modules/auth/providers/AuthProvider";
 
 export function useAuth() {
-  const mockAuth = useMockAuth();
-  if (mockAuth) return mockAuth;
-
   const { user, isSignedIn, isLoaded } = useUser();
   const { signOut, getToken } = useClerkAuth();
 
@@ -28,14 +24,6 @@ export function useAuth() {
 }
 
 export function useLogin() {
-  const mockAuth = useMockAuth();
-  if (mockAuth) {
-    return {
-      signIn: async () => ({ data: null, error: DEFAULT_AUTH_ERROR }),
-      isLoading: false,
-      isLoaded: true,
-    };
-  }
   const { signIn, setActive, isLoaded } = useSignIn();
 
   const handleSignIn = async (params: {
@@ -75,15 +63,6 @@ export function useLogin() {
 }
 
 export function useRegister() {
-  const mockAuth = useMockAuth();
-  if (mockAuth) {
-    return {
-      signUp: async () => ({ data: null, error: null }),
-      resendCode: async () => {},
-      isLoading: false,
-      isLoaded: true,
-    };
-  }
   const { signUp, setActive, isLoaded } = useSignUp();
 
   const handleSignUp = async (params: {
@@ -130,14 +109,6 @@ export function useRegister() {
 }
 
 export function useVerifyEmail() {
-  const mockAuth = useMockAuth();
-  if (mockAuth) {
-    return {
-      verifyEmail: async () => ({ data: null, error: DEFAULT_AUTH_ERROR }),
-      isLoading: false,
-      isLoaded: true,
-    };
-  }
   const { signUp, setActive, isLoaded } = useSignUp();
 
   const verifyEmail = async (code: string) => {
@@ -165,15 +136,6 @@ export function useVerifyEmail() {
 }
 
 export function useForgotPassword() {
-  const mockAuth = useMockAuth();
-  if (mockAuth) {
-    return {
-      sendResetCode: async () => ({ data: null, error: null }),
-      verifyResetCode: async () => ({ data: null, error: DEFAULT_AUTH_ERROR }),
-      isLoading: false,
-      isLoaded: true,
-    };
-  }
   const { signIn, isLoaded } = useSignIn();
 
   const sendResetCode = async (emailAddress: string) => {
@@ -217,14 +179,6 @@ export function useForgotPassword() {
 }
 
 export function useResetPassword() {
-  const mockAuth = useMockAuth();
-  if (mockAuth) {
-    return {
-      resetPassword: async () => ({ data: null, error: DEFAULT_AUTH_ERROR }),
-      isLoading: false,
-      isLoaded: true,
-    };
-  }
   const { signIn, setActive, isLoaded } = useSignIn();
   const { signOut } = useSignOut();
 
@@ -256,13 +210,6 @@ export function useResetPassword() {
 }
 
 export function useChangePassword() {
-  const mockAuth = useMockAuth();
-  if (mockAuth) {
-    return {
-      changePassword: async () => ({ data: null, error: DEFAULT_AUTH_ERROR }),
-      isLoading: false,
-    };
-  }
   const { user, isLoaded } = useUser();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -297,10 +244,6 @@ export function useChangePassword() {
 }
 
 export function useGoogleOAuth() {
-  const mockAuth = useMockAuth();
-  if (mockAuth) {
-    return { signInWithGoogle: async () => {} };
-  }
   const { startOAuthFlow } = useOAuth({ strategy: "oauth_google" });
 
   const signInWithGoogle = useCallback(async () => {
@@ -325,10 +268,6 @@ export function useGoogleOAuth() {
 }
 
 export function useAppleOAuth() {
-  const mockAuth = useMockAuth();
-  if (mockAuth) {
-    return { signInWithApple: async () => {} };
-  }
   const { startOAuthFlow } = useOAuth({ strategy: "oauth_apple" });
 
   const signInWithApple = useCallback(async () => {
@@ -353,10 +292,6 @@ export function useAppleOAuth() {
 }
 
 export function useSignOut() {
-  const mockAuth = useMockAuth();
-  if (mockAuth) {
-    return { signOut: async () => ({ error: null }) };
-  }
   const { signOut } = useClerkAuth();
 
   const handleSignOut = async () => {
@@ -375,10 +310,6 @@ export function useSignOut() {
 }
 
 export function useDeleteAccount() {
-  const mockAuth = useMockAuth();
-  if (mockAuth) {
-    return { deleteAccount: async () => ({ error: null }) };
-  }
   const { user } = useUser();
 
   const deleteAccount = async () => {

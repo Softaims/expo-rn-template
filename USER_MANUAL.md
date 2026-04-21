@@ -9,7 +9,7 @@ This manual explains what the template includes and how to use it to build your 
 - **Expo SDK 54 + React Native 0.81** with Expo Router.
 - **Modular Monolith architecture** (`app/` for routes, `modules/` for features).
 - **MMKV-based storage** and **Zustand** for client state.
-- **Clerk auth integration** with an automatic **mock mode** for local dev.
+- **Clerk auth integration** with strict environment-based setup.
 - **Semantic-release** and Conventional Commits for automated versioning.
 - **Tailwind + NativeWind + theme module** for styling, colors, and typography.
 - **Storybook** wiring for component playgrounds.
@@ -56,14 +56,15 @@ npm install
 Create `.env` in the project root:
 
 ```env
-EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY=your-clerk-publishable-key   # Optional for local, required for real auth
+EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY=your-clerk-publishable-key   # Required
+CLERK_SECRET_KEY=your-clerk-secret-key                         # Backend/server use only
 SENTRY_AUTH_TOKEN=your-sentry-auth-token                       # Used in CI/CD
 ```
 
 Notes:
 
-- If `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY` is **missing**, the template runs in **mock auth mode** (see section 5).
-- For production/staging, always set a real Clerk key.
+- If `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY` is missing, the app fails fast on startup.
+- Keep `CLERK_SECRET_KEY` out of client-side code paths.
 
 ### 2.4. Run with a dev client (MMKV requirement)
 
@@ -192,18 +193,15 @@ export const useMyStore = create<MyState>()(
 
 ---
 
-## 5. Authentication & Mock Mode
+## 5. Authentication
 
 ### 5.1. AuthProvider (`modules/auth/providers/AuthProvider.tsx`)
 
 The main provider:
 
 - Reads `process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY`.
-- If **present**:
-  - Wraps children in `ClerkProvider` with a `tokenCache`.
-- If **missing**:
-  - Wraps children in a **mock auth context** (`MockAuthContext`).
-  - `useAuth` and other hooks return safe mock values so the app still runs.
+- Wraps children in `ClerkProvider` with a `tokenCache`.
+- If the key is missing, throws a startup error so no bypass auth behavior can run.
 
 `app/_layout.tsx` always wraps the tree in `AuthProvider`, so you don’t need to think about this when adding new screens.
 
@@ -220,10 +218,7 @@ These hooks wrap Clerk’s primitives:
 - `useGoogleOAuth()` / `useAppleOAuth()` – social sign-in.
 - `useSignOut()` / `useDeleteAccount()` – sign-out / delete account.
 
-All of them:
-
-- First check `useMockAuth()`; if in mock mode, return safe no-op implementations.
-- Fall back to real Clerk hooks when the publishable key is set.
+All hooks use real Clerk flows so authentication behavior stays consistent across environments.
 
 ### 5.3. Screen hooks (`modules/auth/hooks/*Screen.ts`)
 
@@ -352,7 +347,7 @@ Use this checklist when adding new functionality:
   - Use `typography` for text styles instead of hardcoding `fontFamily` / `fontSize`.
 - **Auth**
   - Use the existing screen hooks for auth flows rather than calling Clerk directly.
-  - Ensure behavior is sensible in mock mode (when the Clerk key is absent).
+  - Ensure required Clerk environment variables are configured before shipping.
 - **Docs**
   - If you add a new top-level concept (new module, new global store), consider linking it from `README.md` or this `USER_MANUAL.md`.
 

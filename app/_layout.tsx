@@ -1,13 +1,13 @@
 import { AlertProvider } from "@/components/alerts";
 import { useFonts } from "@/hooks/useFonts";
 import { initSentry, wrapWithSentry, setSentryUser } from "@/modules/sentry";
-import { AuthProvider, useAuth, useMockAuth } from "@/modules/auth";
+import { AuthProvider, useAuth } from "@/modules/auth";
 import { useOnboardingStore } from "@/modules/appState";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const queryClient = new QueryClient();
@@ -19,14 +19,10 @@ SplashScreen.preventAutoHideAsync();
 
 function RootLayoutContent() {
   const { loaded: isFontsLoaded } = useFonts();
-  const mockAuth = useMockAuth();
   const { user, isSignedIn, isLoaded: isAuthLoaded } = useAuth();
   const hasSeenOnboarding = useOnboardingStore(
     (state) => state.hasSeenOnboarding
   );
-
-  // When EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY is not set, skip auth/splash and show tabs so you can test without a key
-  const skipAuth = !!mockAuth;
 
   // Hide splash screen when fonts, auth and storage are all ready
   useEffect(() => {
@@ -55,15 +51,15 @@ function RootLayoutContent() {
 
   return (
     <Stack screenOptions={{ headerShown: false }} >
-      <Stack.Protected guard={isSignedIn || skipAuth}>
+      <Stack.Protected guard={isSignedIn}>
         <Stack.Screen name="(tabs)" options={{ animation: "none" }} />
       </Stack.Protected>
 
-      <Stack.Protected guard={!skipAuth && !isSignedIn && !hasSeenOnboarding}>
+      <Stack.Protected guard={!isSignedIn && !hasSeenOnboarding}>
         <Stack.Screen name="(splash)" options={{ animation: "none" }} />
       </Stack.Protected>
 
-      <Stack.Protected guard={!skipAuth && !isSignedIn}>
+      <Stack.Protected guard={!isSignedIn}>
         <Stack.Screen name="(auth)" options={{ animation: "none" }} />
       </Stack.Protected>
 

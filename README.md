@@ -99,16 +99,9 @@ Create a `.env` file with at least:
 
 | Variable | Description |
 |----------|-------------|
-| `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY` | Clerk authentication publishable key (optional in local dev, required for real auth) |
+| `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY` | Clerk authentication publishable key (required in all environments) |
+| `CLERK_SECRET_KEY` | Clerk backend secret key (required only for backend/server integrations, never exposed in app code) |
 | `SENTRY_AUTH_TOKEN` | Sentry authentication token for error tracking (used in CI/CD) |
-
-Local development notes:
-
-- If `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY` is **not set**, the template falls back to a **mock auth mode**:
-  - `AuthProvider` does **not** connect to Clerk.
-  - `useAuth` and related hooks report `isSignedIn = false`, `isLoaded = true`.
-  - The root layout skips auth/onboarding and opens the main tabs so you can work on the app without backend auth.
-- In staging/production, set `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY` and restart the dev client to use real Clerk flows.
 
 ### Dynamic App Configuration
 
@@ -499,13 +492,10 @@ Auth is implemented with **Clerk**:
 - `modules/auth/providers/AuthProvider.tsx`
   - Wraps `ClerkProvider` with a `tokenCache`.
   - Reads `process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY`.
-  - If the key is **present**, real Clerk auth is used.
-  - If the key is **missing**, a **mock auth context** is provided:
-    - `useAuth` returns a safe mock value.
-    - Screen hooks still work, but login/signup flows are effectively no-ops.
+  - If the key is missing, the app throws a startup error so auth cannot be bypassed.
 - `modules/auth/hooks/useClerkAuth.ts`
   - Thin wrappers around Clerk hooks (`useLogin`, `useRegister`, `useForgotPassword`, `useResetPassword`, `useGoogleOAuth`, `useAppleOAuth`, `useSignOut`, `useDeleteAccount`).
-  - All hooks **respect mock mode** to avoid crashes when the Clerk key is not configured.
+  - All hooks run directly against Clerk to keep auth behavior consistent across projects.
 
 ### Auth screen hooks (`modules/auth/hooks`)
 
