@@ -1,4 +1,5 @@
 import { Text } from "@/components/text";
+import { hp, wp } from "@/lib/responsive";
 import React from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import Animated, {
@@ -100,7 +101,7 @@ const FloatingMenuItem = ({
         const translateY = interpolate(
             animation.value,
             [0, 1],
-            [20, 0]
+            [wp(5), 0]
         );
 
         const opacity = interpolate(
@@ -153,18 +154,18 @@ const styles = StyleSheet.create({
     },
     menuContainer: {
         position: "absolute",
-        top: 50,
+        top: hp(6),
         right: 0,
         zIndex: 2,
-        minWidth: 160,
-        borderRadius: 10,
-        overflow: 'hidden'
+        minWidth: wp(40),
+        borderRadius: wp(2.5),
+        overflow: "hidden",
     },
     menuItem: {
-        paddingHorizontal: 20,
-        paddingVertical: 14,
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 10,
+        paddingHorizontal: wp(5),
+        paddingVertical: hp(1.75),
+        flexDirection: "row",
+        alignItems: "center",
+        gap: wp(2.5),
     },
 });

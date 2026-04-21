@@ -1,5 +1,7 @@
 import { Image, View } from "react-native";
 import { BottomSheet } from "@/components";
+import { hp } from "@/lib/responsive";
+import { useTheme } from "@/lib/theme";
 import AuthForm from "@/modules/auth/components/AuthForm";
 import SocialAuthButtons from "@/modules/auth/components/SocialAuthButtons";
 import AuthFooter from "@/modules/auth/components/AuthFooter";
@@ -13,10 +15,10 @@ export default function AuthContent({
   variant = "default",
   title,
   description,
-  titleStyles,
-  descriptionStyles,
+  titleStyle,
+  descriptionStyle,
   image,
-  imageStyles,
+  imageStyle,
   isBottomSheetVisible = false,
   setIsBottomSheetVisible = () => {},
   enableBackdropDismiss = false,
@@ -27,7 +29,6 @@ export default function AuthContent({
   onForgotPasswordPress,
   onSubmit,
   formContainerStyle,
-  formContainerClassName,
   footerText = "",
   footerLinkText = "",
   onFooterNavigate = () => {},
@@ -36,6 +37,16 @@ export default function AuthContent({
   showSocialAuthButtons = true,
   isLoading = false,
 }: AuthContentProps) {
+  const { colors, spacing } = useTheme();
+
+  const sheetContentStyle = [
+    {
+      paddingHorizontal: spacing.page,
+      paddingBottom: hp(4),
+      backgroundColor: colors.background,
+    },
+  ];
+
   const content = (
     <View style={styles.root}>
       <View style={styles.upper}>
@@ -44,16 +55,15 @@ export default function AuthContent({
         {image && (
           <Image
             source={image}
-            style={styles.heroImage}
-            className={imageStyles}
+            style={[styles.heroImage, imageStyle]}
           />
         )}
 
         <AuthTitlesSection
           title={title}
           description={description}
-          titleStyles={titleStyles}
-          descriptionStyles={descriptionStyles}
+          titleStyle={titleStyle}
+          descriptionStyle={descriptionStyle}
         />
 
         <AuthForm
@@ -64,7 +74,6 @@ export default function AuthContent({
           onForgotPasswordPress={onForgotPasswordPress}
           onSubmit={onSubmit}
           containerStyle={formContainerStyle}
-          className={formContainerClassName}
           isLoading={isLoading}
         />
 
@@ -87,7 +96,7 @@ export default function AuthContent({
         isVisible={isBottomSheetVisible}
         setIsVisible={setIsBottomSheetVisible}
         enableBackdropDismiss={enableBackdropDismiss}
-        sheetContentContainerStyles="px-0 pb-0 px-[16px] pb-[32px] bg-background"
+        sheetContentContainerStyle={sheetContentStyle}
       >
         {content}
       </BottomSheet>

@@ -1,4 +1,5 @@
 import { View, Pressable, StyleProp, ViewStyle } from "react-native";
+import { hp } from "@/lib/responsive";
 import { useForm, Controller, FieldError } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TextInput, Button, Text } from "@/components";
@@ -16,7 +17,6 @@ export default function AuthForm({
   onSubmit,
   isLoading,
   containerStyle,
-  className,
 }: AuthFormProps) {
   const { colors } = useTheme();
   const defaultValues = fields.reduce(
@@ -51,7 +51,6 @@ export default function AuthForm({
               placeholder={field.placeholder}
               value={value as string}
               onChangeText={onChange}
-              borderActiveColor={error ? "border-destructive" : undefined}
               errorMessage={error ? error.message : undefined}
               editable={!isLoading}
             />
@@ -64,7 +63,7 @@ export default function AuthForm({
   const rootStyle: StyleProp<ViewStyle> = [styles.rootBase, containerStyle];
 
   return (
-    <View style={rootStyle} className={className}>
+    <View style={rootStyle}>
       <View style={styles.fieldStack}>
         {fields.map((field) => renderField(field))}
 
@@ -89,7 +88,7 @@ export default function AuthForm({
         title={buttonText}
         onPress={handleSubmit(onSubmit)}
         disabled={isLoading}
-        containerStyles="mt-10"
+        containerStyle={{ marginTop: hp(5) }}
       />
     </View>
   );

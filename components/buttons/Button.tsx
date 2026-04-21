@@ -1,7 +1,14 @@
 import { Text } from "@/components/text";
 import { useTheme } from "@/lib/theme";
 import { useMemo } from "react";
-import { Pressable, PressableProps, View } from "react-native";
+import {
+  Pressable,
+  PressableProps,
+  View,
+  type StyleProp,
+  type TextStyle,
+  type ViewStyle,
+} from "react-native";
 import { resolveButtonAppearance, styles } from "./Button.styles";
 
 export interface ButtonProps extends Omit<PressableProps, "onPress" | "style"> {
@@ -13,10 +20,14 @@ export interface ButtonProps extends Omit<PressableProps, "onPress" | "style"> {
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
 
-  /** NativeWind classes on the outer pressable. */
+  /** NativeWind classes on the outer pressable — optional for adopters. */
   containerStyles?: string;
   innerWrapperStyles?: string;
   textStyles?: string;
+
+  containerStyle?: StyleProp<ViewStyle>;
+  innerWrapperStyle?: StyleProp<ViewStyle>;
+  textStyle?: StyleProp<TextStyle>;
 }
 
 export function Button({
@@ -30,6 +41,9 @@ export function Button({
   containerStyles,
   innerWrapperStyles,
   textStyles,
+  containerStyle,
+  innerWrapperStyle,
+  textStyle,
   ...props
 }: ButtonProps) {
   const { colors } = useTheme();
@@ -51,16 +65,19 @@ export function Button({
   return (
     <Pressable
       disabled={disabled}
-      style={pressableStyle}
+      style={[pressableStyle, containerStyle]}
       className={containerStyles}
       onPress={onPress}
       {...props}
     >
-      <View style={styles.row} className={innerWrapperStyles}>
+      <View style={[styles.row, innerWrapperStyle]} className={innerWrapperStyles}>
         {leftIcon}
         <Text
           variant={textVariant}
-          style={{ color: textColor, textAlign: "center" }}
+          style={[
+            { color: textColor, textAlign: "center" },
+            textStyle,
+          ]}
           className={textStyles}
         >
           {title}

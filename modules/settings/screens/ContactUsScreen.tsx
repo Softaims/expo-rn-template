@@ -1,4 +1,6 @@
-import { View } from "react-native";
+import { StyleSheet, View } from "react-native";
+import { useTheme } from "@/lib/theme";
+import { wp } from "@/lib/responsive";
 import { Stack } from "expo-router";
 import { Controller } from "react-hook-form";
 import { HeaderBackButton, ScreenWrapper } from "@/components";
@@ -7,7 +9,18 @@ import { Button } from "@/components/buttons/Button";
 import { contactUsFields } from "@/modules/settings/config";
 import { useContactUsScreen } from "../hooks/useContactUsScreen";
 
+const screenStyles = StyleSheet.create({
+  root: {
+    flex: 1,
+    paddingVertical: wp(4),
+  },
+  fieldWrap: {
+    marginBottom: wp(4),
+  },
+});
+
 export function ContactUsScreen() {
+  const { colors } = useTheme();
   const { control, handleSubmit, errors, isSubmitting, onSubmit } = useContactUsScreen();
 
   return (
@@ -21,9 +34,9 @@ export function ContactUsScreen() {
         }}
       />
 
-      <View className="flex-1 py-4">
+      <View style={screenStyles.root}>
         {contactUsFields.map((field) => (
-          <View key={field.name} className="mb-4">
+          <View key={field.name} style={screenStyles.fieldWrap}>
             <Controller
               control={control}
               name={field.name}
@@ -51,8 +64,12 @@ export function ContactUsScreen() {
         size="lg"
         onPress={handleSubmit(onSubmit)}
         disabled={isSubmitting}
-        containerStyles="bg-foreground mx-4 mb-4"
-        textStyles="text-background"
+        containerStyle={{
+          backgroundColor: colors.foreground,
+          marginHorizontal: wp(4),
+          marginBottom: wp(4),
+        }}
+        textStyle={{ color: colors.background }}
       />
     </ScreenWrapper>
   );

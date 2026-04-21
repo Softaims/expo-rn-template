@@ -23,13 +23,25 @@ alwaysApply: true
 
 - Prefer `<Text variant="…" />` from `@/components/text` (applies `colors.text` automatically).
 - **`TextInput`** from `@/components/inputs` sets **`color: colors.text`** and **`placeholderTextColor: colors.mutedForeground`** — do not omit when adding raw `RNTextInput` elsewhere.
-- In `StyleSheet` or raw `TextStyle`, spread `typography.textVariants.*` or `typography.*` — never hardcode `fontFamily: "SharpSans-…"`.
+- In `StyleSheet` or raw `TextStyle`, spread **`typography.textVariants.*`** or **`typography.bodyBold` / `typography.label`** etc. — **never** duplicate `fontSize` / `lineHeight` / `fontFamily` in a screen `StyleSheet` when a token exists; merge color only in the component.
+- Never hardcode `fontFamily: "SharpSans-…"`.
 - For one-off weight, use **`fontFamily`** from `@/lib/theme/fonts`. Do not use `fontWeight` to simulate Sharp Sans weights.
 
 ## Layout styles
 
 - Colocate styles in `*.styles.ts` or `styles.ts`. Use `export const styles = StyleSheet.create({ … })` for static layout; use `createStyles(colors)` when the sheet is theme-driven, memoized in the component.
 
-## Responsive
+## Responsive spacing
 
-- Use **`wp`** / **`hp`** from `@/lib/responsive` (or `@/lib/theme`) and **`useTheme().spacing`** where appropriate.
+- Use **`wp`** / **`hp`** from `@/lib/responsive` for **padding, margin, gap, and corner radius** in `StyleSheet` / `createStyles` — avoid raw numbers like `12` or `16` so layout scales across devices. Hairline borders (`1`) are fine where a true 1 px line is intended.
+- **`useTheme().spacing`** is OK where it already wraps `wp` (e.g. `spacing.page`).
+
+## Storybook
+
+- Use **`@/lib/storybookLayout`** (`storyDecoratorStyle`, etc.) for decorator padding instead of raw `padding: 16`.
+
+## NativeWind (optional)
+
+- **Template convention:** use **`StyleSheet`** (or `createStyles(colors)`) plus **`useTheme()`** for colors, typography tokens, and layout. Do not use NativeWind `className` in app or feature code you own.
+- **Why:** one styling source of truth, predictable behavior with the theme object, and easier refactors without splitting logic between Tailwind strings and RN styles.
+- **Adopters:** NativeWind remains in the project. Primitives may still accept an optional **`className` / `containerClassName`** (or legacy `*Styles` string props where documented) for teams that prefer utility classes—prefer **`StyleProp`** APIs (`containerStyle`, `labelStyle`, etc.) when extending components.

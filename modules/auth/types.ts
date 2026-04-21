@@ -1,4 +1,10 @@
-import type { ImageSourcePropType, StyleProp, ViewStyle } from "react-native";
+import type {
+  ImageSourcePropType,
+  ImageStyle,
+  StyleProp,
+  TextStyle,
+  ViewStyle,
+} from "react-native";
 import type { ZodType } from "zod";
 import type { ReactNode } from "react";
 
@@ -47,18 +53,16 @@ export interface AuthFormProps {
   onSubmit: (data: any) => void;
   isLoading?: boolean;
   containerStyle?: StyleProp<ViewStyle>;
-  /** Optional NativeWind classes on the form root. */
-  className?: string;
 }
 
 export interface AuthContentProps {
   variant?: "default" | "bottom-sheet";
   title: string;
   description: string;
-  titleStyles?: string;
-  descriptionStyles?: string;
+  titleStyle?: StyleProp<TextStyle>;
+  descriptionStyle?: StyleProp<TextStyle>;
   image?: ImageSourcePropType;
-  imageStyles?: string;
+  imageStyle?: StyleProp<ImageStyle>;
   isBottomSheetVisible?: boolean;
   setIsBottomSheetVisible?: (visible: boolean) => void;
   enableBackdropDismiss?: boolean;
@@ -67,7 +71,6 @@ export interface AuthContentProps {
   buttonText: string;
   onSubmit: (data: any) => Promise<void>;
   formContainerStyle?: StyleProp<ViewStyle>;
-  formContainerClassName?: string;
   showForgotPassword?: boolean;
   onForgotPasswordPress?: () => void;
   footerText?: string;
@@ -88,8 +91,8 @@ export interface AuthFooterProps {
 export interface AuthTitlesSectionProps {
   title: string;
   description: string;
-  titleStyles?: string;
-  descriptionStyles?: string;
+  titleStyle?: StyleProp<TextStyle>;
+  descriptionStyle?: StyleProp<TextStyle>;
 }
 
 export interface SocialAuthProviderConfig {

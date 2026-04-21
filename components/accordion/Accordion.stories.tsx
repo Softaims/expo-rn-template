@@ -1,5 +1,6 @@
 import { View } from "react-native";
 import { Meta, StoryObj } from "@storybook/react-native";
+import { storyDecoratorStyle } from "@/lib/storybookLayout";
 import { Accordion } from "./Accordion";
 import { ChevronDownIcon, ChevronRightIcon } from "@/assets/icons";
 
@@ -8,7 +9,7 @@ const meta = {
   component: Accordion,
   decorators: [
     (Story) => (
-      <View style={{ padding: 16, backgroundColor: "#fff" }}>
+      <View style={[storyDecoratorStyle, { backgroundColor: "#fff" }]}>
         <Story />
       </View>
     ),

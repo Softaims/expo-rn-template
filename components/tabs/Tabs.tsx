@@ -22,6 +22,8 @@ export interface TabsProps {
   defaultValue?: string;
   onValueChange?: (value: string) => void;
 
+  /** Merges after themed tab container styles. */
+  style?: StyleProp<ViewStyle>;
   containerStyles?: string;
   activeTabStyle?: string;
   inactiveTabStyle?: string;
@@ -34,6 +36,7 @@ export function Tabs({
   tabs,
   defaultValue,
   onValueChange,
+  style,
   containerStyles,
   activeTabStyle,
   inactiveTabStyle,
@@ -48,7 +51,7 @@ export function Tabs({
     onValueChange?.(value);
   };
 
-  const containerStyle = useMemo(
+  const themedContainer = useMemo(
     (): StyleProp<ViewStyle> => tabsContainer(variant, colors),
     [colors, variant]
   );
@@ -62,7 +65,7 @@ export function Tabs({
   };
 
   return (
-    <View style={containerStyle} className={containerStyles}>
+    <View style={[themedContainer, style]} className={containerStyles}>
       {tabs.map((tab) => {
         const isActive = activeTab === tab.value;
         return (

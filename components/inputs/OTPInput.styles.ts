@@ -12,8 +12,6 @@ export const styles = StyleSheet.create({
     borderWidth: 1.2,
     borderRadius: wp(2.7),
     textAlign: "center",
-    fontSize: wp(3.7),
-    lineHeight: Math.round(wp(3.7) * 1.35),
     height: wp(12.3),
     width: wp(12.3),
   },

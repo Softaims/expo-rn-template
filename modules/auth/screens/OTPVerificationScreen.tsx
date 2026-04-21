@@ -1,4 +1,5 @@
 import { View, Image } from "react-native";
+import { hp, wp } from "@/lib/responsive";
 import { Stack } from "expo-router";
 import { AuthTitlesSection } from "@/modules/auth/components";
 import {
@@ -40,11 +41,11 @@ export default function OTPVerificationScreen() {
         <Image
           source={require("@/assets/images/email-verification-icon.png")}
           style={{
-            width: 100,
-            height: 100,
+            width: wp(25),
+            height: wp(25),
             resizeMode: "contain",
             alignSelf: "center",
-            marginBottom: 20,
+            marginBottom: hp(2.5),
             marginTop: "15%",
           }}
         />
@@ -63,7 +64,7 @@ export default function OTPVerificationScreen() {
         <Button
           title="Resend Code"
           variant="text"
-          containerStyles="mb-3"
+          containerStyle={{ marginBottom: wp(3) }}
           onPress={handleResendCode}
           disabled={isLoading}
         />

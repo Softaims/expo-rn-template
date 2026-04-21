@@ -59,6 +59,16 @@ export function createStyles(colors: ThemeColors) {
     replyPreviewContent: {
       flex: 1,
     },
+    chatComposerField: {
+      backgroundColor: colors.input,
+      borderWidth: 1,
+      borderColor: colors.border,
+      borderRadius: 9999,
+      paddingHorizontal: wp(4),
+    },
+    chatComposerInput: {
+      ...typography.textVariants.bodyText1,
+    },
   });
 }
 

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Meta, StoryObj } from "@storybook/react-native";
+import { storyDecoratorStyleTall } from "@/lib/storybookLayout";
 import { RangeSlider } from "./RangeSlider";
 
 const THUMB_RADIUS = 12;
@@ -10,7 +11,7 @@ const meta = {
   component: RangeSlider,
   decorators: [
     (Story) => (
-      <View style={{ padding: 16, paddingVertical: 40 }}>
+      <View style={storyDecoratorStyleTall}>
         <Story />
       </View>
     ),

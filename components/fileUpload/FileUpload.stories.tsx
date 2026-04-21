@@ -1,5 +1,6 @@
 import { View } from "react-native";
 import { Meta, StoryObj } from "@storybook/react-native";
+import { storyDecoratorComfortable } from "@/lib/storybookLayout";
 import { FileUpload } from "./FileUpload";
 
 const meta = {
@@ -7,7 +8,7 @@ const meta = {
   component: FileUpload,
   decorators: [
     (Story) => (
-      <View style={{ padding: 20 }}>
+      <View style={storyDecoratorComfortable}>
         <Story />
       </View>
     ),

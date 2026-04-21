@@ -1,6 +1,9 @@
 import { View, Pressable } from "react-native";
 import { Text } from "@/components/text";
 import { BottomSheet } from "@/components/bottomSheets";
+import { useTheme } from "@/lib/theme";
+import { typography } from "@/lib/theme/fonts";
+import { imagePickerSheetStyles as styles } from "./ImagePickerBottomSheet.styles";
 
 export interface ImagePickerBottomSheetProps {
   isVisible: boolean;
@@ -15,6 +18,8 @@ export function ImagePickerBottomSheet({
   onTakePhoto,
   onUploadFromGallery,
 }: ImagePickerBottomSheetProps) {
+  const { colors } = useTheme();
+
   const handleTakePhoto = () => {
     onTakePhoto();
     onClose();
@@ -25,6 +30,12 @@ export function ImagePickerBottomSheet({
     onClose();
   };
 
+  const optionText = {
+    ...typography.textVariants.bodyText1,
+    color: colors.text,
+    fontFamily: typography.bodyBold.fontFamily,
+  };
+
   return (
     <BottomSheet
       isVisible={isVisible}
@@ -33,33 +44,46 @@ export function ImagePickerBottomSheet({
       enableBackdropDismiss
       backgroundStyle={{ backgroundColor: "transparent" }}
     >
-      <View className="bg-white rounded-2xl overflow-hidden">
+      <View style={[styles.card, { backgroundColor: colors.input }]}>
         <Pressable
           onPress={handleTakePhoto}
-          className="py-4 items-center active:bg-gray-50"
+          style={({ pressed }) => [
+            styles.option,
+            pressed && { backgroundColor: colors.muted },
+          ]}
         >
-          <Text className="text-base text-foreground font-medium">
-            Take Photo
-          </Text>
+          <Text style={optionText}>Take Photo</Text>
         </Pressable>
 
-        <View className="h-[1px] bg-gray-200" />
+        <View style={[styles.divider, { backgroundColor: colors.border }]} />
 
         <Pressable
           onPress={handleUploadFromGallery}
-          className="py-4 items-center active:bg-gray-50"
+          style={({ pressed }) => [
+            styles.option,
+            pressed && { backgroundColor: colors.muted },
+          ]}
         >
-          <Text className="text-base text-foreground font-medium">
-            Upload From Gallery
-          </Text>
+          <Text style={optionText}>Upload From Gallery</Text>
         </Pressable>
       </View>
 
       <Pressable
         onPress={onClose}
-        className="bg-white rounded-2xl py-4 items-center mt-3 active:bg-gray-50"
+        style={({ pressed }) => [
+          styles.cancelOuter,
+          { backgroundColor: colors.input },
+          pressed && { backgroundColor: colors.muted },
+        ]}
       >
-        <Text className="text-base text-red-500 font-semibold">Cancel</Text>
+        <Text
+          style={[
+            typography.textVariants.bodyText1,
+            { color: colors.destructive, fontFamily: typography.bodyBold.fontFamily },
+          ]}
+        >
+          Cancel
+        </Text>
       </Pressable>
     </BottomSheet>
   );

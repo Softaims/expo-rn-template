@@ -1,5 +1,11 @@
 import { useEffect, useRef, useState } from "react";
-import { TextInput, View } from "react-native";
+import {
+  TextInput,
+  View,
+  type StyleProp,
+  type TextStyle,
+  type ViewStyle,
+} from "react-native";
 import { useTheme } from "@/lib/theme";
 import { styles } from "./OTPInput.styles";
 
@@ -8,8 +14,10 @@ interface OTPInputProps {
   disabled?: boolean;
   otp: string;
   setOtp: (otp: string) => void;
-  containerStyles?: string;
-  inputStyles?: string;
+  containerStyle?: StyleProp<ViewStyle>;
+  inputStyle?: StyleProp<TextStyle>;
+  /** Optional NativeWind on the row — adopters only. */
+  containerClassName?: string;
   numericOnly?: boolean;
 }
 
@@ -18,8 +26,9 @@ export function OTPInput({
   disabled = false,
   otp,
   setOtp,
-  containerStyles,
-  inputStyles,
+  containerStyle,
+  inputStyle,
+  containerClassName,
   numericOnly = true,
 }: OTPInputProps) {
   const { colors } = useTheme();
@@ -75,7 +84,7 @@ export function OTPInput({
   };
 
   return (
-    <View style={styles.row} className={containerStyles}>
+    <View style={[styles.row, containerStyle]} className={containerClassName}>
       {Array.from({ length }).map((_, index) => {
         const focused = focusedIndex === index;
         return (
@@ -98,8 +107,8 @@ export function OTPInput({
                 borderColor: focused ? colors.primary : colors.border,
                 opacity: disabled ? 0.5 : 1,
               },
+              inputStyle,
             ]}
-            className={inputStyles}
             onFocus={() => setFocusedIndex(index)}
             onBlur={() => setFocusedIndex(null)}
           />

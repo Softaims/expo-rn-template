@@ -8,8 +8,8 @@ import { styles } from "./AuthTitlesSection.styles";
 export default function AuthTitlesSection({
   title,
   description,
-  titleStyles,
-  descriptionStyles,
+  titleStyle,
+  descriptionStyle,
 }: AuthTitlesSectionProps) {
   const { colors } = useTheme();
 
@@ -17,15 +17,13 @@ export default function AuthTitlesSection({
     <View style={styles.wrap}>
       <Text
         variant="heading1"
-        style={{ color: colors.text }}
-        className={titleStyles}
+        style={[{ color: colors.text }, titleStyle]}
       >
         {title}
       </Text>
       <Text
         variant="bodyText2"
-        style={{ color: colors.mutedForeground }}
-        className={descriptionStyles}
+        style={[{ color: colors.mutedForeground }, descriptionStyle]}
       >
         {description}
       </Text>

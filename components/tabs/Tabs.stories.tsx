@@ -1,4 +1,5 @@
 import { BookmarkIcon, PostsIcon } from "@/assets/icons";
+import { storyDecoratorStyle } from "@/lib/storybookLayout";
 import { Meta, StoryObj } from "@storybook/react-native";
 import { View } from "react-native";
 import { Tabs } from "./Tabs";
@@ -14,7 +15,7 @@ const meta = {
   },
   decorators: [
     (Story) => (
-      <View style={{ padding: 16 }}>
+      <View style={storyDecoratorStyle}>
         <Story />
       </View>
     ),

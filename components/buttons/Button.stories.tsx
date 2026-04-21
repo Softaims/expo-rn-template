@@ -1,5 +1,6 @@
 import { View } from "react-native";
 import { Meta, StoryObj } from "@storybook/react-native";
+import { storyDecoratorStyle } from "@/lib/storybookLayout";
 import { Button } from "./Button";
 import {
   SendIcon,
@@ -26,7 +27,7 @@ const meta = {
   },
   decorators: [
     (Story) => (
-      <View style={{ padding: 16 }}>
+      <View style={storyDecoratorStyle}>
         <Story />
       </View>
     ),

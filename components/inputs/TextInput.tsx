@@ -12,13 +12,16 @@ import {
   PlaneIcon,
 } from "@/assets/icons";
 import { useTheme } from "@/lib/theme";
-import { cn } from "@/lib/utils";
-import { useCallback, useState } from "react";
+import { typography } from "@/lib/theme/fonts";
+import { useCallback, useMemo, useState } from "react";
 import {
   TextInput as RNTextInput,
   TextInputProps,
   View,
   Pressable,
+  type StyleProp,
+  type TextStyle,
+  type ViewStyle,
 } from "react-native";
 import CountryPicker, {
   Country,
@@ -26,6 +29,7 @@ import CountryPicker, {
   Flag,
 } from "react-native-country-picker-modal";
 import { Text } from "../text";
+import { textInputStyles as styles } from "./TextInput.styles";
 
 type InputType =
   | "default"
@@ -43,17 +47,20 @@ export interface InputProps extends TextInputProps {
   type?: InputType;
 
   label?: string;
-  labelStyles?: string;
+  /** Prefer this; merges after label typography. */
+  labelStyle?: StyleProp<TextStyle>;
 
-  inputContainerStyles?: string;
-  inputStyles?: string;
+  inputContainerStyle?: StyleProp<ViewStyle>;
+  inputStyle?: StyleProp<TextStyle>;
 
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
   leftIconColor?: string;
   rightIconColor?: string;
 
+  /** Border color when focused; defaults to `colors.primary`. */
   borderActiveColor?: string;
+  /** Border color when not focused; defaults to `colors.border`. */
   borderInactiveColor?: string;
 
   countryCode?: CountryCode;
@@ -64,18 +71,43 @@ export interface InputProps extends TextInputProps {
   onRightIconPress?: () => void;
 
   errorMessage?: string;
-  errorMessageStyles?: string;
+  errorMessageStyle?: StyleProp<TextStyle>;
   errorComponent?: React.ReactNode;
+
+  /** Optional NativeWind classes on the outer wrapper — for adopters; template uses `inputContainerStyle` / theme. */
+  containerClassName?: string;
 }
 
-export function TextInput(props: InputProps) {
+export function TextInput({
+  type: inputType = "default",
+  label,
+  labelStyle,
+  inputContainerStyle,
+  inputStyle,
+  leftIcon: leftIconProp,
+  rightIcon: rightIconProp,
+  leftIconColor,
+  rightIconColor,
+  borderActiveColor,
+  borderInactiveColor,
+  countryCode,
+  callingCode,
+  setCountryCode,
+  setCallingCode,
+  onRightIconPress,
+  errorMessage,
+  errorMessageStyle,
+  errorComponent,
+  containerClassName,
+  ...rest
+}: InputProps) {
   const { colors } = useTheme();
   const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
   const [isFocused, setIsFocused] = useState<boolean>(false);
 
   const onSelect = (country: Country) => {
-    props.setCountryCode?.(country.cca2);
-    props.setCallingCode?.(country.callingCode[0]);
+    setCountryCode?.(country.cca2);
+    setCallingCode?.(country.callingCode[0]);
   };
 
   let leftIcon: React.ReactNode | null = null;
@@ -83,12 +115,31 @@ export function TextInput(props: InputProps) {
 
   let additionalProps: TextInputProps = {};
 
+  const borderColor = useMemo(() => {
+    if (errorMessage || errorComponent) {
+      return colors.destructive;
+    }
+    if (isFocused) {
+      return borderActiveColor ?? colors.primary;
+    }
+    return borderInactiveColor ?? colors.border;
+  }, [
+    colors.border,
+    colors.destructive,
+    colors.primary,
+    isFocused,
+    borderActiveColor,
+    borderInactiveColor,
+    errorComponent,
+    errorMessage,
+  ]);
+
   const renderFlagButton = () => {
-    if (props.countryCode && props.callingCode) {
+    if (countryCode && callingCode) {
       return (
-        <View className="flex-row items-center">
+        <View style={styles.phoneRow}>
           <CountryPicker
-            countryCode={props.countryCode}
+            countryCode={countryCode}
             withFlag
             withCallingCode
             withFilter
@@ -97,21 +148,32 @@ export function TextInput(props: InputProps) {
             containerButtonStyle={{ width: 32 }}
             renderFlagButton={({ onOpen }) => {
               return (
-                <Pressable onPress={onOpen} className="flex-row items-center">
-                  {props.type === "phone-code-icon" && (
-                    <View className="mr-[-4px]">
+                <Pressable onPress={onOpen} style={styles.phoneRow}>
+                  {inputType === "phone-code-icon" && (
+                    <View style={styles.phoneFlagWrap}>
                       <Flag
-                        countryCode={props.countryCode as CountryCode}
+                        countryCode={countryCode as CountryCode}
                         flagSize={30}
                         withFlagButton={true}
                       />
                     </View>
                   )}
-                  <Text className="mt-[2px] mr-[8px]">
-                    +{props.callingCode}
+                  <Text
+                    style={[
+                      typography.textVariants.bodyText2,
+                      styles.phoneCalling,
+                      { color: colors.text },
+                    ]}
+                  >
+                    +{callingCode}
                   </Text>
-                  <AltArrowDownIcon color={props.leftIconColor} />
-                  <View className="h-[24px] bg-border w-[1px] ml-[5px] mr-[1px]" />
+                  <AltArrowDownIcon color={leftIconColor} />
+                  <View
+                    style={[
+                      styles.phoneDivider,
+                      { backgroundColor: colors.border },
+                    ]}
+                  />
                 </Pressable>
               );
             }}
@@ -121,34 +183,34 @@ export function TextInput(props: InputProps) {
     }
   };
 
-  switch (props.type) {
+  switch (inputType) {
     case "email":
-      leftIcon = props.leftIcon || <EnvelopeIcon fill={props.leftIconColor} />;
+      leftIcon = leftIconProp || <EnvelopeIcon fill={leftIconColor} />;
       additionalProps.keyboardType = "email-address";
       break;
     case "password":
-      leftIcon = props.leftIcon || <LockIcon fill={props.leftIconColor} />;
+      leftIcon = leftIconProp || <LockIcon fill={leftIconColor} />;
       rightIcon = isPasswordVisible ? <EyeCloseIcon /> : <EyeOpenIcon />;
       additionalProps.keyboardType = "visible-password";
       break;
     case "search":
-      leftIcon = props.leftIcon || <MagnifierIcon fill={props.leftIconColor} />;
+      leftIcon = leftIconProp || <MagnifierIcon fill={leftIconColor} />;
       rightIcon =
-        props.value && props.value.length > 0 ? <CloseCircleIcon /> : null;
+        rest.value && String(rest.value).length > 0 ? <CloseCircleIcon /> : null;
       break;
     case "chat":
-      leftIcon = props.leftIcon || (
-        <PaperClipIcon stroke={props.leftIconColor} />
+      leftIcon = leftIconProp || (
+        <PaperClipIcon stroke={leftIconColor} />
       );
       rightIcon =
-        props.value && props.value.length > 0 ? (
+        rest.value && String(rest.value).length > 0 ? (
           <PlaneIcon />
         ) : (
           <PlaneIcon fill={"#26291F80"} />
         );
       break;
     case "phone-basic":
-      leftIcon = props.leftIcon || <PhoneIcon fill={props.leftIconColor} />;
+      leftIcon = leftIconProp || <PhoneIcon fill={leftIconColor} />;
       additionalProps.keyboardType = "phone-pad";
       break;
     case "phone-code":
@@ -163,72 +225,91 @@ export function TextInput(props: InputProps) {
       additionalProps.multiline = true;
       break;
     default:
-      leftIcon = props.leftIcon || null;
-      rightIcon = props.rightIcon || null;
+      leftIcon = leftIconProp || null;
+      rightIcon = rightIconProp || null;
       break;
   }
 
   const handleRightIconPress = useCallback(() => {
-    if (props.type === "password") {
+    if (inputType === "password") {
       setIsPasswordVisible((prev) => !prev);
-    } else if (props.type === "search") {
-      props.onChangeText?.("");
+    } else if (inputType === "search") {
+      rest.onChangeText?.("");
     } else {
-      props.onRightIconPress?.();
+      onRightIconPress?.();
     }
-  }, [props.type, props.onChangeText, props.onRightIconPress]);
+  }, [inputType, onRightIconPress, rest.onChangeText]);
+
+  const fieldShellStyle: StyleProp<ViewStyle> = [
+    styles.fieldRow,
+    {
+      borderColor,
+      backgroundColor: colors.input,
+    },
+    rest.editable === false && styles.fieldRowDisabled,
+    inputContainerStyle,
+  ];
+
+  const inputCombinedStyle: StyleProp<TextStyle> = [
+    styles.input,
+    typography.textVariants.bodyText1,
+    inputType === "textarea" && styles.inputMultiline,
+    { color: colors.text },
+    inputStyle,
+    rest.style,
+  ];
+
+  const {
+    onFocus: onFocusProp,
+    onBlur: onBlurProp,
+    style: _style,
+    ...restInput
+  } = rest;
 
   return (
-    <View>
-      {props.label && (
+    <View className={containerClassName}>
+      {label && (
         <Text
-          className={cn(
-            "text-[16px] mb-[12px] font-bold text-primary",
-            props.labelStyles,
-          )}
+          style={[
+            typography.bodyBold,
+            styles.labelSpacing,
+            { color: colors.primary },
+            labelStyle,
+          ]}
         >
-          {props.label}
+          {label}
         </Text>
       )}
-      <View
-        className={cn(
-          "flex-row border-[1.2px] border-primary justify-between items-center px-[12px] rounded-[10px] gap-[5px] bg-input",
-          isFocused
-            ? props.borderActiveColor || "border-primary"
-            : props.borderInactiveColor || "border-border",
-          props.editable === false && "opacity-50",
-          (props.errorMessage || props.errorComponent) && "border-destructive",
-          props.inputContainerStyles,
-        )}
-      >
-        <View className="flex-row items-center gap-[5px] flex-1">
+      <View style={fieldShellStyle}>
+        <View style={styles.innerRow}>
           {leftIcon && leftIcon}
           <RNTextInput
-            onFocus={() => setIsFocused(true)}
-            onBlur={() => setIsFocused(false)}
-            secureTextEntry={props.type === "password" && !isPasswordVisible}
-            className={cn(
-              "flex-1 py-[12px]",
-              props.type === "textarea" && "h-[140px]",
-              // (props.errorMessage || props.errorComponent) &&
-              //   "text-destructive",
-              props.inputStyles,
-            )}
-            {...props}
+            {...restInput}
             {...additionalProps}
-            placeholderTextColor={
-              props.placeholderTextColor ?? colors.mutedForeground
+            onFocus={(e) => {
+              setIsFocused(true);
+              onFocusProp?.(e);
+            }}
+            onBlur={(e) => {
+              setIsFocused(false);
+              onBlurProp?.(e);
+            }}
+            secureTextEntry={
+              inputType === "password" && !isPasswordVisible
             }
-            style={[{ color: colors.text }, props.style]}
+            style={inputCombinedStyle}
+            placeholderTextColor={
+              rest.placeholderTextColor ?? colors.mutedForeground
+            }
           />
         </View>
         {rightIcon && (
           <Pressable
             disabled={
               !(
-                props.type === "chat" ||
-                props.type === "search" ||
-                props.type === "password"
+                inputType === "chat" ||
+                inputType === "search" ||
+                inputType === "password"
               )
             }
             onPress={handleRightIconPress}
@@ -237,18 +318,18 @@ export function TextInput(props: InputProps) {
           </Pressable>
         )}
       </View>
-      {props.errorMessage && (
-        <View className="flex-row items-center gap-[5px] mt-[10px]">
+      {errorMessage && (
+        <View style={styles.errorRow}>
           <InfoCircleIcon fill="#FF5050" />
           <Text
             variant="bodyText3"
-            className={cn("text-destructive", props.errorMessageStyles)}
+            style={[{ color: colors.destructive }, errorMessageStyle]}
           >
-            {props.errorMessage}
+            {errorMessage}
           </Text>
         </View>
       )}
-      {props.errorComponent && props.errorComponent}
+      {errorComponent && errorComponent}
     </View>
   );
 }

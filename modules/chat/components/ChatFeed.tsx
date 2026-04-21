@@ -223,8 +223,8 @@ export function ChatFeed({
           placeholderTextColor={colors.mutedForeground}
           value={inputText}
           onChangeText={setInputText}
-          inputContainerStyles="bg-white border-border rounded-full px-4"
-          inputStyles="text-[14px]"
+          inputContainerStyle={styles.chatComposerField}
+          inputStyle={styles.chatComposerInput}
           onRightIconPress={handleSend}
         />
       </View>

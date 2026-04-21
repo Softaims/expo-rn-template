@@ -1,4 +1,5 @@
 import { Meta, StoryObj } from "@storybook/react-native";
+import { storyDecoratorStyle } from "@/lib/storybookLayout";
 import { Pressable, View } from "react-native";
 import { Text } from "../text";
 import { Alert, AlertProvider, useAlert } from "./Alert";
@@ -9,7 +10,7 @@ const meta = {
     decorators: [
         (Story) => (
             <AlertProvider>
-                <View className="flex-1 p-4">
+                <View style={[{ flex: 1 }, storyDecoratorStyle]}>
                     <Story />
                 </View>
             </AlertProvider>
