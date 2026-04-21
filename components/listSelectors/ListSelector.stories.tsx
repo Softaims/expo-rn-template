@@ -1,14 +1,19 @@
 import { Meta, StoryObj } from "@storybook/react-native";
-import { View } from "react-native";
+import { StyleSheet, View } from "react-native";
+import { storyScreenPadding } from "@/lib/storybookLayout";
 import { ListSelector, ListSelectorItem } from "./ListSelector";
 import { useState } from "storybook/internal/preview-api";
+
+const decoratorStyles = StyleSheet.create({
+    pad: { padding: storyScreenPadding },
+});
 
 const meta = {
     title: "ListSelectors/ListSelector",
     component: ListSelector,
     decorators: [
         (Story) => (
-            <View className="p-4">
+            <View style={decoratorStyles.pad}>
                 <Story />
             </View>
         ),

@@ -1,13 +1,16 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { FlatList, useWindowDimensions, View } from "react-native";
 import { BarGroup, Button, ScreenWrapper } from "@/components";
 import { SplashButtons, SplashContent } from "@/modules/splash/components";
 import { SPLASH_SCREENS, TOTAL_STEPS } from "@/modules/splash/config";
 import { useSplashAnimation, useSplashNavigation } from "@/modules/splash/hooks";
 import type { SplashScreenData } from "@/modules/splash/types";
+import { useTheme } from "@/lib/theme";
+import { createSlideStyles, styles } from "./SplashScreen.styles";
 
 export default function SplashScreen() {
   const { width } = useWindowDimensions();
+  const { colors, spacing } = useTheme();
 
   const {
     currentStep,
@@ -25,22 +28,35 @@ export default function SplashScreen() {
     handleStorybook,
   } = useSplashNavigation({ currentStep, animateToNextStep });
 
-  const renderItem = useCallback(({ item }: { item: SplashScreenData }) => (
-    <View style={{ width }} className="px-4">
-      <SplashContent
-        title={item.title}
-        description={item.description}
-      />
-    </View>
-  ), [width]);
+  const slideStyles = useMemo(
+    () => createSlideStyles(width, spacing.page),
+    [width, spacing.page]
+  );
 
-  const keyExtractor = useCallback((item: SplashScreenData) => item.id.toString(), []);
+  const renderItem = useCallback(
+    ({ item }: { item: SplashScreenData }) => (
+      <View style={slideStyles.slide}>
+        <SplashContent
+          title={item.title}
+          description={item.description}
+        />
+      </View>
+    ),
+    [slideStyles]
+  );
+
+  const keyExtractor = useCallback(
+    (item: SplashScreenData) => item.id.toString(),
+    []
+  );
 
   return (
-    <ScreenWrapper containerStyles="px-0">
-      <View className="flex-1 justify-between bg-background">
+    <ScreenWrapper containerStyle={{ paddingHorizontal: 0 }}>
+      <View
+        style={[styles.mainColumn, { backgroundColor: colors.background }]}
+      >
         {currentScreen.showSkipButton ? (
-          <View className="flex-row justify-between items-center px-4">
+          <View style={[styles.topBar, { paddingHorizontal: spacing.page }]}>
             <Button
               variant="text"
               size="sm"
@@ -88,7 +104,7 @@ export default function SplashScreen() {
               offset: width * index,
               index,
             })}
-            contentContainerClassName="mb-[32px]"
+            contentContainerStyle={styles.flatListContent}
           />
 
           <SplashButtons buttons={buttonsWithHandlers} />

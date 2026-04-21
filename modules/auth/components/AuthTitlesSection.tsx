@@ -1,26 +1,29 @@
 import { View } from "react-native";
 import { Text } from "@/components";
-import { cn } from "@/lib/utils";
+import { useTheme } from "@/lib/theme";
 
 import type { AuthTitlesSectionProps } from "@/modules/auth/types";
+import { styles } from "./AuthTitlesSection.styles";
 
 export default function AuthTitlesSection({
   title,
   description,
-  titleStyles,
-  descriptionStyles,
+  titleStyle,
+  descriptionStyle,
 }: AuthTitlesSectionProps) {
+  const { colors } = useTheme();
+
   return (
-    <View className="mb-[30px] gap-[10px]">
+    <View style={styles.wrap}>
       <Text
         variant="heading1"
-        className={cn("text-foreground font-bold", titleStyles)}
+        style={[{ color: colors.text }, titleStyle]}
       >
         {title}
       </Text>
       <Text
         variant="bodyText2"
-        className={cn("text-muted-foreground", descriptionStyles)}
+        style={[{ color: colors.mutedForeground }, descriptionStyle]}
       >
         {description}
       </Text>

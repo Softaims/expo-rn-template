@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { View, ActivityIndicator } from "react-native";
+import { wp } from "@/lib/responsive";
 import { Text, Button, TextInput } from "@/components";
 import { ScreenWrapper } from "@/components/wrappers/ScreenWrapper";
 import { Tabs } from "@/components/tabs";
@@ -490,7 +491,7 @@ export default function DummyServiceScreen() {
                 defaultValue="queries"
                 variant="filled-rounded"
                 onValueChange={setActiveTab}
-                containerStyles="mb-4"
+                style={{ marginBottom: wp(4) }}
             />
 
             {activeTab === "queries" ? <QueriesTab /> : <MutationsTab />}

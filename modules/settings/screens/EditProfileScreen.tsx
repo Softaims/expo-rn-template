@@ -1,4 +1,5 @@
-import { View } from "react-native";
+import { StyleSheet, View } from "react-native";
+import { useTheme } from "@/lib/theme";
 import { Stack } from "expo-router";
 import { Controller } from "react-hook-form";
 import { TextInput } from "@/components/inputs";
@@ -17,7 +18,19 @@ import { CameraIcon, ImageIcon } from "@/assets/icons";
 import { useEditProfileScreen } from "../hooks/useEditProfileScreen";
 import { useImagePicker } from "../hooks/useImagePicker";
 
+const screenStyles = StyleSheet.create({
+  column: {
+    flex: 1,
+    justifyContent: "space-between",
+  },
+  avatarBlock: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});
+
 export function EditProfileScreen() {
+  const { colors } = useTheme();
   const {
     control,
     handleSubmit,
@@ -50,9 +63,9 @@ export function EditProfileScreen() {
         }}
       />
 
-      <View className="flex-1 justify-between">
+      <View style={screenStyles.column}>
         <View>
-          <View className="justify-center items-center">
+          <View style={screenStyles.avatarBlock}>
             <FloatingActionMenu
               isOpen={isFloatingMenuVisible}
               onToggle={handleAvatarPress}
@@ -88,7 +101,7 @@ export function EditProfileScreen() {
                 value={value}
                 onChangeText={onChange}
                 leftIcon={null}
-                inputContainerStyles="bg-background"
+                inputContainerStyle={{ backgroundColor: colors.background }}
                 errorMessage={errors.username?.message}
               />
             )}
@@ -100,8 +113,10 @@ export function EditProfileScreen() {
           variant="primary"
           size="lg"
           onPress={handleSubmit(handleUpdateProfile)}
-          containerStyles="bg-foreground"
-          textStyles="text-background"
+          containerStyle={{
+            backgroundColor: colors.foreground,
+          }}
+          textStyle={{ color: colors.background }}
         />
       </View>
 

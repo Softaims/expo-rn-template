@@ -30,7 +30,7 @@ export default function ResetPasswordScreen() {
         showFooter={false}
         showSocialAuthButtons={false}
         image={require("@/assets/images/reset-password-icon.png")}
-        formContainerStyles="flex-1 justify-between"
+        formContainerStyle={{ flex: 1, justifyContent: "space-between" }}
         isLoading={isLoading}
       />
     </ScreenWrapper>

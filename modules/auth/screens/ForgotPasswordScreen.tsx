@@ -30,7 +30,7 @@ export default function ForgotPasswordScreen() {
         showFooter={false}
         showSocialAuthButtons={false}
         image={require("@/assets/images/forgot-password-icon.png")}
-        formContainerStyles="flex-1 justify-between"
+        formContainerStyle={{ flex: 1, justifyContent: "space-between" }}
         isLoading={isLoading}
       />
     </ScreenWrapper>

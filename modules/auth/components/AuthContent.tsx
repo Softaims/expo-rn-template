@@ -1,24 +1,26 @@
 import { Image, View } from "react-native";
 import { BottomSheet } from "@/components";
+import { hp } from "@/lib/responsive";
+import { useTheme } from "@/lib/theme";
 import AuthForm from "@/modules/auth/components/AuthForm";
 import SocialAuthButtons from "@/modules/auth/components/SocialAuthButtons";
 import AuthFooter from "@/modules/auth/components/AuthFooter";
 import AuthHeader from "@/modules/auth/components/AuthHeader";
 import AuthTitlesSection from "@/modules/auth/components/AuthTitlesSection";
-import { cn } from "@/lib/utils";
 
 import type { AuthContentProps } from "@/modules/auth/types";
+import { styles } from "./AuthContent.styles";
 
 export default function AuthContent({
   variant = "default",
   title,
   description,
-  titleStyles,
-  descriptionStyles,
+  titleStyle,
+  descriptionStyle,
   image,
-  imageStyles,
+  imageStyle,
   isBottomSheetVisible = false,
-  setIsBottomSheetVisible = () => { },
+  setIsBottomSheetVisible = () => {},
   enableBackdropDismiss = false,
   fields,
   schema,
@@ -26,27 +28,42 @@ export default function AuthContent({
   showForgotPassword = false,
   onForgotPasswordPress,
   onSubmit,
-  formContainerStyles,
+  formContainerStyle,
   footerText = "",
   footerLinkText = "",
-  onFooterNavigate = () => { },
+  onFooterNavigate = () => {},
   showHeader = true,
   showFooter = true,
   showSocialAuthButtons = true,
   isLoading = false,
 }: AuthContentProps) {
+  const { colors, spacing } = useTheme();
+
+  const sheetContentStyle = [
+    {
+      paddingHorizontal: spacing.page,
+      paddingBottom: hp(4),
+      backgroundColor: colors.background,
+    },
+  ];
+
   const content = (
-    <View className="flex-1 justify-between">
-      <View className="flex-1">
+    <View style={styles.root}>
+      <View style={styles.upper}>
         {showHeader && <AuthHeader />}
 
-        {image && <Image source={image} className={cn("w-[100px] h-[100px] object-contain self-center mb-[20px] mt-[15%]", imageStyles)} />}
+        {image && (
+          <Image
+            source={image}
+            style={[styles.heroImage, imageStyle]}
+          />
+        )}
 
         <AuthTitlesSection
           title={title}
           description={description}
-          titleStyles={titleStyles}
-          descriptionStyles={descriptionStyles}
+          titleStyle={titleStyle}
+          descriptionStyle={descriptionStyle}
         />
 
         <AuthForm
@@ -56,18 +73,20 @@ export default function AuthContent({
           showForgotPassword={showForgotPassword}
           onForgotPasswordPress={onForgotPasswordPress}
           onSubmit={onSubmit}
-          className={formContainerStyles}
+          containerStyle={formContainerStyle}
           isLoading={isLoading}
         />
 
         {showSocialAuthButtons && <SocialAuthButtons />}
       </View>
 
-      {showFooter && <AuthFooter
-        text={footerText}
-        linkText={footerLinkText}
-        onNavigate={onFooterNavigate}
-      />}
+      {showFooter && (
+        <AuthFooter
+          text={footerText}
+          linkText={footerLinkText}
+          onNavigate={onFooterNavigate}
+        />
+      )}
     </View>
   );
 
@@ -77,7 +96,7 @@ export default function AuthContent({
         isVisible={isBottomSheetVisible}
         setIsVisible={setIsBottomSheetVisible}
         enableBackdropDismiss={enableBackdropDismiss}
-        sheetContentContainerStyles="px-0 pb-0 px-[16px] pb-[32px] bg-background"
+        sheetContentContainerStyle={sheetContentStyle}
       >
         {content}
       </BottomSheet>

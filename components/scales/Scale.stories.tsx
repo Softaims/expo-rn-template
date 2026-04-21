@@ -1,4 +1,5 @@
 import { Meta, StoryObj } from "@storybook/react-native";
+import { storyDecoratorStyle } from "@/lib/storybookLayout";
 import { View } from "react-native";
 import { Scale } from "./Scale";
 import { useState } from "storybook/internal/preview-api";
@@ -10,7 +11,7 @@ const meta = {
     component: Scale,
     decorators: [
         (Story) => (
-            <View className="p-4">
+            <View style={[{ flex: 1 }, storyDecoratorStyle]}>
                 <Story />
             </View>
         ),

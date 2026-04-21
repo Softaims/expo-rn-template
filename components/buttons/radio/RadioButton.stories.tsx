@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { View } from "react-native";
 import { Meta, StoryObj } from "@storybook/react-native";
+import { storyDecoratorStyle } from "@/lib/storybookLayout";
 import { RadioButton } from "./RadioButton";
 
 const meta = {
@@ -16,7 +17,7 @@ const meta = {
   },
   decorators: [
     (Story) => (
-      <View style={{ padding: 16 }}>
+      <View style={storyDecoratorStyle}>
         <Story />
       </View>
     ),

@@ -1,4 +1,5 @@
 import { Meta, StoryObj } from "@storybook/react-native";
+import { storyDecoratorStyle } from "@/lib/storybookLayout";
 import { View } from "react-native";
 import { TextInput } from "./TextInput";
 import { useState } from "react";
@@ -8,7 +9,7 @@ const meta = {
   component: TextInput,
   decorators: [
     (Story) => (
-      <View style={{ padding: 16 }}>
+      <View style={storyDecoratorStyle}>
         <Story />
       </View>
     ),

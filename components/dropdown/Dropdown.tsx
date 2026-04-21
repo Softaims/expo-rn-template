@@ -1,7 +1,8 @@
-import { View, StyleSheet, TextStyle, Text as RNText, TouchableOpacity, TextInput, ScrollView } from "react-native";
+import { useTheme } from "@/lib/theme";
+import { createStyles } from "./styles";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Text as RNText, ScrollView, TextInput, TextStyle, TouchableOpacity, View } from "react-native";
 import { Dropdown as ElementDropdown, MultiSelect } from "react-native-element-dropdown";
-import { fontFamilies } from "@/hooks/useFonts";
-import { useState, useRef, useEffect } from "react";
 
 export interface DropdownOption {
   label: string;
@@ -85,6 +86,9 @@ export function Dropdown({
   itemTextStyle,
   selectedItemStyle,
 }: DropdownProps) {
+  const { colors } = useTheme();
+  const styles = useMemo(() => createStyles(colors), [colors]);
+
   const [inputValue, setInputValue] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
@@ -105,7 +109,9 @@ export function Dropdown({
       )
     : options;
 
-  const focusedBorderStyle = isFocused ? { borderColor: "#000000" } : {};
+  const focusedBorderStyle = isFocused
+    ? { borderColor: colors.text }
+    : {};
 
   const handleFocus = () => {
     setIsFocused(true);
@@ -293,115 +299,3 @@ export function Dropdown({
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    marginBottom: 8,
-  },
-  dropdown: {
-    minHeight: 48,
-    borderWidth: 2,
-    borderColor: "#e5e5e5",
-    borderRadius: 8,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    backgroundColor: "#FAFAFA",
-  },
-  placeholderStyle: {
-    fontSize: 14,
-    color: "#929292",
-    fontFamily: fontFamilies.medium,
-  },
-  selectedTextStyle: {
-    fontSize: 14,
-    color: "#000000",
-    fontFamily: fontFamilies.medium,
-  },
-  inputSearchStyle: {
-    height: 40,
-    fontSize: 14,
-    marginHorizontal: 14,
-    borderRadius: 8,
-    backgroundColor:"#FAFAFA",
-    fontFamily: fontFamilies.medium,
-  },
-  itemContainerStyle: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  itemTextStyle: {
-    fontSize: 14,
-    color: "#000000",
-    fontFamily: fontFamilies.medium,
-  },
-  selectedStyle: {
-    borderRadius: 6,
-    backgroundColor: "#f0f0f0",
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    marginRight: 8,
-    marginTop: 8,
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  selectedTextStylePill: {
-    fontSize: 14,
-    color: "#929292",
-    fontFamily: fontFamilies.medium,
-    marginRight: 8,
-  },
-  iconContainer: {
-    padding: 4,
-  },
-  checkboxContainer: {
-    marginRight: 12,
-    width: 24,
-  },
-  checkbox: {
-    borderWidth: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  checkmark: {
-    color: "#FFFFFF",
-    fontWeight: "bold",
-  },
-  // Autocomplete styles
-  autocompleteWrapper: {
-    position: "relative",
-    zIndex: 1000,
-  },
-  autocompleteInput: {
-    fontSize: 14,
-    color: "#000000",
-    fontFamily: fontFamilies.medium,
-  },
-  suggestionsContainer: {
-    position: "absolute",
-    top: "100%",
-    left: 0,
-    right: 0,
-    backgroundColor: "#FAFAFA",
-    borderWidth: 2,
-    borderColor: "#e5e5e5",
-    borderRadius: 8,
-    marginTop: 4,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-    zIndex: 1001,
-  },
-  suggestionItem: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: "#f0f0f0",
-  },
-  iconWrapper: {
-    marginHorizontal: 8,
-  },
-});

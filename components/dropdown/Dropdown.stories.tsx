@@ -1,5 +1,9 @@
 import React, { useState } from "react";
 import { View } from "react-native";
+import {
+  storyDecoratorStyle,
+  storyDecoratorStyleWithGap,
+} from "@/lib/storybookLayout";
 import { Dropdown, DropdownOption } from "./Dropdown";
 import { CloseIcon, MagnifierIcon } from "@/assets/icons";
 
@@ -20,7 +24,7 @@ export const Default = () => {
   const [value, setValue] = useState<string>("");
 
   return (
-    <View style={{ padding: 16 }}>
+    <View style={storyDecoratorStyle}>
       <Dropdown
         placeholder="Select"
         options={sampleOptions}
@@ -33,7 +37,7 @@ export const Default = () => {
 
 export const Disabled = () => {
   return (
-    <View style={{ padding: 16, gap: 16 }}>
+    <View style={storyDecoratorStyleWithGap}>
       <Dropdown
         placeholder="Select"
         options={sampleOptions}
@@ -47,7 +51,7 @@ export const Select = () => {
   const [value, setValue] = useState<string>("3");
 
   return (
-    <View style={{ padding: 16 }}>
+    <View style={storyDecoratorStyle}>
       <Dropdown
         placeholder="Select"
         options={sampleOptions}
@@ -62,7 +66,7 @@ export const AutoSuggest = () => {
   const [value, setValue] = useState<string>("");
 
   return (
-    <View style={{ padding: 16, zIndex: 1 }}>
+    <View style={[storyDecoratorStyle, { zIndex: 1 }]}>
       <Dropdown
         placeholder="Start typing to see suggestions..."
         options={sampleOptions}
@@ -78,7 +82,7 @@ export const MultiSelectWithCheckbox = () => {
   const [values, setValues] = useState<string[]>([]);
 
   return (
-    <View style={{ padding: 16 }}>
+    <View style={storyDecoratorStyle}>
       <Dropdown
         placeholder="Select with checkboxes"
         options={[
@@ -102,7 +106,7 @@ export const AfterMultiSelect = () => {
   const [values, setValues] = useState<string[]>(["2", "4"]);
 
   return (
-    <View style={{ padding: 16 }}>
+    <View style={storyDecoratorStyle}>
       <Dropdown
         placeholder="Select"
         options={[
@@ -122,7 +126,7 @@ export const SelectWithSearch = () => {
   const [value, setValue] = useState<string>("");
 
   return (
-    <View style={{ padding: 16, gap: 16 }}>
+    <View style={storyDecoratorStyleWithGap}>
       <View>
         <Dropdown
           placeholder="With search inside dropdown"

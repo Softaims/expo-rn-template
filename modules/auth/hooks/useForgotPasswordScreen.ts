@@ -11,21 +11,24 @@ export function useForgotPasswordScreen() {
 
   const handleSubmit = async (data: ForgotPasswordFormData) => {
     setIsLoading(true);
-    const { error } = await sendResetCode(data.email);
-    setIsLoading(false);
+    try {
+      const { error } = await sendResetCode(data.email);
 
-    if (error) {
-      showErrorAlert(error);
-      return;
+      if (error) {
+        showErrorAlert(error);
+        return;
+      }
+
+      push({
+        pathname: "/(auth)/otpVerification",
+        params: {
+          email: data.email,
+          flow: "reset-password",
+        },
+      });
+    } finally {
+      setIsLoading(false);
     }
-
-    push({
-      pathname: "/(auth)/otpVerification",
-      params: {
-        email: data.email,
-        flow: "reset-password",
-      },
-    });
   };
 
   const handleGoBack = () => {

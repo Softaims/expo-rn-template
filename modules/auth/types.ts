@@ -1,4 +1,10 @@
-import type { ImageSourcePropType } from "react-native";
+import type {
+  ImageSourcePropType,
+  ImageStyle,
+  StyleProp,
+  TextStyle,
+  ViewStyle,
+} from "react-native";
 import type { ZodType } from "zod";
 import type { ReactNode } from "react";
 
@@ -46,17 +52,17 @@ export interface AuthFormProps {
   onForgotPasswordPress?: () => void;
   onSubmit: (data: any) => void;
   isLoading?: boolean;
-  className?: string;
+  containerStyle?: StyleProp<ViewStyle>;
 }
 
 export interface AuthContentProps {
   variant?: "default" | "bottom-sheet";
   title: string;
   description: string;
-  titleStyles?: string;
-  descriptionStyles?: string;
+  titleStyle?: StyleProp<TextStyle>;
+  descriptionStyle?: StyleProp<TextStyle>;
   image?: ImageSourcePropType;
-  imageStyles?: string;
+  imageStyle?: StyleProp<ImageStyle>;
   isBottomSheetVisible?: boolean;
   setIsBottomSheetVisible?: (visible: boolean) => void;
   enableBackdropDismiss?: boolean;
@@ -64,7 +70,7 @@ export interface AuthContentProps {
   schema: ZodType<any>;
   buttonText: string;
   onSubmit: (data: any) => Promise<void>;
-  formContainerStyles?: string;
+  formContainerStyle?: StyleProp<ViewStyle>;
   showForgotPassword?: boolean;
   onForgotPasswordPress?: () => void;
   footerText?: string;
@@ -85,8 +91,8 @@ export interface AuthFooterProps {
 export interface AuthTitlesSectionProps {
   title: string;
   description: string;
-  titleStyles?: string;
-  descriptionStyles?: string;
+  titleStyle?: StyleProp<TextStyle>;
+  descriptionStyle?: StyleProp<TextStyle>;
 }
 
 export interface SocialAuthProviderConfig {

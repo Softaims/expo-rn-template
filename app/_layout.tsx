@@ -1,14 +1,15 @@
 import { AlertProvider } from "@/components/alerts";
 import { useFonts } from "@/hooks/useFonts";
+import { ThemeProvider, useTheme } from "@/lib/theme";
 import { initSentry, wrapWithSentry, setSentryUser } from "@/modules/sentry";
 import { AuthProvider, useAuth } from "@/modules/auth";
-import { storage } from "@/lib/storage";
-import { STORAGE_KEYS } from "@/lib/storageKeys";
+import { useOnboardingStore } from "@/modules/appState";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
+import { StatusBar } from "expo-status-bar";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const queryClient = new QueryClient();
@@ -18,23 +19,33 @@ initSentry();
 // Prevent auto hide of splash screen
 SplashScreen.preventAutoHideAsync();
 
+function ThemedRootShell({ children }: { children: React.ReactNode }) {
+  const { colors } = useTheme();
+  return (
+    <GestureHandlerRootView
+      style={{ flex: 1, backgroundColor: colors.background }}
+    >
+      {/* Dark status-bar *icons* — matches white-shaded surfaces in both theme modes */}
+      <StatusBar style="dark" />
+      {children}
+    </GestureHandlerRootView>
+  );
+}
+
 function RootLayoutContent() {
   const { loaded: isFontsLoaded } = useFonts();
+  const { colors } = useTheme();
   const { user, isSignedIn, isLoaded: isAuthLoaded } = useAuth();
-  const [hasSeenOnboarding, setHasSeenOnboarding] = useState<boolean | null>(null);
-
-  useEffect(() => {
-    storage.get(STORAGE_KEYS.HAS_SEEN_ONBOARDING).then((value) => {
-      setHasSeenOnboarding(value === "true");
-    });
-  }, []);
+  const hasSeenOnboarding = useOnboardingStore(
+    (state) => state.hasSeenOnboarding
+  );
 
   // Hide splash screen when fonts, auth and storage are all ready
   useEffect(() => {
-    if (isFontsLoaded && isAuthLoaded && hasSeenOnboarding !== null) {
+    if (isFontsLoaded && isAuthLoaded) {
       SplashScreen.hideAsync();
     }
-  }, [isFontsLoaded, isAuthLoaded, hasSeenOnboarding]);
+  }, [isFontsLoaded, isAuthLoaded]);
 
   useEffect(() => {
     if (!isAuthLoaded) return;
@@ -50,12 +61,17 @@ function RootLayoutContent() {
     }
   }, [user, isAuthLoaded, isSignedIn]);
 
-  if (!isFontsLoaded || !isAuthLoaded || hasSeenOnboarding === null) {
+  if (!isFontsLoaded || !isAuthLoaded) {
     return null;
   }
 
   return (
-    <Stack screenOptions={{ headerShown: false }} >
+    <Stack
+      screenOptions={{
+        headerShown: false,
+        contentStyle: { backgroundColor: colors.background },
+      }}
+    >
       <Stack.Protected guard={isSignedIn}>
         <Stack.Screen name="(tabs)" options={{ animation: "none" }} />
       </Stack.Protected>
@@ -79,17 +95,19 @@ function RootLayoutContent() {
 
 function RootLayout() {
   return (
-    <GestureHandlerRootView>
-      <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <BottomSheetModalProvider>
-            <AlertProvider>
-              <RootLayoutContent />
-            </AlertProvider>
-          </BottomSheetModalProvider>
-        </AuthProvider>
-      </QueryClientProvider>
-    </GestureHandlerRootView>
+    <ThemeProvider>
+      <ThemedRootShell>
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
+            <BottomSheetModalProvider>
+              <AlertProvider>
+                <RootLayoutContent />
+              </AlertProvider>
+            </BottomSheetModalProvider>
+          </AuthProvider>
+        </QueryClientProvider>
+      </ThemedRootShell>
+    </ThemeProvider>
   );
 }
 

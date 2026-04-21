@@ -7,8 +7,11 @@ export { tokenCache };
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
+
   if (!publishableKey) {
-    throw new Error("EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY is not set");
+    throw new Error(
+      "Missing EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY. Configure Clerk before running the app.",
+    );
   }
 
   return (
